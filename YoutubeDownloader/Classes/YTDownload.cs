@@ -64,6 +64,7 @@ namespace YoutubeDownloader
                 foreach (var item in objResponse.items)
                 {
                     info.Add("title", (string)(item.snippet.title));
+                    info.Add("thumbSmall", (string)(item.snippet.thumbnails.medium.url));
                 }
                 
             }

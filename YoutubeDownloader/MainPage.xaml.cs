@@ -44,5 +44,10 @@ namespace YoutubeDownloader
         }
 
         public ListView GetVideosListView() { return VideoList; }
+
+        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainMenu.IsPaneOpen = !MainMenu.IsPaneOpen;
+        }
     }
 }
