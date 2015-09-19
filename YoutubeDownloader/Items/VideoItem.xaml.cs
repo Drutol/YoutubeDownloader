@@ -20,9 +20,8 @@ namespace YoutubeDownloader
             Dictionary<string, string> info = await YTDownload.GetVideoDetails(id);
 
             VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
-            VideoThumb.MinHeight = 50;
-            VideoThumb.MinWidth = 50;
             VideoTitle.Text = info["title"];
+            VideoAuthor.Text = info["author"];
         }
     }
 }

@@ -18,7 +18,7 @@ namespace YoutubeDownloader
 
     static class YTDownload
     {
-        const string API_KEY = "nope";
+        const string API_KEY = "AIzaSyCC1bN7iQNMc60AoocV7V0ub1VKPiib0zA";
         static public async System.Threading.Tasks.Task<List<string>> GetVideosInPlaylist(string playlistID)
         {
             List<string> videos = new List<string>();
@@ -65,6 +65,7 @@ namespace YoutubeDownloader
                 {
                     info.Add("title", (string)(item.snippet.title));
                     info.Add("thumbSmall", (string)(item.snippet.thumbnails.medium.url));
+                    info.Add("author", (string)(item.snippet.channelTitle));
                 }
                 
             }
