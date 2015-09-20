@@ -14,6 +14,7 @@ namespace YoutubeDownloader
         public VideoItem(string id)
         {
             InitializeComponent();
+            Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             this.id = id;
             PopulateVideoInfo(id);
         }
@@ -25,11 +26,12 @@ namespace YoutubeDownloader
             VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
             VideoTitle.Text = info["title"];
             VideoAuthor.Text = info["author"];
+
+            Visibility = Windows.UI.Xaml.Visibility.Visible;
         }
 
         public void SetProgress(int progress)
         {
-            System.Diagnostics.Debug.WriteLine(progress);
             Progress.Value = progress;
         }
     }

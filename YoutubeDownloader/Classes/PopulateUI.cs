@@ -29,7 +29,6 @@ namespace YoutubeDownloader
                     var page = (MainPage)frame.Content;
                     foreach (VideoItem vidItem in page.vidListItems)
                     {
-                        System.Diagnostics.Debug.WriteLine(vidItem.id + " " + itemId);
                         if (vidItem.id == itemId)
                         {
                             vidItem.SetProgress(progress);

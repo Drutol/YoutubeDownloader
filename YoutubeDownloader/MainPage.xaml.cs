@@ -8,6 +8,7 @@ using Windows.UI.Popups;
 using System.Linq;
 using System.IO;
 using System;
+using Windows.Media.Transcoding;
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -45,52 +46,75 @@ namespace YoutubeDownloader
             }
 
 
-            BoxID.Text = ApplicationData.Current.LocalFolder.Path;
-            try
+            foreach (VideoItem videoItem in vidListItems)
             {
-                await System.Threading.Tasks.Task.Run(() =>
-                 {
-                     // Our test youtube link
-                     string link = "https://www.youtube.com/watch?v=a97Acuqudxo";
-
-                     IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
-
-                     VideoInfo vid = videoInfos
-                         .Where(info => info.CanExtractAudio)
-                         .OrderByDescending(info => info.AudioBitrate)
-                         .First();
-
-                     if (vid.RequiresDecryption)
+                try
+                {
+                    await System.Threading.Tasks.Task.Run(() =>
                      {
-                         DownloadUrlResolver.DecryptDownloadUrl(vid);
-                     }
+                         // Our test youtube link
+                         string link = "https://www.youtube.com/watch?v=" + videoItem.id;
 
-                     YTDownload.DownloadVideo(vid.DownloadUrl, "file.lol", "a97Acuqudxo");
+                         IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
 
-                     //HttpClient http = new System.Net.Http.HttpClient();
-                     //HttpResponseMessage response = await http.GetAsync(vid.DownloadUrl);
+                         VideoInfo vid = null;
 
-                     //Stream webresponse = await response.Content.ReadAsStreamAsync();
+                         string format = "";
 
+                         foreach (var item in videoInfos)
+                         {
 
-                     //StreamReader reader = new StreamReader(webresponse);
+                             if (item.DownloadUrl.Contains("mime=audio/mp4"))
+                             {
+                                 vid = item;
+                                 format = ".mp4";
+                                 break;
+                             }
+                         }
+                         if (vid == null)
+                         {
+                             foreach (var item in videoInfos)
+                             {
+                                 if (item.DownloadUrl.Contains("mime=audio"))
+                                 {
+                                     vid = item;
+                                     format = ".webm";
+                                     break;
+                                 }
+                             }
+                         }
 
+                         if (vid != null)
+                         {
+                             if (vid.RequiresDecryption)
+                             {
+                                 DownloadUrlResolver.DecryptDownloadUrl(vid);
+                             }
 
-                     //reader.BaseStream.Seek(0, SeekOrigin.Begin);
-                     //reader.BaseStream.CopyTo(fileStream);
-                 });
-            }
-            catch (Exception exc)
-            {
-                MessageDialog dialog = new MessageDialog(exc.Message);
-                await dialog.ShowAsync();
+                             System.Diagnostics.Debug.WriteLine("Found for :" + vid.Title);
+
+                             YTDownload.DownloadVideo(vid.DownloadUrl, CleanFileName(vid.Title + format), videoItem.id);
+                         }
+                     });
+                }
+                catch (Exception exc)
+                {
+                    MessageDialog dialog = new MessageDialog(exc.Message);
+                    await dialog.ShowAsync();
+                }
             }
 
 
             //BoxID.Text = vid.DownloadUrl;
+            //MediaTranscoder trans = new MediaTranscoder();
+            // trans.
 
 
+        }
 
+        private static string CleanFileName(string fileName)
+        {
+            return Path.GetInvalidFileNameChars().Aggregate(fileName, (current, c) => current.Replace(c.ToString(), string.Empty));
         }
 
         public ListView GetVideosListView() { return VideoList; }
