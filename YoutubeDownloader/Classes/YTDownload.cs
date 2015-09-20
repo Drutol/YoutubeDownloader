@@ -6,6 +6,10 @@ using System.Text;
 using System.Net;
 using System.IO;
 using Windows.UI.Popups;
+using System.Net.Http;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Controls;
 
 namespace YoutubeDownloader
 {
@@ -120,6 +124,49 @@ namespace YoutubeDownloader
             dynamic objResponse = JsonConvert.DeserializeObject(responseString);
 
             return objResponse;
+        }
+
+        static async public void DownloadVideo(string url,string filename,string id)
+        {
+            try
+            {
+                HttpClientHandler aHandler = new HttpClientHandler();
+                aHandler.ClientCertificateOptions = ClientCertificateOption.Automatic;
+                HttpClient aClient = new HttpClient(aHandler);
+                aClient.DefaultRequestHeaders.ExpectContinue = false;
+                HttpResponseMessage response = await aClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead); // Important! ResponseHeadersRead.
+
+                var audioFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+                var fs = await audioFile.OpenAsync(FileAccessMode.ReadWrite);
+
+                Stream stream = await response.Content.ReadAsStreamAsync();
+                ulong totalBytes = (ulong)response.Content.Headers.ContentLength;
+                IInputStream inputStream = stream.AsInputStream();
+                ulong totalBytesRead = 0;
+                while (true)
+                {
+                    // Read from the web.
+                    IBuffer buffer = new Windows.Storage.Streams.Buffer(1024);
+                    buffer = await inputStream.ReadAsync(buffer, buffer.Capacity, InputStreamOptions.None);
+
+                    if (buffer.Length == 0)
+                        break;
+
+                    // Report progress.
+                    totalBytesRead += buffer.Length;
+                    PopulateUI.UpdateVideoDownloadProgress(id, (int)((100 * totalBytesRead) / totalBytes)); 
+
+                    // Write to file.
+                    await fs.WriteAsync(buffer);
+                }
+                inputStream.Dispose();
+                fs.Dispose();
+            }
+            catch (Exception exc)
+            {
+                System.Diagnostics.Debug.WriteLine(exc.Message);
+            }
+
         }
 
 

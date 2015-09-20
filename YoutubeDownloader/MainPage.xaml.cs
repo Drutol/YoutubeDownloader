@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System.Net;
-using YoutubeExtractor;
-using System;
-using System.Net.Http;
-using Windows.UI.Popups;
+using System.Collections.ObjectModel;
 using Windows.Storage;
+using YoutubeExtractor;
+using Windows.UI.Popups;
+using System.Linq;
+using System.IO;
+using System;
+
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -24,61 +24,67 @@ namespace YoutubeDownloader
             InitializeComponent();
         }
 
+
+        public ObservableCollection<VideoItem> vidListItems;
         private async void BtnDownload_Click(object sender, RoutedEventArgs e)
         {
-
+            VideoItem vidItem;
             if (YTDownload.IsIdValid(BoxID.Text))
             {
+                vidListItems = new ObservableCollection<VideoItem>();
                 SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
                 List<string> videos = await YTDownload.GetVideosInPlaylist(BoxID.Text);
                 SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed;
                 foreach (var video in videos)
                 {
-                    VideoList.Items.Add(new VideoItem(video));
+                    vidItem = new VideoItem(video);
+                    vidListItems.Add(vidItem);
                 }
+
+                VideoList.ItemsSource = vidListItems;
             }
 
 
-            //BoxID.Text = ApplicationData.Current.LocalFolder.Path;
-            //try
-            //{
-            //    await System.Threading.Tasks.Task.Run(async () =>
-            //     {
-            //         StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-            //         StorageFile file = await storageFolder.CreateFileAsync("filez.lol");
-            //         var fileStream = await file.OpenStreamForWriteAsync();
-            //        // Our test youtube link
-            //        string link = "https://www.youtube.com/watch?v=wrdq_N_sLPY";
+            BoxID.Text = ApplicationData.Current.LocalFolder.Path;
+            try
+            {
+                await System.Threading.Tasks.Task.Run(() =>
+                 {
+                     // Our test youtube link
+                     string link = "https://www.youtube.com/watch?v=a97Acuqudxo";
 
-            //         IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
+                     IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
 
-            //         VideoInfo vid = videoInfos
-            //             .Where(info => info.CanExtractAudio)
-            //             .OrderByDescending(info => info.AudioBitrate)
-            //             .First();
+                     VideoInfo vid = videoInfos
+                         .Where(info => info.CanExtractAudio)
+                         .OrderByDescending(info => info.AudioBitrate)
+                         .First();
 
-            //         if (vid.RequiresDecryption)
-            //         {
-            //             DownloadUrlResolver.DecryptDownloadUrl(vid);
-            //         }
+                     if (vid.RequiresDecryption)
+                     {
+                         DownloadUrlResolver.DecryptDownloadUrl(vid);
+                     }
 
-            //         HttpClient http = new System.Net.Http.HttpClient();
-            //         HttpResponseMessage response = await http.GetAsync(vid.DownloadUrl);
-            //         Stream webresponse = await response.Content.ReadAsStreamAsync();
+                     YTDownload.DownloadVideo(vid.DownloadUrl, "file.lol", "a97Acuqudxo");
 
-            //         StreamReader reader = new StreamReader(webresponse);
+                     //HttpClient http = new System.Net.Http.HttpClient();
+                     //HttpResponseMessage response = await http.GetAsync(vid.DownloadUrl);
+
+                     //Stream webresponse = await response.Content.ReadAsStreamAsync();
 
 
-            //         reader.BaseStream.Seek(0, SeekOrigin.Begin);
-            //         reader.BaseStream.CopyTo(fileStream);
-            //     });
-            //}
-            //catch (Exception exc)
-            //{
-            //    MessageDialog dialog = new MessageDialog(exc.Message);
-            //    await dialog.ShowAsync();
-            //}
-           // fileStream.Dispose();
+                     //StreamReader reader = new StreamReader(webresponse);
+
+
+                     //reader.BaseStream.Seek(0, SeekOrigin.Begin);
+                     //reader.BaseStream.CopyTo(fileStream);
+                 });
+            }
+            catch (Exception exc)
+            {
+                MessageDialog dialog = new MessageDialog(exc.Message);
+                await dialog.ShowAsync();
+            }
 
 
             //BoxID.Text = vid.DownloadUrl;

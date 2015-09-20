@@ -40,6 +40,9 @@ namespace YoutubeDownloader
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
+        /// 
+
+
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
@@ -50,14 +53,13 @@ namespace YoutubeDownloader
             }
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
-
+            Windows.UI.Xaml.Controls.Frame rootFrame = Window.Current.Content as Windows.UI.Xaml.Controls.Frame;
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
+                rootFrame = new Windows.UI.Xaml.Controls.Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 

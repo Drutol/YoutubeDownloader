@@ -9,9 +9,12 @@ namespace YoutubeDownloader
 {
     public sealed partial class VideoItem : UserControl
     {
+        public string id;
+
         public VideoItem(string id)
         {
             InitializeComponent();
+            this.id = id;
             PopulateVideoInfo(id);
         }
 
@@ -22,6 +25,12 @@ namespace YoutubeDownloader
             VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
             VideoTitle.Text = info["title"];
             VideoAuthor.Text = info["author"];
+        }
+
+        public void SetProgress(int progress)
+        {
+            System.Diagnostics.Debug.WriteLine(progress);
+            Progress.Value = progress;
         }
     }
 }
