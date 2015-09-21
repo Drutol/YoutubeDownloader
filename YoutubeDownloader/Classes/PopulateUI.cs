@@ -42,7 +42,7 @@ namespace YoutubeDownloader
             }
             catch (Exception exc)
             {
-                System.Diagnostics.Debug.WriteLine("upd" + exc.Message);
+                System.Diagnostics.Debug.WriteLine(exc.Message);
 
             }
         }

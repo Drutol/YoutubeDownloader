@@ -10,18 +10,17 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ProgressBar x:Name="Progress" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="1920" Margin="0,0,-1806,0" Foreground="#66FE7C22" Background="#33FFFFFF" />
+        <ProgressBar x:Name="Progress" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="1920" Margin="0,0,-1806,0" Foreground="#66FE7C22" Background="#33FFFFFF"/>
         <Image x:Name="VideoThumb" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="94" Stretch="UniformToFill"/>
         <StackPanel Margin="108,0,-1701,25" Orientation="Horizontal">
-            <TextBlock x:Name="VideoTitle" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Loading..." VerticalAlignment="Bottom" Height="25" LineHeight="8" Width="Auto" RenderTransformOrigin="1.54,3.033"/>
+            <TextBlock x:Name="VideoTitle" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Loading..." VerticalAlignment="Bottom" Height="25" LineHeight="8" Width="Auto"/>
         </StackPanel>
         <StackPanel Margin="108,25,-1701,0" Orientation="Horizontal">
-            <TextBlock x:Name="VideoAuthor" Text="--" HorizontalAlignment="Left" Margin="10,0,-6,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="25" Width="33" RenderTransformOrigin="3.417,0.35"/>
+            <TextBlock x:Name="VideoAuthor" Text="--" HorizontalAlignment="Left" Margin="10,0,-6,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="25" Width="Auto"/>
         </StackPanel>
-        <TextBlock x:Name="ProgressPercentage" HorizontalAlignment="Left" Margin="1830,0,-1744,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="50" Width="90" TextAlignment="Center" Padding="{Binding ElementName=ProgressPercentage, Path=Height}"/>
 
 
 
 
-    </Grid>
+        </Grid>
 </UserControl>

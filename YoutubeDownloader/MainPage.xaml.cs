@@ -23,6 +23,7 @@ namespace YoutubeDownloader
         public MainPage()
         {
             InitializeComponent();
+            Settings.Init();
         }
 
 
@@ -46,63 +47,63 @@ namespace YoutubeDownloader
             }
 
 
-            foreach (VideoItem videoItem in vidListItems)
-            {
-                try
-                {
-                    await System.Threading.Tasks.Task.Run(() =>
-                     {
-                         // Our test youtube link
-                         string link = "https://www.youtube.com/watch?v=" + videoItem.id;
+            //foreach (VideoItem videoItem in vidListItems)
+            //{
+            //    try
+            //    {
+            //        await System.Threading.Tasks.Task.Run(() =>
+            //         {
+            //             // Our test youtube link
+            //             string link = "https://www.youtube.com/watch?v=" + videoItem.id;
 
-                         IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
+            //             IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
 
-                         VideoInfo vid = null;
+            //             VideoInfo vid = null;
 
-                         string format = "";
+            //             string format = "";
 
-                         foreach (var item in videoInfos)
-                         {
+            //             foreach (var item in videoInfos)
+            //             {
 
-                             if (item.DownloadUrl.Contains("mime=audio/mp4"))
-                             {
-                                 vid = item;
-                                 format = ".mp4";
-                                 break;
-                             }
-                         }
-                         if (vid == null)
-                         {
-                             foreach (var item in videoInfos)
-                             {
-                                 if (item.DownloadUrl.Contains("mime=audio"))
-                                 {
-                                     vid = item;
-                                     format = ".webm";
-                                     break;
-                                 }
-                             }
-                         }
+            //                 if (item.DownloadUrl.Contains("mime=audio/mp4"))
+            //                 {
+            //                     vid = item;
+            //                     format = ".mp4";
+            //                     break;
+            //                 }
+            //             }
+            //             if (vid == null)
+            //             {
+            //                 foreach (var item in videoInfos)
+            //                 {
+            //                     if (item.DownloadUrl.Contains("mime=audio"))
+            //                     {
+            //                         vid = item;
+            //                         format = ".webm";
+            //                         break;
+            //                     }
+            //                 }
+            //             }
 
-                         if (vid != null)
-                         {
-                             if (vid.RequiresDecryption)
-                             {
-                                 DownloadUrlResolver.DecryptDownloadUrl(vid);
-                             }
+            //             if (vid != null)
+            //             {
+            //                 if (vid.RequiresDecryption)
+            //                 {
+            //                     DownloadUrlResolver.DecryptDownloadUrl(vid);
+            //                 }
 
-                             System.Diagnostics.Debug.WriteLine("Found for :" + vid.Title);
+            //                 System.Diagnostics.Debug.WriteLine("Found for :" + vid.Title);
 
-                             YTDownload.DownloadVideo(vid.DownloadUrl, CleanFileName(vid.Title + format), videoItem.id);
-                         }
-                     });
-                }
-                catch (Exception exc)
-                {
-                    MessageDialog dialog = new MessageDialog(exc.Message);
-                    await dialog.ShowAsync();
-                }
-            }
+            //                 YTDownload.DownloadVideo(vid.DownloadUrl, , videoItem.id);
+            //             }
+            //         });
+            //    }
+            //    catch (Exception exc)
+            //    {
+            //        MessageDialog dialog = new MessageDialog(exc.Message);
+            //        await dialog.ShowAsync();
+            //    }
+            //}
 
 
             //BoxID.Text = vid.DownloadUrl;
@@ -112,16 +113,23 @@ namespace YoutubeDownloader
 
         }
 
-        private static string CleanFileName(string fileName)
-        {
-            return Path.GetInvalidFileNameChars().Aggregate(fileName, (current, c) => current.Replace(c.ToString(), string.Empty));
-        }
+
 
         public ListView GetVideosListView() { return VideoList; }
+        public void SetAutoDownloadSetting(string val)
+        {
+            SettingAutoDownload.IsOn = val == "True" ? true : false;
+        }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
             MainMenu.IsPaneOpen = !MainMenu.IsPaneOpen;
+        }
+
+        private void ChangeSetting(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggle = (ToggleSwitch)sender;
+            Settings.ChangeSetting(toggle.Name, Convert.ToString(toggle.IsOn));
         }
     }
 }

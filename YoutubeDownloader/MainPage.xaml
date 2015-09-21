@@ -10,26 +10,27 @@
     <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
 
         <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay"  IsPaneOpen="False" 
-               CompactPaneLength="50" OpenPaneLength="150">
+               CompactPaneLength="50" OpenPaneLength="280">
             <SplitView.Pane>
                 <StackPanel Background="Gray">
-                    <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
                     Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="MenuButton1" FontFamily="Segoe MDL2 Assets" Content="&#xE825;"
-                    Width="50" Height="50" Background="Transparent"/>
-                        <TextBlock Text="Button 1" FontSize="18" VerticalAlignment="Center" />
+                        <TextBlock Text="Settings" FontSize="18" VerticalAlignment="Center" TextAlignment="Center" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="MenuButton2" FontFamily="Segoe MDL2 Assets" Content="&#xE10F;"
-                        Width="50" Height="50" Background="Transparent"/>
-                        <TextBlock Text="Button 2" FontSize="18" VerticalAlignment="Center" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="MenuButton3" FontFamily="Segoe MDL2 Assets" Content="&#xE1D6;"
-                        Width="50" Height="50" Background="Transparent"/>
-                        <TextBlock Text="Button 3" FontSize="18" VerticalAlignment="Center" />
-                    </StackPanel>
+                    <Grid Height="131" Margin="50,0,0,0" Background="#7FB9B9B9">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="Start download automatically:"></TextBlock>
+                            <Grid>
+                                <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
+                            </Grid>
+
+                        </StackPanel>
+
+                    </Grid>
+                    <StackPanel Orientation="Horizontal"/>
+
+
                 </StackPanel>
             </SplitView.Pane>
             <SplitView.Content>
