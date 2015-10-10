@@ -70,7 +70,6 @@ namespace YoutubeDownloader
 
                 foreach (var item in videoInfos)
                 {
-
                     if (item.DownloadUrl.Contains("mime=audio/mp4"))
                     {
                         vid = item;
@@ -102,6 +101,7 @@ namespace YoutubeDownloader
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() =>
                 {                                  
                     downloadUrl = vid.DownloadUrl;
+                    title = vid.Title;
                     fileFormat = format;
                 });
             }

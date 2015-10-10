@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -161,6 +162,8 @@ namespace YoutubeDownloader
                 }
                 inputStream.Dispose();
                 fs.Dispose();
+
+                //TagProcessing.SetAlbumTag(filename, "lolme");
             }
             catch (Exception exc)
             {

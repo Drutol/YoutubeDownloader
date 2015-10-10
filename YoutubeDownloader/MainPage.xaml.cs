@@ -24,6 +24,8 @@ namespace YoutubeDownloader
         {
             InitializeComponent();
             Settings.Init();
+           // TagProcessing.Convert("test1.mp4");
+           // TagProcessing.SetAlbumTag("yup.mp3", "lolme");
         }
 
 
@@ -112,15 +114,19 @@ namespace YoutubeDownloader
 
 
         }
+        #region Setting Setters
+        internal void SetSetAlbumAsPlaylistNameSetting(string val)
+        {
+            SettingSetAlbumAsPlaylistName.IsOn = val == "True" ? true : false;
+        }
+        
 
-
-
-        public ListView GetVideosListView() { return VideoList; }
         public void SetAutoDownloadSetting(string val)
         {
             SettingAutoDownload.IsOn = val == "True" ? true : false;
         }
-
+        #endregion
+        public ListView GetVideosListView() { return VideoList; }
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
             MainMenu.IsPaneOpen = !MainMenu.IsPaneOpen;

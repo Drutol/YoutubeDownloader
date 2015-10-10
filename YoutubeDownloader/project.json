@@ -1,11 +1,13 @@
 ﻿{
   "dependencies": {
+    "ID3": "0.4.0-beta",
     "Microsoft.ApplicationInsights": "1.0.0",
     "Microsoft.ApplicationInsights.PersistenceChannel": "1.0.0",
     "Microsoft.ApplicationInsights.WindowsApps": "1.0.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
     "Newtonsoft.Json": "7.0.1",
     "System.Net.Http": "4.0.0",
+    "TagLib.Portable": "1.0.2",
     "YoutubeExtractor": "0.10.6"
   },
   "frameworks": {
