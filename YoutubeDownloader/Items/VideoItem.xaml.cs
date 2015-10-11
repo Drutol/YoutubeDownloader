@@ -37,18 +37,31 @@ namespace YoutubeDownloader
                 // Use dispatcher only to interact with the UI , putting the async method in there will block UI thread.
                 // Info is obtained in the line above and populated on the UI thread.
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                      {
-                          VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
-                          VideoTitle.Text = info["title"];
-                          VideoAuthor.Text = info["author"];
+                    {
+                        VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
+                        VideoTitle.Text = info["title"];
+                        VideoAuthor.Text = info["author"];
 
-                          Visibility = Windows.UI.Xaml.Visibility.Visible;
-                      });
+                        Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    });
+
                 await System.Threading.Tasks.Task.Run(() =>
+                    {
+                        PopulateVideoDownloadInfo();
+                    });
+
+                if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))              
+                    YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id);
+                else
                 {
-                    PopulateVideoDownloadInfo();
-                });
-                YTDownload.DownloadVideo(downloadUrl,Utils.CleanFileName(title + fileFormat),id);
+                    // Wait for manual download action.
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        btnDownload.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    });
+                }
+                
+                
             }
             catch(Exception exc)
             {
@@ -115,6 +128,11 @@ namespace YoutubeDownloader
         {
             Progress.Value = progress;
             VideoAuthor.Text = Convert.ToString(progress);
+        }
+
+        private void StartDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id);
         }
     }
 }

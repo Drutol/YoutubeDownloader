@@ -103,6 +103,7 @@
     <Compile Include="Classes\Utils.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\TagProcessing.cs" />
+    <Compile Include="Classes\VideoFormat.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

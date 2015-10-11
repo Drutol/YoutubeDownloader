@@ -47,72 +47,6 @@ namespace YoutubeDownloader
 
                 VideoList.ItemsSource = vidListItems;
             }
-
-
-            //foreach (VideoItem videoItem in vidListItems)
-            //{
-            //    try
-            //    {
-            //        await System.Threading.Tasks.Task.Run(() =>
-            //         {
-            //             // Our test youtube link
-            //             string link = "https://www.youtube.com/watch?v=" + videoItem.id;
-
-            //             IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
-
-            //             VideoInfo vid = null;
-
-            //             string format = "";
-
-            //             foreach (var item in videoInfos)
-            //             {
-
-            //                 if (item.DownloadUrl.Contains("mime=audio/mp4"))
-            //                 {
-            //                     vid = item;
-            //                     format = ".mp4";
-            //                     break;
-            //                 }
-            //             }
-            //             if (vid == null)
-            //             {
-            //                 foreach (var item in videoInfos)
-            //                 {
-            //                     if (item.DownloadUrl.Contains("mime=audio"))
-            //                     {
-            //                         vid = item;
-            //                         format = ".webm";
-            //                         break;
-            //                     }
-            //                 }
-            //             }
-
-            //             if (vid != null)
-            //             {
-            //                 if (vid.RequiresDecryption)
-            //                 {
-            //                     DownloadUrlResolver.DecryptDownloadUrl(vid);
-            //                 }
-
-            //                 System.Diagnostics.Debug.WriteLine("Found for :" + vid.Title);
-
-            //                 YTDownload.DownloadVideo(vid.DownloadUrl, , videoItem.id);
-            //             }
-            //         });
-            //    }
-            //    catch (Exception exc)
-            //    {
-            //        MessageDialog dialog = new MessageDialog(exc.Message);
-            //        await dialog.ShowAsync();
-            //    }
-            //}
-
-
-            //BoxID.Text = vid.DownloadUrl;
-            //MediaTranscoder trans = new MediaTranscoder();
-            // trans.
-
-
         }
         #region Setting Setters
         internal void SetSetAlbumAsPlaylistNameSetting(string val)
@@ -126,7 +60,7 @@ namespace YoutubeDownloader
             SettingAutoDownload.IsOn = val == "True" ? true : false;
         }
         #endregion
-        public ListView GetVideosListView() { return VideoList; }
+
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
             MainMenu.IsPaneOpen = !MainMenu.IsPaneOpen;

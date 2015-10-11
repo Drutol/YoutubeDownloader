@@ -41,7 +41,13 @@
                     <TextBox x:Name="BoxID" Margin="100,10,200,0" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" VerticalAlignment="Top" Width="Auto" Height="50"/>
                     <Button x:Name="BtnDownload" Content="Button" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="50" Width="185" Click="BtnDownload_Click"/>
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,25,0,0" TextWrapping="Wrap" Text="Playlist ID:" VerticalAlignment="Top" Height="20" Width="85"/>
-                    <ListView x:Name="VideoList" Height="1005" Margin="10,65,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Width="Auto"/>
+                    <ListView x:Name="VideoList" Height="1005" Margin="10,65,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Width="Auto">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
                     <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed"/>
                 </Grid>
             </SplitView.Content>
