@@ -8,12 +8,18 @@ using Windows.UI.Xaml.Controls;
 
 namespace YoutubeDownloader
 {
-    static class Settings
+    public static class Settings
     {
         public enum PossibleSettingsBool
         {
             SETTING_AUTO_DL,
             SETTING_ALBUM_PLAYLIST_NAME,
+        }
+
+        public enum PossibleOutputFormats
+        {
+            FORMAT_MP3 = 1,
+            FORMAT_MP4 = 2,
         }
         //private static IEnumerable<string> SettingsKeys = new List<string>() { "SettingAutoDownload" };
 
@@ -28,6 +34,8 @@ namespace YoutubeDownloader
                 // TODO : Move this to main page class.
                 page.SetAutoDownloadSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"]);
                 page.SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
+                page.SetOutputFormat((int)ApplicationData.Current.LocalSettings.Values["outFormat"]);
+
             });
 
         }
@@ -40,6 +48,11 @@ namespace YoutubeDownloader
 
             if (ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"] == null)
                 ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"] = "True";
+
+            //format
+            if (ApplicationData.Current.LocalSettings.Values["outFormat"] == null)
+                ApplicationData.Current.LocalSettings.Values["outFormat"] = (int)PossibleOutputFormats.FORMAT_MP3;
+
         }
 
         public static bool GetBoolSettingValueForKey(PossibleSettingsBool setting)
@@ -64,6 +77,11 @@ namespace YoutubeDownloader
         public static void ChangeSetting(string key,string value)
         {
             ApplicationData.Current.LocalSettings.Values[key] = value;
+        }
+
+        public static void ChangeFormat(PossibleOutputFormats format)
+        {
+            ApplicationData.Current.LocalSettings.Values["outFormat"] = (int)format;
         }
     }
 }

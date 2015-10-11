@@ -48,8 +48,9 @@ namespace YoutubeDownloader
                 VideoList.ItemsSource = vidListItems;
             }
         }
+        
         #region Setting Setters
-        internal void SetSetAlbumAsPlaylistNameSetting(string val)
+        public void SetSetAlbumAsPlaylistNameSetting(string val)
         {
             SettingSetAlbumAsPlaylistName.IsOn = val == "True" ? true : false;
         }
@@ -59,8 +60,14 @@ namespace YoutubeDownloader
         {
             SettingAutoDownload.IsOn = val == "True" ? true : false;
         }
-        #endregion
 
+        public void SetOutputFormat(int iFormat)
+        {
+            ComboOutputFormat.SelectedIndex = iFormat;
+        }
+        #endregion
+       
+        #region Settings Controls
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
             MainMenu.IsPaneOpen = !MainMenu.IsPaneOpen;
@@ -71,5 +78,16 @@ namespace YoutubeDownloader
             ToggleSwitch toggle = (ToggleSwitch)sender;
             Settings.ChangeSetting(toggle.Name, Convert.ToString(toggle.IsOn));
         }
+
+
+        #endregion
+
+        private void ChangePrefferedFormat(object sender, object e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+
+            Settings.ChangeFormat((Settings.PossibleOutputFormats)cmb.SelectedIndex);
+        }
+
     }
 }

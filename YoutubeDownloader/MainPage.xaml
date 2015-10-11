@@ -18,7 +18,7 @@
                     Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
                         <TextBlock Text="Settings" FontSize="18" VerticalAlignment="Center" TextAlignment="Center" />
                     </StackPanel>
-                    <Grid Height="120" Margin="50,0,0,0" Background="#7FB9B9B9">
+                    <Grid Height="203" Margin="50,0,0,0" Background="#7FB9B9B9">
                         <StackPanel HorizontalAlignment="Center">
                             <TextBlock Text="Start download automatically:" TextAlignment="Center"/>
                             <Grid>
@@ -28,6 +28,14 @@
                             <Grid>
                                 <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
                             </Grid>
+                            <TextBlock Text="Output format:" TextAlignment="Center"/>
+                            <Grid Height="2">
+                                <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="29,10,29,-49" SelectionChanged="ChangePrefferedFormat">
+                                    <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
+                                    <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
+                                </ComboBox>
+                            </Grid>
+
                         </StackPanel>
                     </Grid>
 
