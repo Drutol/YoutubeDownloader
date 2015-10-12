@@ -24,8 +24,7 @@ namespace YoutubeDownloader
         {
             InitializeComponent();
             Settings.Init();
-           // TagProcessing.Convert("test1.mp4");
-           // TagProcessing.SetAlbumTag("yup.mp3", "lolme");
+            
         }
 
 
