@@ -11,6 +11,7 @@ using System.Net.Http;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
+using Windows.Media.MediaProperties;
 
 namespace YoutubeDownloader
 {
@@ -19,6 +20,13 @@ namespace YoutubeDownloader
     {
         REQUEST_PLAYLIST,
         REQUEST_VIDEO,
+    }
+
+    public enum IdType
+    {
+        TYPE_PLAYLIST,
+        TYPE_VIDEO,
+        INVALID,
     }
 
     static class YTDownload
@@ -84,9 +92,12 @@ namespace YoutubeDownloader
             return info;
         }
 
-        public static bool IsIdValid(string id)
+        public static IdType IsIdValid(string id)
         {
-            return id.Length == 11 || id.Length == 34;
+            if(id.Length != 11 && id.Length != 34) return IdType.INVALID;
+
+            if (id.Length == 11) return IdType.TYPE_VIDEO;
+            else return IdType.TYPE_PLAYLIST;
         }
 
         static private WebRequest GetWebRequest(RequestTypes RequestType,string id)
@@ -163,7 +174,7 @@ namespace YoutubeDownloader
                 inputStream.Dispose();
                 fs.Dispose();
 
-                //TagProcessing.SetAlbumTag(filename, "lolme");
+                VideoFormat.VideoConvert(audioFile, MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High));
             }
             catch (Exception exc)
             {

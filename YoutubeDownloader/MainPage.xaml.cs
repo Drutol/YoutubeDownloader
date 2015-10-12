@@ -33,20 +33,31 @@ namespace YoutubeDownloader
         private async void BtnDownload_Click(object sender, RoutedEventArgs e)
         {
             VideoItem vidItem;
-            if (YTDownload.IsIdValid(BoxID.Text))
+            SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
+            vidListItems = new ObservableCollection<VideoItem>();
+            switch (YTDownload.IsIdValid(BoxID.Text))
             {
-                vidListItems = new ObservableCollection<VideoItem>();
-                SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
-                List<string> videos = await YTDownload.GetVideosInPlaylist(BoxID.Text);
-                SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed;
-                foreach (var video in videos)
-                {
-                    vidItem = new VideoItem(video);
+                case IdType.TYPE_VIDEO:
+                    vidItem = new VideoItem(BoxID.Text);
                     vidListItems.Add(vidItem);
-                }
-
-                VideoList.ItemsSource = vidListItems;
+                    break;
+                case IdType.TYPE_PLAYLIST:
+                    List<string> videos = await YTDownload.GetVideosInPlaylist(BoxID.Text);
+                    foreach (var video in videos)
+                    {
+                        vidItem = new VideoItem(video);
+                        vidListItems.Add(vidItem);
+                    }
+                    break;
+                case IdType.INVALID:
+                    MessageDialog dialog = new MessageDialog("YouTube video got injured in an horrible accident, sorry it's ID is INVALID","God F&#$%*@ D%&#");
+                    await dialog.ShowAsync();
+                    break;
+                default:
+                    throw new Exception("Invalid enumm - id valid");
             }
+            SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed;
+            VideoList.ItemsSource = vidListItems;
         }
         
         #region Setting Setters

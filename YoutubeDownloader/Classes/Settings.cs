@@ -71,6 +71,7 @@ namespace YoutubeDownloader
             }
 
             return value == "True" ? true : false;
+
         }
 
 
