@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Core;
+using Windows.Media.MediaProperties;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -53,6 +54,10 @@ namespace YoutubeDownloader
             if (ApplicationData.Current.LocalSettings.Values["outFormat"] == null)
                 ApplicationData.Current.LocalSettings.Values["outFormat"] = (int)PossibleOutputFormats.FORMAT_MP3;
 
+            //quality
+            if (ApplicationData.Current.LocalSettings.Values["outQuality"] == null)
+                ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)AudioEncodingQuality.High;
+
         }
 
         public static bool GetBoolSettingValueForKey(PossibleSettingsBool setting)
@@ -83,6 +88,11 @@ namespace YoutubeDownloader
         public static void ChangeFormat(PossibleOutputFormats format)
         {
             ApplicationData.Current.LocalSettings.Values["outFormat"] = (int)format;
+        }
+
+        public static void ChangeQuality(AudioEncodingQuality quality)
+        {
+            ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)quality;
         }
     }
 }
