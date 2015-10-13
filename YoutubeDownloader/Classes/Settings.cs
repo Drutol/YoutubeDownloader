@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Core;
+using Windows.Media.MediaProperties;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -20,13 +21,6 @@ namespace YoutubeDownloader
         {
             FORMAT_MP3 = 1,
             FORMAT_MP4 = 2,
-        }
-
-        public enum PossibleOutputQuality
-        {
-            QUALITY_LOW = 1,
-            QUALITY_MEDIUM = 2,
-            QUALITY_HIGH = 3,
         }
         //private static IEnumerable<string> SettingsKeys = new List<string>() { "SettingAutoDownload" };
 
@@ -62,7 +56,7 @@ namespace YoutubeDownloader
 
             //quality
             if (ApplicationData.Current.LocalSettings.Values["outQuality"] == null)
-                ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)PossibleOutputQuality.QUALITY_HIGH;
+                ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)AudioEncodingQuality.High;
 
         }
 
@@ -96,7 +90,7 @@ namespace YoutubeDownloader
             ApplicationData.Current.LocalSettings.Values["outFormat"] = (int)format;
         }
 
-        public static void ChangeQuality(PossibleOutputQuality quality)
+        public static void ChangeQuality(AudioEncodingQuality quality)
         {
             ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)quality;
         }
