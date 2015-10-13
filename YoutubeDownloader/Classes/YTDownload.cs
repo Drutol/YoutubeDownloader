@@ -174,7 +174,8 @@ namespace YoutubeDownloader
                 inputStream.Dispose();
                 fs.Dispose();
 
-                VideoFormat.VideoConvert(audioFile, MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High));
+                VideoFormat.VideoConvert(audioFile, MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High),id);
+                await audioFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
             catch (Exception exc)
             {
