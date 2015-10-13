@@ -21,6 +21,13 @@ namespace YoutubeDownloader
             FORMAT_MP3 = 1,
             FORMAT_MP4 = 2,
         }
+
+        public enum PossibleOutputQuality
+        {
+            QUALITY_LOW = 1,
+            QUALITY_MEDIUM = 2,
+            QUALITY_HIGH = 3,
+        }
         //private static IEnumerable<string> SettingsKeys = new List<string>() { "SettingAutoDownload" };
 
         public static async void Init()
@@ -53,6 +60,10 @@ namespace YoutubeDownloader
             if (ApplicationData.Current.LocalSettings.Values["outFormat"] == null)
                 ApplicationData.Current.LocalSettings.Values["outFormat"] = (int)PossibleOutputFormats.FORMAT_MP3;
 
+            //quality
+            if (ApplicationData.Current.LocalSettings.Values["outQuality"] == null)
+                ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)PossibleOutputQuality.QUALITY_HIGH;
+
         }
 
         public static bool GetBoolSettingValueForKey(PossibleSettingsBool setting)
@@ -83,6 +94,11 @@ namespace YoutubeDownloader
         public static void ChangeFormat(PossibleOutputFormats format)
         {
             ApplicationData.Current.LocalSettings.Values["outFormat"] = (int)format;
+        }
+
+        public static void ChangeQuality(PossibleOutputQuality quality)
+        {
+            ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)quality;
         }
     }
 }
