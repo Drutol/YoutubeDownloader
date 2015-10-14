@@ -39,6 +39,7 @@ namespace YoutubeDownloader
                 page.SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
                 page.SetOutputFormat((int)ApplicationData.Current.LocalSettings.Values["outFormat"]);
                 page.SetOutputFolderName((string)ApplicationData.Current.LocalSettings.Values["outFolder"]);
+                page.SetOutputQuality((int)ApplicationData.Current.LocalSettings.Values["outQuality"]);
 
             });
 

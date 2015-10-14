@@ -17,7 +17,11 @@ namespace YoutubeDownloader
         {
             return Path.GetInvalidFileNameChars().Aggregate(fileName, (current, c) => current.Replace(c.ToString(), string.Empty));
         }
-
+        /// <summary>
+        /// Tries to delete file n times , each try is postponed by 5 seconds.
+        /// </summary>
+        /// <param name="nRetries"></param>
+        /// <param name="file"></param>
         public static void TryToRemoveFile(int nRetries,StorageFile file)
         {
             Task.Run( async () =>

@@ -12,6 +12,7 @@ using Windows.Media.Transcoding;
 using Windows.Storage.Pickers;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
+using Windows.Media.MediaProperties;
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -79,6 +80,11 @@ namespace YoutubeDownloader
             ComboOutputFormat.SelectedIndex = iFormat;
         }
 
+        public void SetOutputQuality(int iQuality)
+        {
+            ComboOutputQuality.SelectedIndex = iQuality;
+        }
+
         public void SetOutputFolderName(string name)
         {
             SettingOutputFolder.Text = name == "" ? "Music library" : name;
@@ -89,6 +95,8 @@ namespace YoutubeDownloader
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
             MainMenu.IsPaneOpen = !MainMenu.IsPaneOpen;
+            if (!MainMenu.IsPaneOpen)
+                HideAllPaneGrids();
         }
 
         private void ChangeSetting(object sender, RoutedEventArgs e)
@@ -107,17 +115,25 @@ namespace YoutubeDownloader
             Settings.ChangeFormat((Settings.PossibleOutputFormats)cmb.SelectedIndex);
         }
 
+        private void ChangePrefferedQuality(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+
+            Settings.ChangeQuality((AudioEncodingQuality)cmb.SelectedIndex);
+        }
+
         private async void SelectOutputFolder(object sender, RoutedEventArgs e)
         {
             try
             {
                 var picker = new FolderPicker { ViewMode = PickerViewMode.List };
-                picker.FileTypeFilter.Add(".fake");
+                picker.FileTypeFilter.Add(".fake"); //Avoid random files from displaying
 
                 var folder = await picker.PickSingleFolderAsync();
                 if (folder == null) return;
 
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("outFolder", folder);
+                
                 Settings.SetOutputFolderName(folder.Name);
                 SettingOutputFolder.Text = folder.Name;         
             }
@@ -126,5 +142,37 @@ namespace YoutubeDownloader
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
+
+        private void OpenOutputFolder(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            HamburgerButton_Click(null,null);
+            GridSettings.Visibility = MainMenu.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void BtnSettingsInner_Click(object sender, RoutedEventArgs e)
+        {
+            GridSettings.Visibility = GridSettings.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        #region Helpers
+        private void HideAllPaneGrids()
+        {
+            GridSettings.Visibility = Visibility.Collapsed;
+        }
+
+        private void HideAllPaneGrids(Grid exception)
+        {
+            HideAllPaneGrids();
+            exception.Visibility = Visibility.Visible;
+        }
+
+        #endregion
+
+
     }
 }
