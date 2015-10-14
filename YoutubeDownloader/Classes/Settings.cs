@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -36,11 +38,14 @@ namespace YoutubeDownloader
                 page.SetAutoDownloadSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"]);
                 page.SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
                 page.SetOutputFormat((int)ApplicationData.Current.LocalSettings.Values["outFormat"]);
+                page.SetOutputFolderName((string)ApplicationData.Current.LocalSettings.Values["outFolder"]);
 
             });
 
         }
-
+        /// <summary>
+        /// Function sets default values for each setting if they do not exist.
+        /// </summary>
         public static void CheckDefaultSettings()
         {
             //bools
@@ -57,6 +62,10 @@ namespace YoutubeDownloader
             //quality
             if (ApplicationData.Current.LocalSettings.Values["outQuality"] == null)
                 ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)AudioEncodingQuality.High;
+
+            //output
+            if (ApplicationData.Current.LocalSettings.Values["outFolder"] == null)
+                ApplicationData.Current.LocalSettings.Values["outFolder"] = ""; //empty as for default Music folder.
 
         }
 
@@ -76,9 +85,12 @@ namespace YoutubeDownloader
             }
 
             return value == "True" ? true : false;
-
         }
 
+        public static PossibleOutputFormats GetPrefferedOutputFormat()
+        {
+            return (PossibleOutputFormats)ApplicationData.Current.LocalSettings.Values["outFormat"];
+        }
 
         public static void ChangeSetting(string key,string value)
         {
@@ -93,6 +105,25 @@ namespace YoutubeDownloader
         public static void ChangeQuality(AudioEncodingQuality quality)
         {
             ApplicationData.Current.LocalSettings.Values["outQuality"] = (int)quality;
+        }
+
+        public static void SetOutputFolderName(string name)
+        {
+            ApplicationData.Current.LocalSettings.Values["outFolder"] = name;
+        }
+        /// <summary>
+        /// Returns folder set by user , returns Music Library by default.
+        /// </summary>
+        /// <returns>
+        /// Output folder.
+        /// </returns>
+        public static async Task<IStorageFolder> GetOutputFolder()
+        {
+            if((string)ApplicationData.Current.LocalSettings.Values["outFolder"] == "")
+            {
+                return KnownFolders.MusicLibrary;
+            }
+            return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync("outFolder",AccessCacheOptions.None);
         }
     }
 }

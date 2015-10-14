@@ -9,6 +9,9 @@ using System.Linq;
 using System.IO;
 using System;
 using Windows.Media.Transcoding;
+using Windows.Storage.Pickers;
+using System.Threading.Tasks;
+using Windows.Storage.AccessCache;
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -75,6 +78,11 @@ namespace YoutubeDownloader
         {
             ComboOutputFormat.SelectedIndex = iFormat;
         }
+
+        public void SetOutputFolderName(string name)
+        {
+            SettingOutputFolder.Text = name == "" ? "Music library" : name;
+        }
         #endregion
        
         #region Settings Controls
@@ -99,5 +107,24 @@ namespace YoutubeDownloader
             Settings.ChangeFormat((Settings.PossibleOutputFormats)cmb.SelectedIndex);
         }
 
+        private async void SelectOutputFolder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var picker = new FolderPicker { ViewMode = PickerViewMode.List };
+                picker.FileTypeFilter.Add(".fake");
+
+                var folder = await picker.PickSingleFolderAsync();
+                if (folder == null) return;
+
+                StorageApplicationPermissions.FutureAccessList.AddOrReplace("outFolder", folder);
+                Settings.SetOutputFolderName(folder.Name);
+                SettingOutputFolder.Text = folder.Name;         
+            }
+            catch (TaskCanceledException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+        }
     }
 }

@@ -148,7 +148,8 @@ namespace YoutubeDownloader
                 aClient.DefaultRequestHeaders.ExpectContinue = false;
                 HttpResponseMessage response = await aClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead); // Important! ResponseHeadersRead.
 
-                var audioFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+                var outputFolder = await Settings.GetOutputFolder();
+                var audioFile = await outputFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
                 var fs = await audioFile.OpenAsync(FileAccessMode.ReadWrite);
 
                 Stream stream = await response.Content.ReadAsStreamAsync();
@@ -174,8 +175,7 @@ namespace YoutubeDownloader
                 inputStream.Dispose();
                 fs.Dispose();
 
-                VideoFormat.VideoConvert(audioFile, MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High),id);
-                await audioFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                await VideoFormat.VideoConvert(audioFile, MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High),id);
             }
             catch (Exception exc)
             {
@@ -184,7 +184,7 @@ namespace YoutubeDownloader
 
         }
 
-
+        
 
     }
 }

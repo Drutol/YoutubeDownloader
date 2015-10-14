@@ -14,12 +14,11 @@
             <SplitView.Pane>
                 <StackPanel Background="LightGray">
                     <StackPanel Orientation="Horizontal">
-                        <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
-                    Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
+                        <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
                         <TextBlock Text="Settings" FontSize="18" VerticalAlignment="Center" TextAlignment="Center" />
                     </StackPanel>
-                    <Grid Height="290" Margin="50,0,0,0" Background="#7FB9B9B9">
-                        <StackPanel HorizontalAlignment="Center">
+                    <Grid Height="376" Margin="50,0,0,0" Background="#7FB9B9B9">
+                        <StackPanel HorizontalAlignment="Center" Width="230">
                             <TextBlock Text="Start download automatically:" TextAlignment="Center"/>
                             <Grid>
                                 <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
@@ -29,19 +28,24 @@
                                 <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
                             </Grid>
                             <TextBlock Text="Output format:" TextAlignment="Center"/>
-                            <Grid Height="2">
-                                <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="29,10,29,-49" SelectionChanged="ChangePrefferedFormat">
+                            <Grid Height="60">
+                                <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedFormat">
                                     <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
                                     <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
                                 </ComboBox>
                             </Grid>
-                            <TextBlock Text="Output quality:" TextAlignment="Center" Margin="10,60,10,0"/>
-                            <Grid Height="2">
-                                <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="29,10,29,-49" SelectionChanged="ChangePrefferedFormat">
+                            <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5"/>
+                            <Grid Height="60">
+                                <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedFormat">
                                     <TextBlock x:Name="OptQualityLow" Text="Low" HorizontalAlignment="Stretch" />
                                     <TextBlock x:Name="OptQualityMedium" Text="Medium" HorizontalAlignment="Stretch" />
                                     <TextBlock x:Name="OptQualityHigh" Text="High" HorizontalAlignment="Stretch" />
                                 </ComboBox>
+                            </Grid>
+                            <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
+                            <Grid Height="50">
+                                <Button Margin="179,12,0,11" Width="41"  FontFamily="Segoe MDL2 Assets" Content="&#57612;" Click="SelectOutputFolder" />
+                                <TextBox x:Name="SettingOutputFolder" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="164" IsReadOnly="True"/>
                             </Grid>
 
                         </StackPanel>

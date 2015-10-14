@@ -12,13 +12,17 @@ namespace YoutubeDownloader
 {
     public static class VideoFormat
     {
-        public static async void VideoConvert(StorageFile file,MediaEncodingProfile mediaProfile,string id)
+        public static async Task<bool> VideoConvert(StorageFile file,MediaEncodingProfile mediaProfile,string id)
         {
             try
-            {                                             
-                var audioFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(file.Name.Replace("mp4","mp3"), CreationCollisionOption.ReplaceExisting);
+            {
+                var outFolder = await Settings.GetOutputFolder();                                          
+                var audioFile = await outFolder.CreateFileAsync(file.Name.Replace("mp4","mp3"), CreationCollisionOption.ReplaceExisting);
 
                 MediaTranscoder transcoder = new MediaTranscoder();
+
+                System.Diagnostics.Debug.WriteLine(file.Name);
+                System.Diagnostics.Debug.WriteLine(audioFile.Name);
 
                 var result = await transcoder.PrepareFileTranscodeAsync(file, audioFile, mediaProfile);
                 
@@ -30,19 +34,28 @@ namespace YoutubeDownloader
                         {
                             PopulateUI.UpdateVideoDownloadProgress(id,(int)percent);
                         });
-                }             
+                    transcodeOp.Completed +=
+                        new AsyncActionWithProgressCompletedHandler<double>( (IAsyncActionWithProgress<double> asyncInfo, AsyncStatus status) =>
+                        {
+                            Utils.TryToRemoveFile(5, file);
+                        });
+                }
+                             
             }
             catch (Exception exc)
             {
-                System.Diagnostics.Debug.WriteLine("Conversion(string)" + exc.Message);
+                System.Diagnostics.Debug.WriteLine("Conversion : " + exc.Message);
+                return false;
             }
 
-            
+            //Utils.TryToRemoveFile(5, file);
+            return true;
         }
         public static async void VideoConvert(string fileName,MediaEncodingProfile mediaProfile,string id)
         {
-            StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
-            VideoConvert(file, mediaProfile,id);
+            var outFolder = await Settings.GetOutputFolder();
+            StorageFile file = await outFolder.GetFileAsync(fileName);
+            await VideoConvert(file, mediaProfile, id);
         }
 
     }
