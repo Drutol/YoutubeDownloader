@@ -16,6 +16,10 @@ namespace YoutubeDownloader
         public string downloadUrl;
         public string title;
         public string fileFormat;
+        
+        public string tagAlbum = "";
+        public string tagTitle = "";
+        public string tagArtist = "";
 
         public  VideoItem(string id)
         {
@@ -67,6 +71,11 @@ namespace YoutubeDownloader
             {
                 System.Diagnostics.Debug.WriteLine(exc.Message);
             }
+        }
+
+        internal void SetConvProgress(int progress)
+        {
+            ConversionProgress.Value = progress;
         }
 
         private async void PopulateVideoDownloadInfo()
@@ -127,12 +136,30 @@ namespace YoutubeDownloader
         public void SetProgress(int progress)
         {
             Progress.Value = progress;
-            VideoAuthor.Text = Convert.ToString(progress);
         }
 
         private void StartDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id);
+        }
+
+        private void SetMusicTags(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            tagArtist = TagArtist.Text;
+            tagAlbum = TagAlbum.Text;
+            tagTitle = TagTitle.Text;
+
+
+            VideoItemFlyout.Hide();
+            
+        }
+
+        private void PopulateFlyout(object sender, object e)
+        {
+            TagAlbum.Text = tagAlbum;
+            TagTitle.Text = tagTitle;
+            TagArtist.Text = tagArtist;
+            TagNumber.Text = "0";
         }
     }
 }

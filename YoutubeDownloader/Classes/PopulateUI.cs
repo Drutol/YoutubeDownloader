@@ -14,12 +14,12 @@ namespace YoutubeDownloader
 {
     class PopulateUI
     {
-        //public async void HandleException(string msg)
-        //{
-        //    MessageDialog dialog = new MessageDialog("LOL");
-        //    await dialog.ShowAsync();
-        //}
-        public static async void UpdateVideoDownloadProgress(string itemId,int progress)
+        public enum ProgressType
+        {
+            PROGRESS_DL,
+            PROGRESS_CONV,
+        }
+        public static async void UpdateVideoManipulationProgress(string itemId,int progress,ProgressType type)
         {
             try
             {
@@ -31,7 +31,10 @@ namespace YoutubeDownloader
                     {
                         if (vidItem.id == itemId)
                         {
-                            vidItem.SetProgress(progress);
+                            if (type == ProgressType.PROGRESS_DL)
+                                vidItem.SetProgress(progress);
+                            else if (type == ProgressType.PROGRESS_CONV)
+                                vidItem.SetConvProgress(progress);
                             return;
                         }
                     }

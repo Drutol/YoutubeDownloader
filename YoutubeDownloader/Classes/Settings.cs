@@ -93,6 +93,11 @@ namespace YoutubeDownloader
             return (PossibleOutputFormats)ApplicationData.Current.LocalSettings.Values["outFormat"];
         }
 
+        public static AudioEncodingQuality GetPrefferedOutputQuality()
+        {
+            return (AudioEncodingQuality)ApplicationData.Current.LocalSettings.Values["outQuality"];
+        }
+
         public static void ChangeSetting(string key,string value)
         {
             ApplicationData.Current.LocalSettings.Values[key] = value;
@@ -111,6 +116,22 @@ namespace YoutubeDownloader
         public static void SetOutputFolderName(string name)
         {
             ApplicationData.Current.LocalSettings.Values["outFolder"] = name;
+        }
+
+        public static MediaEncodingProfile GetPrefferedEncodingProfile()
+        {
+            switch (GetPrefferedOutputFormat())
+            {
+                case PossibleOutputFormats.FORMAT_MP3:
+                    return MediaEncodingProfile.CreateMp3(GetPrefferedOutputQuality());
+                case PossibleOutputFormats.FORMAT_MP4:
+                    throw new Exception("Source is MP4");
+                default:
+                    break;
+            }
+
+            throw new Exception("Unknown format");
+            
         }
         /// <summary>
         /// Returns folder set by user , returns Music Library by default.

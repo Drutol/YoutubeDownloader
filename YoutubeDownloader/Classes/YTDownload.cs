@@ -167,7 +167,7 @@ namespace YoutubeDownloader
 
                     // Report progress.
                     totalBytesRead += buffer.Length;
-                    PopulateUI.UpdateVideoDownloadProgress(id, (int)((100 * totalBytesRead) / totalBytes)); 
+                    PopulateUI.UpdateVideoManipulationProgress(id, (int)((100 * totalBytesRead) / totalBytes),PopulateUI.ProgressType.PROGRESS_DL); 
 
                     // Write to file.
                     await fs.WriteAsync(buffer);
@@ -175,7 +175,7 @@ namespace YoutubeDownloader
                 inputStream.Dispose();
                 fs.Dispose();
 
-                await VideoFormat.VideoConvert(audioFile, MediaEncodingProfile.CreateMp3(AudioEncodingQuality.High),id);
+                await VideoFormat.VideoConvert(audioFile, Settings.GetPrefferedEncodingProfile() ,id);
             }
             catch (Exception exc)
             {

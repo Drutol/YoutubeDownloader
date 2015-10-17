@@ -12,7 +12,9 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="120" />
         </Grid.ColumnDefinitions>
+
         <ProgressBar x:Name="Progress" HorizontalAlignment="Stretch" Height="50" VerticalAlignment="Top" Width="Auto" Foreground="#66FE7C22" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3"/>
+        <ProgressBar x:Name="ConversionProgress" HorizontalAlignment="Stretch" Height="7" VerticalAlignment="Top" Width="Auto" Foreground="#B2FE7C22" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,43,0,0"/>
         <Image x:Name="VideoThumb" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="94" Stretch="UniformToFill" Grid.Column="0"/>
         <StackPanel Orientation="Vertical" Grid.Column="1">
             <StackPanel Orientation="Horizontal" Width="Auto">
@@ -22,11 +24,42 @@
                 <TextBlock x:Name="VideoAuthor" Text="--" HorizontalAlignment="Left" Margin="10,0,-6,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="25" Width="Auto"/>
             </StackPanel>
         </StackPanel>
-        <Button x:Name="btnDownload" Content="Download" HorizontalAlignment="Right" Margin="0,10,24,0" VerticalAlignment="Top" Height="30" Visibility="Visible" FontSize="13.333" Grid.Column="2" Click="StartDownload"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="2">
+            <Button x:Name="btnDownload"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="StartDownload">
+                <SymbolIcon Symbol="Download"/>
+            </Button>
+            <Button x:Name="btnEditTags"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333">
+                <SymbolIcon Symbol="MusicInfo"/>
+                <Button.Flyout>
+                    <Flyout Opened="PopulateFlyout" x:Name="VideoItemFlyout" Placement="Left">
+                        <StackPanel Orientation="Vertical" Width="200" Margin="5">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Margin" Value="5"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock Text="Title"></TextBlock>
+                            <TextBox x:Name="TagTitle"></TextBox>
+                            <TextBlock Text="Artist"></TextBlock>
+                            <TextBox x:Name="TagArtist"></TextBox>
+                            <TextBlock Text="Album"></TextBlock>
+                            <TextBox x:Name="TagAlbum"></TextBox>
+                            <TextBlock Text="Track No."></TextBlock>
+                            <TextBox x:Name="TagNumber"></TextBox>
+                            <Button Margin="10" HorizontalAlignment="Stretch" Click="SetMusicTags">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon HorizontalAlignment="Left" Symbol="Accept"></SymbolIcon>
+                                    <TextBlock>Accept</TextBlock>
+                                </StackPanel>
 
-
-
+                            </Button>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </StackPanel>
 
 
     </Grid>
+
 </UserControl>

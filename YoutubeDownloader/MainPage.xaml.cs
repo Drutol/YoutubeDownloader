@@ -13,6 +13,7 @@ using Windows.Storage.Pickers;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
 using Windows.Media.MediaProperties;
+using Windows.UI.Xaml.Controls.Primitives;
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -171,8 +172,21 @@ namespace YoutubeDownloader
             exception.Visibility = Visibility.Visible;
         }
 
+
         #endregion
 
+        private void EnableMultiSelection(object sender, RoutedEventArgs e)
+        {
+            var btn = (ToggleButton)sender;
+            VideoList.SelectionMode = (bool)btn.IsChecked ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
+        }
 
+        private void VideoItemSelected(object sender, SelectionChangedEventArgs e)
+        {
+            if (VideoList.SelectedItems.Count > 0)
+                SelectionMenu.Visibility = Visibility.Visible;
+            else
+                SelectionMenu.Visibility = Visibility.Collapsed;
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace YoutubeDownloader
                     transcodeOp.Progress +=
                         new AsyncActionProgressHandler<double>((IAsyncActionWithProgress<double> asyncInfo, double percent) =>                 
                         {
-                            PopulateUI.UpdateVideoDownloadProgress(id,(int)percent);
+                            PopulateUI.UpdateVideoManipulationProgress(id,(int)percent,PopulateUI.ProgressType.PROGRESS_CONV);
                         });
                     transcodeOp.Completed +=
                         new AsyncActionWithProgressCompletedHandler<double>( (IAsyncActionWithProgress<double> asyncInfo, AsyncStatus status) =>
