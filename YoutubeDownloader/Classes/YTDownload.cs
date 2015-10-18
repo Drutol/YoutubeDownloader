@@ -10,10 +10,6 @@ using Windows.UI.Popups;
 using System.Net.Http;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml.Controls;
-using Windows.Media.MediaProperties;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.Graphics.Imaging;
 using System.Threading.Tasks;
 
 namespace YoutubeDownloader
@@ -81,6 +77,7 @@ namespace YoutubeDownloader
                 {
                     info.Add("title", (string)(item.snippet.title));
                     info.Add("thumbSmall", (string)(item.snippet.thumbnails.medium.url));
+                    info.Add("thumbHigh", (string)(item.snippet.thumbnails.high.url));
                     info.Add("author", (string)(item.snippet.channelTitle));
                 }
                 
@@ -190,17 +187,34 @@ namespace YoutubeDownloader
 
         public static async void DownloadThumbnails(Dictionary<string,string> urls)
         {
+            var folder = await Settings.GetOutputFolder();
             foreach (KeyValuePair<string,string> url in urls)
             {
                 try
                 {
-                    var folder = await Settings.GetOutputFolder();
-                    var thumb = await folder.CreateFileAsync(url.Key+".bmp", CreationCollisionOption.ReplaceExisting);
+                    await Task.Run(async () =>
+                    {
 
+                        try
+                        {
+                            var thumb = await folder.CreateFileAsync(Utils.CleanFileName(url.Key + ".png"), CreationCollisionOption.ReplaceExisting);
 
-                    var img = await GetBytesFromImage(url.Value);
+                            HttpClient http = new System.Net.Http.HttpClient();
+                            byte[] response = await http.GetByteArrayAsync(url.Value);
 
-                    await FileIO.WriteBytesAsync(thumb, img);
+                            var fs = await thumb.OpenStreamForWriteAsync();
+
+                            var writer = new DataWriter(fs.AsOutputStream());
+
+                            writer.WriteBytes(response);
+                            await writer.StoreAsync();
+                        }
+                        catch (Exception exce)
+                        {
+                            System.Diagnostics.Debug.WriteLine(exce.Message);
+                        }
+                    });
+
                 }
                 catch (Exception exc)
                 {
@@ -209,21 +223,6 @@ namespace YoutubeDownloader
             }
         }
 
-        private static async Task<byte[]> GetBytesFromImage(string URL)
-        {
-            byte[] srcPixels;
-            var uri = new Uri(URL);
-            var streamRef = RandomAccessStreamReference.CreateFromUri(uri);
-
-            using (IRandomAccessStreamWithContentType fileStream = await streamRef.OpenReadAsync())
-            {
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
-                PixelDataProvider pixelProvider = await decoder.GetPixelDataAsync();
-                srcPixels = pixelProvider.DetachPixelData();
-            }
-
-            return srcPixels;
-        }
 
 
     }

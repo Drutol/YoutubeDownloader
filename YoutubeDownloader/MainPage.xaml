@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.BottomAppBar>
-        <CommandBar x:Name="SelectionMenu" Visibility="Visible">
+        <CommandBar x:Name="SelectionMenu" Visibility="Collapsed">
             <CommandBar.Content>
                 <Grid/>
             </CommandBar.Content>
@@ -35,7 +35,7 @@
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
-            <AppBarButton Icon="Download" Label="Download"/>
+            <AppBarButton Icon="Download" Label="Download" Click="MassEditDownload"/>
         </CommandBar>
     </Page.BottomAppBar>
 
@@ -102,7 +102,7 @@
                     <TextBox x:Name="BoxID" Margin="100,10,200,0" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" VerticalAlignment="Top" Width="Auto" Height="50"/>
                     <Button x:Name="BtnDownload" Content="Get videos" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="50" Width="185" Click="BtnDownload_Click"/>
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,11,0,0" TextWrapping="Wrap" Text="Playlist ID:" VerticalAlignment="Top" Height="20" Width="85"/>
-                    <ListView x:Name="VideoList" Height="960" Margin="10,65,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Width="Auto" BorderThickness="2" BorderBrush="#FFDEDEDE" SelectionChanged="VideoItemSelected">
+                    <ListView x:Name="VideoList" Margin="10,65,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="948">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />

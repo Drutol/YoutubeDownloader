@@ -47,7 +47,7 @@ namespace YoutubeDownloader
                         VideoTitle.Text = info["title"];
                         VideoAuthor.Text = info["author"];
 
-                        thumbUrl = info["thumbSmall"];
+                        thumbUrl = info["thumbHigh"];
 
                         Visibility = Windows.UI.Xaml.Visibility.Visible;
                     });
@@ -141,7 +141,7 @@ namespace YoutubeDownloader
             Progress.Value = progress;
         }
 
-        private void StartDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        public void StartDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
         }
@@ -151,10 +151,7 @@ namespace YoutubeDownloader
             tagArtist = TagArtist.Text;
             tagAlbum = TagAlbum.Text;
             tagTitle = TagTitle.Text;
-
-
-            VideoItemFlyout.Hide();
-            
+            VideoItemFlyout.Hide();         
         }
 
         private void PopulateFlyout(object sender, object e)

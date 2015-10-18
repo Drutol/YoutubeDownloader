@@ -215,5 +215,13 @@ namespace YoutubeDownloader
                 System.Diagnostics.Debug.WriteLine(exc.Message);
             }
         }
+
+        private void MassEditDownload(object sender, RoutedEventArgs e)
+        {
+            foreach (VideoItem item in VideoList.SelectedItems)
+            {
+                item.StartDownload(null,null);
+            }
+        }
     }
 }
