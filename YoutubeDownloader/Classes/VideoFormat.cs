@@ -12,7 +12,7 @@ namespace YoutubeDownloader
 {
     public static class VideoFormat
     {
-        public static async Task<bool> VideoConvert(StorageFile file,MediaEncodingProfile mediaProfile,string id)
+        public static async Task<StorageFile> VideoConvert(StorageFile file,MediaEncodingProfile mediaProfile,string id)
         {
             try
             {
@@ -40,16 +40,15 @@ namespace YoutubeDownloader
                             Utils.TryToRemoveFile(5, file);
                         });
                 }
+
+                return audioFile;
                              
             }
             catch (Exception exc)
             {
                 System.Diagnostics.Debug.WriteLine("Conversion : " + exc.Message);
-                return false;
+                throw;
             }
-
-            //Utils.TryToRemoveFile(5, file);
-            return true;
         }
         public static async void VideoConvert(string fileName,MediaEncodingProfile mediaProfile,string id)
         {

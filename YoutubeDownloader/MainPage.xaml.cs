@@ -29,7 +29,6 @@ namespace YoutubeDownloader
         {
             InitializeComponent();
             Settings.Init();
-            
         }
 
 
@@ -187,6 +186,34 @@ namespace YoutubeDownloader
                 SelectionMenu.Visibility = Visibility.Visible;
             else
                 SelectionMenu.Visibility = Visibility.Collapsed;
+        }
+
+        private void MassEditTags(object sender, RoutedEventArgs e)
+        {
+            foreach(VideoItem item in VideoList.SelectedItems)
+            {
+                item.tagAlbum = MassEditTagAlbum.Text;
+                item.tagArtist = MassEditTagArtist.Text;
+            }
+            MassEditFlyout.Hide();
+        }
+
+        private void DownloadThumbnails(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                Dictionary<string, string> urls = new Dictionary<string, string>();
+                foreach (VideoItem item in VideoList.SelectedItems)
+                {
+                    urls.Add(item.title, item.thumbUrl);
+                }
+                YTDownload.DownloadThumbnails(urls);
+            }
+            catch (Exception exc)
+            {
+                System.Diagnostics.Debug.WriteLine(exc.Message);
+            }
         }
     }
 }

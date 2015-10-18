@@ -6,9 +6,29 @@ using Windows.Storage.FileProperties;
 using Windows.Media.Transcoding;
 using Windows.Media.MediaProperties;
 using Windows.Media.Core;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Storage.Streams;
+using System.Threading.Tasks;
 
 namespace YoutubeDownloader
 {
+
+    struct TagsPackage
+    {
+        public string artist;
+        public string album;
+        public string title;
+
+        public TagsPackage(string artist,string album,string title)
+        {
+            this.artist = artist;
+            this.album = album;
+            this.title = title;
+        }
+    }
+
     class TagProcessing
     {
         public enum EditableTags
@@ -16,6 +36,26 @@ namespace YoutubeDownloader
             ALBUM,
             TITLE,
             ARTIST,
+        }
+
+        public static async void SetTags(TagsPackage tagsPck , StorageFile file, int nRetries = 5)
+        {
+            try
+            {
+                MusicProperties tags = await file.Properties.GetMusicPropertiesAsync();
+                tags.Artist = tagsPck.artist;
+                tags.Title = tagsPck.title;
+                tags.Album = tagsPck.album;         
+                await tags.SavePropertiesAsync();
+            }
+            catch (Exception exc)
+            {
+                System.Diagnostics.Debug.WriteLine("TagsProcessing(StorageFile) " + exc.Message);
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                if (nRetries >= 0)
+                    SetTags(tagsPck, file, nRetries - 1);
+               
+            }
         }
 
         public static async void SetTag(StorageFile file, string value, EditableTags tagToEdit)
@@ -37,6 +77,7 @@ namespace YoutubeDownloader
                     default:
                         break;
                 }
+               
                 await tags.SavePropertiesAsync();
             }
             catch (Exception exc)
@@ -44,6 +85,7 @@ namespace YoutubeDownloader
                 System.Diagnostics.Debug.WriteLine("TagProcessingAlbum(StorageFile) " + exc.Message);
             }
         }
+
         public static async void SetTag(string fileName, string value, EditableTags tagToEdit)
         {
             StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);

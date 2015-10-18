@@ -38,10 +38,7 @@ namespace YoutubeDownloader
                             return;
                         }
                     }
-                });
-                
-
-
+                });            
             }
             catch (Exception exc)
             {

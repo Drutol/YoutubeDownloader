@@ -12,6 +12,9 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
 using Windows.Media.MediaProperties;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Graphics.Imaging;
+using System.Threading.Tasks;
 
 namespace YoutubeDownloader
 {
@@ -138,7 +141,7 @@ namespace YoutubeDownloader
             return objResponse;
         }
 
-        static async public void DownloadVideo(string url,string filename,string id)
+        static async public void DownloadVideo(string url,string filename,string id,VideoItem caller = null)
         {
             try
             {
@@ -175,7 +178,8 @@ namespace YoutubeDownloader
                 inputStream.Dispose();
                 fs.Dispose();
 
-                await VideoFormat.VideoConvert(audioFile, Settings.GetPrefferedEncodingProfile() ,id);
+                StorageFile outFile = await VideoFormat.VideoConvert(audioFile, Settings.GetPrefferedEncodingProfile() ,id);
+                TagProcessing.SetTags(new TagsPackage(caller.tagArtist, caller.tagAlbum, caller.tagTitle),outFile);
             }
             catch (Exception exc)
             {
@@ -184,7 +188,43 @@ namespace YoutubeDownloader
 
         }
 
-        
+        public static async void DownloadThumbnails(Dictionary<string,string> urls)
+        {
+            foreach (KeyValuePair<string,string> url in urls)
+            {
+                try
+                {
+                    var folder = await Settings.GetOutputFolder();
+                    var thumb = await folder.CreateFileAsync(url.Key+".bmp", CreationCollisionOption.ReplaceExisting);
+
+
+                    var img = await GetBytesFromImage(url.Value);
+
+                    await FileIO.WriteBytesAsync(thumb, img);
+                }
+                catch (Exception exc)
+                {
+                    System.Diagnostics.Debug.WriteLine(exc.Message);
+                }
+            }
+        }
+
+        private static async Task<byte[]> GetBytesFromImage(string URL)
+        {
+            byte[] srcPixels;
+            var uri = new Uri(URL);
+            var streamRef = RandomAccessStreamReference.CreateFromUri(uri);
+
+            using (IRandomAccessStreamWithContentType fileStream = await streamRef.OpenReadAsync())
+            {
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
+                PixelDataProvider pixelProvider = await decoder.GetPixelDataAsync();
+                srcPixels = pixelProvider.DetachPixelData();
+            }
+
+            return srcPixels;
+        }
+
 
     }
 }

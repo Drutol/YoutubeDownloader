@@ -14,6 +14,7 @@ namespace YoutubeDownloader
     {
         public string id;
         public string downloadUrl;
+        public string thumbUrl;
         public string title;
         public string fileFormat;
         
@@ -46,6 +47,8 @@ namespace YoutubeDownloader
                         VideoTitle.Text = info["title"];
                         VideoAuthor.Text = info["author"];
 
+                        thumbUrl = info["thumbSmall"];
+
                         Visibility = Windows.UI.Xaml.Visibility.Visible;
                     });
 
@@ -55,7 +58,7 @@ namespace YoutubeDownloader
                     });
 
                 if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))              
-                    YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id);
+                    YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
                 else
                 {
                     // Wait for manual download action.
@@ -140,7 +143,7 @@ namespace YoutubeDownloader
 
         private void StartDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id);
+            YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
         }
 
         private void SetMusicTags(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -160,6 +163,14 @@ namespace YoutubeDownloader
             TagTitle.Text = tagTitle;
             TagArtist.Text = tagArtist;
             TagNumber.Text = "0";
+        }
+
+        private void MouseButtonDown(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+            {
+                VideoItemFlyout.ShowAt(this);
+            }
         }
     }
 }
