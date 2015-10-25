@@ -79,6 +79,7 @@ namespace YoutubeDownloader
                     info.Add("thumbSmall", (string)(item.snippet.thumbnails.medium.url));
                     info.Add("thumbHigh", (string)(item.snippet.thumbnails.high.url));
                     info.Add("author", (string)(item.snippet.channelTitle));
+                    info.Add("details", (string)(item.snippet.description));
                 }
                 
             }

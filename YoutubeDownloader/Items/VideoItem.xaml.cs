@@ -22,6 +22,7 @@ namespace YoutubeDownloader
         public string tagTitle = "";
         public string tagArtist = "";
 
+
         public  VideoItem(string id)
         {
             InitializeComponent();
@@ -39,18 +40,22 @@ namespace YoutubeDownloader
             try
             {
                 Dictionary<string, string> info = await YTDownload.GetVideoDetails(id);
+                SuggestedTagsPackage package = TagParser.AttemptToParseTags(info["title"], info["details"], "",info["author"]);
                 // Use dispatcher only to interact with the UI , putting the async method in there will block UI thread.
                 // Info is obtained in the line above and populated on the UI thread.
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
-                        VideoTitle.Text = info["title"];
+                        //VideoTitle.Text = info["title"];
+                        VideoTitle.Text = string.Join(",", package.titles.ToArray());
                         VideoAuthor.Text = info["author"];
 
                         thumbUrl = info["thumbHigh"];
 
                         Visibility = Windows.UI.Xaml.Visibility.Visible;
                     });
+
+                
 
                 await System.Threading.Tasks.Task.Run(() =>
                     {
