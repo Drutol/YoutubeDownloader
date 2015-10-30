@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ namespace YoutubeDownloader
         {
             title = Purify(title);
             details = Purify(details);
+            //Debug.WriteLine(details);
 
 
             List<string> titles = new List<string>();
@@ -100,14 +102,35 @@ namespace YoutubeDownloader
 
 
 
-            titles = titles.Distinct().ToList(); // clear duplicates
+            
+            for (int i = 0; i < titles.Count; i++)
+            {
+                if (titles[i].Length < 4 || string.IsNullOrWhiteSpace(titles[i]) || !ContainsLetters(titles[i]))
+                    titles.RemoveAt(i);
+                else
+                {
+                    titles[i] = titles[i].Trim();
+                }
+            }
             authors = authors.Distinct().ToList();
+            titles = titles.Distinct().ToList(); // clear duplicates
             SuggestedTagsPackage pkg = new SuggestedTagsPackage();
             pkg.titles = titles;
             pkg.authors = authors;
 
             return pkg;
         } 
+
+        private static bool ContainsLetters(string part)
+        {
+            foreach (var item in part)
+            {
+                if(item > '9')
+                    return true;
+            }
+
+            return false;
+        }
 
         private static bool? IsTitleWord(string word)
         {
@@ -140,12 +163,17 @@ namespace YoutubeDownloader
 
         private static string Purify(string part)
         {
-            foreach(string illegal in illegals)
+            StringBuilder details = new StringBuilder();
+            foreach (string illegal in greatIllegals)
             {
-                part.Replace(illegal, "");
+                foreach (var line in part.Split("\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (!line.Contains(illegal))
+                        details.AppendLine(line);
+                }
             }
 
-            return part;
+            return details.ToString();
         }
 
         private static bool ContainsIllegals(string part)

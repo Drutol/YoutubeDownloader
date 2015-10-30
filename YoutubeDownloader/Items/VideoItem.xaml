@@ -24,7 +24,7 @@
                 <TextBlock x:Name="VideoAuthor" Text="--" HorizontalAlignment="Left" Margin="10,0,-6,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="25" Width="Auto"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Column="2">
+        <StackPanel x:Name="ActionButtons" Orientation="Horizontal" Grid.Column="2">
             <Button x:Name="btnDownload"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="StartDownload">
                 <SymbolIcon Symbol="Download"/>
             </Button>
@@ -39,7 +39,9 @@
                                 </Style>
                             </StackPanel.Resources>
                             <TextBlock Text="Title"></TextBlock>
-                            <TextBox x:Name="TagTitle"></TextBox>
+                            <ComboBox x:Name="ComboTitles" Width="Auto" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestion">
+                                <TextBox x:Name="TagTitle"></TextBox>
+                            </ComboBox>
                             <TextBlock Text="Artist"></TextBlock>
                             <TextBox x:Name="TagArtist"></TextBox>
                             <TextBlock Text="Album"></TextBlock>

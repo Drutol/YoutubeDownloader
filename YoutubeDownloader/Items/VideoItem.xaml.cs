@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using YoutubeExtractor;
 
@@ -22,12 +24,15 @@ namespace YoutubeDownloader
         public string tagTitle = "";
         public string tagArtist = "";
 
+        SuggestedTagsPackage suggestions;
+
 
         public  VideoItem(string id)
         {
             InitializeComponent();
             Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             this.id = id;
+            suggestions = new SuggestedTagsPackage();
             System.Threading.Tasks.Task.Run(() =>
             {
                 PopulateVideoInfo();
@@ -40,14 +45,14 @@ namespace YoutubeDownloader
             try
             {
                 Dictionary<string, string> info = await YTDownload.GetVideoDetails(id);
-                SuggestedTagsPackage package = TagParser.AttemptToParseTags(info["title"], info["details"], "",info["author"]);
+                suggestions = TagParser.AttemptToParseTags(info["title"], info["details"], "",info["author"]);
                 // Use dispatcher only to interact with the UI , putting the async method in there will block UI thread.
                 // Info is obtained in the line above and populated on the UI thread.
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
-                        //VideoTitle.Text = info["title"];
-                        VideoTitle.Text = string.Join(",", package.titles.ToArray());
+                        VideoTitle.Text = info["title"];
+                        //VideoTitle.Text = string.Join(",", package.titles.ToArray());
                         VideoAuthor.Text = info["author"];
 
                         thumbUrl = info["thumbHigh"];
@@ -137,7 +142,7 @@ namespace YoutubeDownloader
             }
             catch (Exception exc)
             {
-                System.Diagnostics.Debug.WriteLine(exc.Message);
+                SetErrorState();
             }
         }
 
@@ -161,6 +166,16 @@ namespace YoutubeDownloader
 
         private void PopulateFlyout(object sender, object e)
         {
+            if(ComboTitles.Items.Count == 1 && suggestions.titles.Count != 0)
+                foreach (var item in suggestions.titles)
+                {
+                    Debug.WriteLine(item);
+                    TextBlock btn = new TextBlock();
+                    btn.Text = item;
+                    btn.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
+                    btn.Height = 35;
+                    ComboTitles.Items.Add(btn);
+                }
             TagAlbum.Text = tagAlbum;
             TagTitle.Text = tagTitle;
             TagArtist.Text = tagArtist;
@@ -173,6 +188,25 @@ namespace YoutubeDownloader
             {
                 VideoItemFlyout.ShowAt(this);
             }
+        }
+
+        private async void SetErrorState()
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                VideoTitle.Text = "Failed parsing info , is video still available?";
+                VideoAuthor.Text = "";
+                ActionButtons.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            });
+        }
+
+        private void SelectSuggestion(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+            TextBlock btn = (TextBlock)cmb.SelectedItem;
+            TagTitle.Text = btn.Text;
+            ComboTitles.SelectedIndex = 0;
+            ComboTitles.IsDropDownOpen = false;
         }
     }
 }
