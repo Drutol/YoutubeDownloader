@@ -17,8 +17,9 @@ namespace YoutubeDownloader
 
     enum RequestTypes
     {
-        REQUEST_PLAYLIST,
+        REQUEST_PLAYLIST_ITEMS,
         REQUEST_VIDEO,
+        REQUEST_PLAYLIST,
     }
 
     public enum IdType
@@ -37,7 +38,7 @@ namespace YoutubeDownloader
 
             try
             {
-                WebRequest request = GetWebRequest(RequestTypes.REQUEST_PLAYLIST, playlistID);
+                WebRequest request = GetWebRequest(RequestTypes.REQUEST_PLAYLIST_ITEMS, playlistID);
 
                 dynamic objResponse = await GetRequestResponse(request);
 
@@ -62,6 +63,19 @@ namespace YoutubeDownloader
             }
 
             return videos;
+        }
+
+        internal static async Task<string> GetPlaylistDetails(string id)
+        {
+            WebRequest request = GetWebRequest(RequestTypes.REQUEST_PLAYLIST, id);
+            dynamic objResponse = await GetRequestResponse(request);
+
+            foreach (var item in objResponse.items)
+            {
+                return item.snippet.title;
+            }
+
+            return "";
         }
 
         static public async System.Threading.Tasks.Task<Dictionary<string,string>> GetVideoDetails(string videoId)
@@ -107,11 +121,14 @@ namespace YoutubeDownloader
 
             switch (RequestType)
             {
-                case RequestTypes.REQUEST_PLAYLIST:
+                case RequestTypes.REQUEST_PLAYLIST_ITEMS:
                     uri = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=" + id +"&key=" + API_KEY;
                     break;
                 case RequestTypes.REQUEST_VIDEO:
                     uri = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&part=snippet&key=" + API_KEY;
+                    break;
+                case RequestTypes.REQUEST_PLAYLIST:
+                    uri = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&maxResults=50&id=" + id + "&key=" + API_KEY;
                     break;
                 default:
                     throw new Exception("Invalid Request");

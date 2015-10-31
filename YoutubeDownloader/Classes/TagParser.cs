@@ -112,6 +112,11 @@ namespace YoutubeDownloader
                     titles[i] = titles[i].Trim();
                 }
             }
+            for (int i = 0; i < authors.Count; i++)
+            {
+                authors[i] = authors[i].Trim();
+            }
+            authors.Add(vidAuthor);
             authors = authors.Distinct().ToList();
             titles = titles.Distinct().ToList(); // clear duplicates
             SuggestedTagsPackage pkg = new SuggestedTagsPackage();

@@ -39,11 +39,13 @@
                                 </Style>
                             </StackPanel.Resources>
                             <TextBlock Text="Title"></TextBlock>
-                            <ComboBox x:Name="ComboTitles" Width="Auto" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestion">
+                            <ComboBox x:Name="ComboTitles" Width="Auto" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestionTitle">
                                 <TextBox x:Name="TagTitle"></TextBox>
                             </ComboBox>
                             <TextBlock Text="Artist"></TextBlock>
-                            <TextBox x:Name="TagArtist"></TextBox>
+                            <ComboBox x:Name="ComboArtist" Width="Auto" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestionAuthor">
+                                <TextBox x:Name="TagArtist"></TextBox>
+                            </ComboBox>
                             <TextBlock Text="Album"></TextBlock>
                             <TextBox x:Name="TagAlbum"></TextBox>
                             <TextBlock Text="Track No."></TextBlock>

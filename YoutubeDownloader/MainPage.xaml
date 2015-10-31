@@ -53,7 +53,7 @@
                         <Button x:Name="BtnSettingsText" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                     </StackPanel>
                     <Grid x:Name="GridSettings" Height="376" Background="#7FE2E2E2" Visibility="Collapsed">
-                        <StackPanel HorizontalAlignment="Center" Width="230">
+                        <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
                             <TextBlock Text="Start download automatically:" TextAlignment="Center"/>
                             <Grid>
                                 <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
@@ -98,11 +98,11 @@
                 </StackPanel>
             </SplitView.Pane>
             <SplitView.Content>
-                <Grid Margin="10">
+                <Grid Margin="4,10,16,10">
                     <TextBox x:Name="BoxID" Margin="100,10,200,0" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" VerticalAlignment="Top" Width="Auto" Height="50"/>
                     <Button x:Name="BtnDownload" Content="Get videos" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="50" Width="185" Click="BtnDownload_Click"/>
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,11,0,0" TextWrapping="Wrap" Text="Playlist ID:" VerticalAlignment="Top" Height="20" Width="85"/>
-                    <ListView x:Name="VideoList" Margin="10,65,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto">
+                    <ListView x:Name="VideoList" Margin="10,65,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple"> 
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -110,7 +110,8 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                     <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed"/>
-                    <ToggleButton x:Name="button" FontFamily="Segoe MDL2 Assets" Content="&#57721;" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Height="29" Width="85" Background="{x:Null}" Click="EnableMultiSelection"/>
+                    <Button x:Name="SelectAll" FontFamily="Segoe MDL2 Assets" Content="&#57678;" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionAll" ToolTipService.ToolTip="Select all."/>
+                    <Button x:Name="SelectInvert" FontFamily="Segoe MDL2 Assets" Content="&#57797;" HorizontalAlignment="Left" Margin="55,31,0,0" VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionInvert" ToolTipService.ToolTip="Invert Selection"/>
                 </Grid>
             </SplitView.Content>
         </SplitView>

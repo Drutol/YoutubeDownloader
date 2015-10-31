@@ -15,6 +15,7 @@ namespace YoutubeDownloader
     public sealed partial class VideoItem : UserControl
     {
         public string id;
+        public string origin;
         public string downloadUrl;
         public string thumbUrl;
         public string title;
@@ -27,11 +28,13 @@ namespace YoutubeDownloader
         SuggestedTagsPackage suggestions;
 
 
-        public  VideoItem(string id)
+        public  VideoItem(string id,string origin = "") // as for playlist title
         {
             InitializeComponent();
             Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             this.id = id;
+            this.origin = origin;
+            tagAlbum = origin;
             suggestions = new SuggestedTagsPackage();
             System.Threading.Tasks.Task.Run(() =>
             {
@@ -169,12 +172,20 @@ namespace YoutubeDownloader
             if(ComboTitles.Items.Count == 1 && suggestions.titles.Count != 0)
                 foreach (var item in suggestions.titles)
                 {
-                    Debug.WriteLine(item);
                     TextBlock btn = new TextBlock();
                     btn.Text = item;
                     btn.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
                     btn.Height = 35;
                     ComboTitles.Items.Add(btn);
+                }
+            if (ComboArtist.Items.Count == 1 && suggestions.authors.Count != 0)
+                foreach (var item in suggestions.authors)
+                {
+                    TextBlock btn = new TextBlock();
+                    btn.Text = item;
+                    btn.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
+                    btn.Height = 35;
+                    ComboArtist.Items.Add(btn);
                 }
             TagAlbum.Text = tagAlbum;
             TagTitle.Text = tagTitle;
@@ -197,16 +208,26 @@ namespace YoutubeDownloader
                 VideoTitle.Text = "Failed parsing info , is video still available?";
                 VideoAuthor.Text = "";
                 ActionButtons.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                IsEnabled = false;
             });
         }
 
-        private void SelectSuggestion(object sender, SelectionChangedEventArgs e)
+        private void SelectSuggestionTitle(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cmb = (ComboBox)sender;
             TextBlock btn = (TextBlock)cmb.SelectedItem;
             TagTitle.Text = btn.Text;
             ComboTitles.SelectedIndex = 0;
             ComboTitles.IsDropDownOpen = false;
+        }
+
+        private void SelectSuggestionAuthor(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+            TextBlock btn = (TextBlock)cmb.SelectedItem;
+            TagArtist.Text = btn.Text;
+            ComboArtist.SelectedIndex = 0;
+            ComboArtist.IsDropDownOpen = false;
         }
     }
 }

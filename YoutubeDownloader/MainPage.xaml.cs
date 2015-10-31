@@ -45,10 +45,14 @@ namespace YoutubeDownloader
                     vidListItems.Add(vidItem);
                     break;
                 case IdType.TYPE_PLAYLIST:
+                    string playlistName = "";
+                    if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_ALBUM_PLAYLIST_NAME))
+                        playlistName = await YTDownload.GetPlaylistDetails(BoxID.Text);
+
                     List<string> videos = await YTDownload.GetVideosInPlaylist(BoxID.Text);
                     foreach (var video in videos)
                     {
-                        vidItem = new VideoItem(video);
+                        vidItem = new VideoItem(video,playlistName);
                         vidListItems.Add(vidItem);
                     }
                     break;
@@ -200,7 +204,6 @@ namespace YoutubeDownloader
 
         private void DownloadThumbnails(object sender, RoutedEventArgs e)
         {
-
             try
             {
                 Dictionary<string, string> urls = new Dictionary<string, string>();
@@ -222,6 +225,28 @@ namespace YoutubeDownloader
             {
                 item.StartDownload(null,null);
             }
+        }
+
+        private void SelectionInvert(object sender, RoutedEventArgs e)
+        {
+            List<string> disabledIds = new List<string>();
+            foreach (var item in VideoList.SelectedItems)
+            {
+                VideoItem vid = (VideoItem)item;
+                disabledIds.Add(vid.id);
+            }
+            VideoList.SelectedItems.Clear();
+            foreach (var item in VideoList.Items)
+            {
+                VideoItem vid = (VideoItem)item;
+                if (disabledIds.Find(video => video == vid.id) == null)
+                    VideoList.SelectedItems.Add(item);
+            }
+        }
+
+        private void SelectionAll(object sender, RoutedEventArgs e)
+        {
+            VideoList.SelectAll();
         }
     }
 }
