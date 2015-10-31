@@ -11,6 +11,7 @@
             <CommandBar.Content>
                 <Grid/>
             </CommandBar.Content>
+            <AppBarButton Icon="Clear" Label="Remove from list" Click="SelectionRemove"></AppBarButton>
             <AppBarButton Icon="Pictures" Label="Download thumbnails" Click="DownloadThumbnails"></AppBarButton>
             <AppBarButton Icon="MusicInfo" Label="Edit tags">
                 <AppBarButton.Flyout>
@@ -42,7 +43,7 @@
     <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
 
         <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay"  IsPaneOpen="False" 
-               CompactPaneLength="50" OpenPaneLength="280">
+               CompactPaneLength="50" OpenPaneLength="280" PaneClosed="HideAllPaneGrids">
             <SplitView.Pane>
                 <StackPanel Background="#FFEEEEEE">
                     <StackPanel Orientation="Horizontal">
@@ -98,17 +99,18 @@
                 </StackPanel>
             </SplitView.Pane>
             <SplitView.Content>
-                <Grid Margin="4,10,16,10">
+                <Grid Margin="4,10,16,56">
                     <TextBox x:Name="BoxID" Margin="100,10,200,0" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" VerticalAlignment="Top" Width="Auto" Height="50"/>
                     <Button x:Name="BtnDownload" Content="Get videos" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="50" Width="185" Click="BtnDownload_Click"/>
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,11,0,0" TextWrapping="Wrap" Text="Playlist ID:" VerticalAlignment="Top" Height="20" Width="85"/>
-                    <ListView x:Name="VideoList" Margin="10,65,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple"> 
+                    <ListView x:Name="VideoList" Margin="10,65,10,0" VerticalAlignment="Top" BorderThickness="6" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
+                    <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9"></TextBlock>
                     <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed"/>
                     <Button x:Name="SelectAll" FontFamily="Segoe MDL2 Assets" Content="&#57678;" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionAll" ToolTipService.ToolTip="Select all."/>
                     <Button x:Name="SelectInvert" FontFamily="Segoe MDL2 Assets" Content="&#57797;" HorizontalAlignment="Left" Margin="55,31,0,0" VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionInvert" ToolTipService.ToolTip="Invert Selection"/>

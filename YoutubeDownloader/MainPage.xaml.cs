@@ -33,9 +33,11 @@ namespace YoutubeDownloader
 
 
         public ObservableCollection<VideoItem> vidListItems;
+        
         private async void BtnDownload_Click(object sender, RoutedEventArgs e)
-        {
+        {          
             VideoItem vidItem;
+            EmptyNotice.Visibility = Visibility.Collapsed;
             SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
             vidListItems = new ObservableCollection<VideoItem>();
             switch (YTDownload.IsIdValid(BoxID.Text))
@@ -59,6 +61,7 @@ namespace YoutubeDownloader
                 case IdType.INVALID:
                     MessageDialog dialog = new MessageDialog("YouTube video got injured in an horrible accident, sorry it's ID is INVALID","God F&#$%*@ D%&#");
                     await dialog.ShowAsync();
+                    EmptyNotice.Visibility = Visibility.Visible;
                     break;
                 default:
                     throw new Exception("Invalid enumm - id valid");
@@ -174,6 +177,11 @@ namespace YoutubeDownloader
             HideAllPaneGrids();
             exception.Visibility = Visibility.Visible;
         }
+        private void HideAllPaneGrids(SplitView sender, object args)
+        {
+            HideAllPaneGrids();
+        }
+
 
 
         #endregion
@@ -247,6 +255,14 @@ namespace YoutubeDownloader
         private void SelectionAll(object sender, RoutedEventArgs e)
         {
             VideoList.SelectAll();
+        }
+
+        private void SelectionRemove(object sender, RoutedEventArgs e)
+        {
+            foreach (VideoItem item in VideoList.SelectedItems)
+            {
+                vidListItems.Remove(item);
+            }
         }
     }
 }

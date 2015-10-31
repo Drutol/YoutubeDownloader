@@ -13,8 +13,8 @@
             <ColumnDefinition Width="120" />
         </Grid.ColumnDefinitions>
 
-        <ProgressBar x:Name="Progress" HorizontalAlignment="Stretch" Height="50" VerticalAlignment="Top" Width="Auto" Foreground="#66FE7C22" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3"/>
-        <ProgressBar x:Name="ConversionProgress" HorizontalAlignment="Stretch" Height="7" VerticalAlignment="Top" Width="Auto" Foreground="#B2FE7C22" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,43,0,0"/>
+        <ProgressBar x:Name="Progress" HorizontalAlignment="Stretch" Height="50" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Opacity="0.4"/>
+        <ProgressBar x:Name="ConversionProgress" HorizontalAlignment="Stretch" Height="7" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Opacity=".5" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,43,0,0"/>
         <Image x:Name="VideoThumb" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="94" Stretch="UniformToFill" Grid.Column="0"/>
         <StackPanel Orientation="Vertical" Grid.Column="1">
             <StackPanel Orientation="Horizontal" Width="Auto">
