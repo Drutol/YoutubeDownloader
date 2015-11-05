@@ -31,7 +31,7 @@ namespace YoutubeDownloader
         public  VideoItem(string id,string origin = "") // as for playlist title
         {
             InitializeComponent();
-            Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            //Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             this.id = id;
             this.origin = origin;
             tagAlbum = origin;
@@ -60,7 +60,7 @@ namespace YoutubeDownloader
 
                         thumbUrl = info["thumbHigh"];
 
-                        Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        LoadingInfo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                     });
 
                 
@@ -208,7 +208,8 @@ namespace YoutubeDownloader
                 VideoTitle.Text = "Failed parsing info , is video still available?";
                 VideoAuthor.Text = "";
                 ActionButtons.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                IsEnabled = false;
+                ErrorButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                //IsEnabled = false;
             });
         }
 
@@ -228,6 +229,11 @@ namespace YoutubeDownloader
             TagArtist.Text = btn.Text;
             ComboArtist.SelectedIndex = 0;
             ComboArtist.IsDropDownOpen = false;
+        }
+
+        private async void OpenInBrowswer(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("https://www.youtube.com/watch?v=" + id));
         }
     }
 }

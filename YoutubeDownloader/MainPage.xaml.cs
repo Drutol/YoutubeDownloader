@@ -40,18 +40,20 @@ namespace YoutubeDownloader
             EmptyNotice.Visibility = Visibility.Collapsed;
             SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
             vidListItems = new ObservableCollection<VideoItem>();
-            switch (YTDownload.IsIdValid(BoxID.Text))
+            string contentID = BoxID.Text;
+            VideoList.ItemsSource = vidListItems;
+            switch (YTDownload.IsIdValid(contentID,out contentID))
             {
                 case IdType.TYPE_VIDEO:
-                    vidItem = new VideoItem(BoxID.Text);
+                    vidItem = new VideoItem(contentID);
                     vidListItems.Add(vidItem);
                     break;
                 case IdType.TYPE_PLAYLIST:
                     string playlistName = "";
                     if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_ALBUM_PLAYLIST_NAME))
-                        playlistName = await YTDownload.GetPlaylistDetails(BoxID.Text);
+                        playlistName = await YTDownload.GetPlaylistDetails(contentID);
 
-                    List<string> videos = await YTDownload.GetVideosInPlaylist(BoxID.Text);
+                    List<string> videos = await YTDownload.GetVideosInPlaylist(contentID);
                     foreach (var video in videos)
                     {
                         vidItem = new VideoItem(video,playlistName);
@@ -66,8 +68,7 @@ namespace YoutubeDownloader
                 default:
                     throw new Exception("Invalid enumm - id valid");
             }
-            SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed;
-            VideoList.ItemsSource = vidListItems;
+            SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed; 
         }
         
         #region Setting Setters
@@ -85,6 +86,11 @@ namespace YoutubeDownloader
         public void SetOutputFormat(int iFormat)
         {
             ComboOutputFormat.SelectedIndex = iFormat;
+        }
+
+        public void SetRenameSetting(string val)
+        {
+            SettingRenameFile.IsOn = val == "True" ? true : false;
         }
 
         public void SetOutputQuality(int iQuality)

@@ -107,10 +107,18 @@ namespace YoutubeDownloader
             return info;
         }
 
-        public static IdType IsIdValid(string id)
+        public static IdType IsIdValid(string id,out string finalId)
         {
-            if(id.Length != 11 && id.Length != 34) return IdType.INVALID;
-
+            if (id.Length != 11 && id.Length != 34)
+            {
+                id = Utils.TryNormalizeYoutubeUrl(id);
+                if (id.Length != 11 && id.Length != 34)
+                {
+                    finalId = "";
+                    return IdType.INVALID;
+                }
+            }
+            finalId = id;
             if (id.Length == 11) return IdType.TYPE_VIDEO;
             else return IdType.TYPE_PLAYLIST;
         }

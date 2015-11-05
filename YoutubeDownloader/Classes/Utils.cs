@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -39,6 +40,44 @@ namespace YoutubeDownloader
                     }            
                 }
             });
+        }
+
+        //Snippet from https://github.com/flagbug/YoutubeExtractor
+        public static string TryNormalizeYoutubeUrl(string url)
+        {
+            url = url.Trim();
+
+            url = url.Replace("youtu.be/", "youtube.com/watch?v=");
+            url = url.Replace("www.youtube", "youtube");
+            url = url.Replace("youtube.com/embed/", "youtube.com/watch?v=");
+
+            if (url.Contains("/v/"))
+            {
+                url = "http://youtube.com" + new Uri(url).AbsolutePath.Replace("/v/", "/watch?v=");
+            }
+
+            url = url.Replace("/watch#", "/watch?");
+
+
+            if (url.Contains("?"))
+            {
+                url = url.Substring(url.IndexOf('?') + 1);
+            }
+
+            var dictionary = new Dictionary<string, string>();
+
+            foreach (string vp in Regex.Split(url, "&"))
+            {
+                string[] strings = Regex.Split(vp, "=");
+                dictionary.Add(strings[0], strings.Length == 2 ? System.Net.WebUtility.UrlDecode(strings[1]) : string.Empty);
+            }
+
+            if (dictionary.ContainsKey("list"))
+                return dictionary["list"];
+            else if (dictionary.ContainsKey("v"))
+                return dictionary["v"];
+
+            return "";
         }
 
     }

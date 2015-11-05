@@ -12,7 +12,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="120" />
         </Grid.ColumnDefinitions>
-
+        <ProgressRing x:Name="LoadingInfo" Grid.Column="0" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Top" Height="30" Width="30" IsActive="True"/>
         <ProgressBar x:Name="Progress" HorizontalAlignment="Stretch" Height="50" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Opacity="0.4"/>
         <ProgressBar x:Name="ConversionProgress" HorizontalAlignment="Stretch" Height="7" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Opacity=".5" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,43,0,0"/>
         <Image x:Name="VideoThumb" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="94" Stretch="UniformToFill" Grid.Column="0"/>
@@ -23,6 +23,11 @@
             <StackPanel Orientation="Horizontal" Width="Auto">
                 <TextBlock x:Name="VideoAuthor" Text="--" HorizontalAlignment="Left" Margin="10,0,-6,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="25" Width="Auto"/>
             </StackPanel>
+        </StackPanel>
+        <StackPanel x:Name="ErrorButton" Orientation="Horizontal" Grid.Column="2" Margin="29,0" Visibility="Collapsed">
+            <Button x:Name="btnOpenURL"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="OpenInBrowswer">
+                <SymbolIcon Symbol="Globe"/>
+            </Button>
         </StackPanel>
         <StackPanel x:Name="ActionButtons" Orientation="Horizontal" Grid.Column="2">
             <Button x:Name="btnDownload"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="StartDownload">
@@ -63,7 +68,8 @@
             </Button>
         </StackPanel>
 
-
     </Grid>
+
+
 
 </UserControl>

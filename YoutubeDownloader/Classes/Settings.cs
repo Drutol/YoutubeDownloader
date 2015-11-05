@@ -37,6 +37,7 @@ namespace YoutubeDownloader
                 // TODO : Move this to main page class.
                 page.SetAutoDownloadSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"]);
                 page.SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
+                page.SetRenameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingRenameFile"]);
                 page.SetOutputFormat((int)ApplicationData.Current.LocalSettings.Values["outFormat"]);
                 page.SetOutputFolderName((string)ApplicationData.Current.LocalSettings.Values["outFolder"]);
                 page.SetOutputQuality((int)ApplicationData.Current.LocalSettings.Values["outQuality"]);
@@ -55,6 +56,9 @@ namespace YoutubeDownloader
 
             if (ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"] == null)
                 ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"] = "True";
+
+            if (ApplicationData.Current.LocalSettings.Values["SettingRenameFile"] == null)
+                ApplicationData.Current.LocalSettings.Values["SettingRenameFile"] = "True";
 
             //format
             if (ApplicationData.Current.LocalSettings.Values["outFormat"] == null)
