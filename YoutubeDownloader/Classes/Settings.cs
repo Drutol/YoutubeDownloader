@@ -25,6 +25,11 @@ namespace YoutubeDownloader
             FORMAT_MP3 = 1,
             FORMAT_MP4 = 2,
         }
+
+        public enum PossibleValueSettings
+        {
+            SETTINGS_PARARELL_DL,
+        }
         //private static IEnumerable<string> SettingsKeys = new List<string>() { "SettingAutoDownload" };
 
         public static async void Init()
@@ -99,6 +104,19 @@ namespace YoutubeDownloader
 
             return value == "True" ? true : false;
         }
+
+        public static int GetValueForSetting(PossibleValueSettings setting)
+        {
+            switch (setting)
+            {
+                case PossibleValueSettings.SETTINGS_PARARELL_DL:
+                    return (int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"];
+                default:
+                    break;
+            }
+            throw new Exception("Wrong Enum");
+        }
+
 
         public static PossibleOutputFormats GetPrefferedOutputFormat()
         {

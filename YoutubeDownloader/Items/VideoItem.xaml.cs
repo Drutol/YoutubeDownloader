@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using YoutubeExtractor;
+using System.Threading.Tasks;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -25,8 +26,11 @@ namespace YoutubeDownloader
         public string tagTitle = "";
         public string tagArtist = "";
 
+        public int queuePos = 0;
+
         SuggestedTagsPackage suggestions;
 
+        public object Task { get; private set; }
 
         public  VideoItem(string id,string origin = "") // as for playlist title
         {
@@ -74,7 +78,7 @@ namespace YoutubeDownloader
                     });
 
                 if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))
-                    QueueManager.Instance.QueueNewItem(this);
+                    QueueDownload();
                 //YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
                 else
                 {
@@ -168,9 +172,16 @@ namespace YoutubeDownloader
             QueueManager.Instance.ForceDownload(this);
         }
 
-        public void QueueDownload()
+        public void QueueDownload(int retries = 5)
         {
-            QueueManager.Instance.QueueNewItem(this);
+            if (downloadUrl == null && retries >= 0)
+            {
+                Debug.WriteLine("Waiting...");
+                System.Threading.Tasks.Task.Delay(1000);
+                QueueDownload(retries - 1);
+            }
+            else if (downloadUrl != null)
+                QueueManager.Instance.QueueNewItem(this);
         }
 
         private void SetMusicTags(object sender, Windows.UI.Xaml.RoutedEventArgs e)

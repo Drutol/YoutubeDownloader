@@ -42,7 +42,9 @@ namespace YoutubeDownloader
             vidListItems = new ObservableCollection<VideoItem>();
             string contentID = BoxID.Text;
             VideoList.ItemsSource = vidListItems;
-            switch (YTDownload.IsIdValid(contentID,out contentID))
+            var inputData = await YTDownload.IsIdValid(contentID);
+            contentID = inputData.Item2;
+            switch (inputData.Item1)
             {
                 case IdType.TYPE_VIDEO:
                     vidItem = new VideoItem(contentID);
@@ -61,7 +63,7 @@ namespace YoutubeDownloader
                     }
                     break;
                 case IdType.INVALID:
-                    MessageDialog dialog = new MessageDialog("YouTube video got injured in an horrible accident, sorry it's ID is INVALID","God F&#$%*@ D%&#");
+                    MessageDialog dialog = new MessageDialog("Couldn't extract playlist or video id from input string.");
                     await dialog.ShowAsync();
                     EmptyNotice.Visibility = Visibility.Visible;
                     break;
@@ -77,7 +79,6 @@ namespace YoutubeDownloader
             SettingSetAlbumAsPlaylistName.IsOn = val == "True" ? true : false;
         }
         
-
         public void SetAutoDownloadSetting(string val)
         {
             SettingAutoDownload.IsOn = val == "True" ? true : false;
@@ -124,8 +125,12 @@ namespace YoutubeDownloader
 
         private void ChangeSliderSetting(object sender, RangeBaseValueChangedEventArgs e)
         {
-            Slider slider = (Slider)sender;
-            Settings.ChangeSetting(slider.Name, (int)slider.Value);
+            if (MainMenu.IsPaneOpen) //Cause it was triggering on app load. Seems like reasonable workaroud ^^
+            {
+                Slider slider = (Slider)sender;
+                Settings.ChangeSetting(slider.Name, (int)slider.Value);
+                QueueManager.Instance.MaxPararellDownloadChanged((int)slider.Value);
+            }
         }
 
         #endregion

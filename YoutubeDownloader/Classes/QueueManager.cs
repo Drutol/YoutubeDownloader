@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace YoutubeDownloader
 {
     /// <summary>
-    /// Singleton class.
+    /// Singleton class that manages queueing items.
     /// </summary>
     public class QueueManager
     {
-        const int maxPararellDownloads = 4;
+        private int maxPararellDownloads = Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTINGS_PARARELL_DL);
 
         private static QueueManager instance;
 
@@ -19,6 +19,9 @@ namespace YoutubeDownloader
 
         private List<VideoItem> queuedItems = new List<VideoItem>();
         private List<VideoItem> downloadingItems = new List<VideoItem>();
+
+        private List<VideoItem> queuedItemsConv = new List<VideoItem>();
+        private List<VideoItem> convertingItems = new List<VideoItem>();
 
         public static QueueManager Instance
         {
@@ -46,12 +49,14 @@ namespace YoutubeDownloader
 
         private void CheckQueue()
         {
-            while(queuedItems.Count > 0 && downloadingItems.Count <= maxPararellDownloads)
+            if (queuedItems.Count > 0 && downloadingItems.Count < maxPararellDownloads)
             {
-                downloadingItems.Add(queuedItems.First());
-                queuedItems.First().StartDownload(null,null);
+                var item = queuedItems.First();
+                downloadingItems.Add(item);
+                item.StartDownload(null, null);
                 queuedItems.RemoveAt(0);
             }
+           
         }
 
         public void DownloadCompleted(string id)
@@ -60,6 +65,7 @@ namespace YoutubeDownloader
             {
                 if (item.id == id)
                 {
+                    System.Diagnostics.Debug.WriteLine("Downloaded " + id);
                     downloadingItems.Remove(item);
                     break;
                 }
@@ -67,6 +73,42 @@ namespace YoutubeDownloader
             CheckQueue();
         }
 
+        public void MaxPararellDownloadChanged(int to)
+        {
+            maxPararellDownloads = to;
+        }
+
+        public void QueueNewItemConv(VideoItem item)
+        {
+            queuedItemsConv.Add(item);
+            CheckQueueConv();
+        }
+
+        private void CheckQueueConv()
+        {
+            if (queuedItemsConv.Count > 0 && convertingItems.Count < 2)
+            {
+                var item = queuedItemsConv.First();
+                convertingItems.Add(item);
+                VideoFormat.VideoConvert(Utils.CleanFileName(item.title + item.fileFormat), Settings.GetPrefferedEncodingProfile(), item.id , item);
+                queuedItemsConv.RemoveAt(0);
+            }
+
+        }
+
+        public void ConvCompleted(string id)
+        {
+            foreach (VideoItem item in convertingItems)
+            {
+                if (item.id == id)
+                {
+                    System.Diagnostics.Debug.WriteLine("Converted " + id);
+                    convertingItems.Remove(item);
+                    break;
+                }
+            }
+            CheckQueueConv();
+        }
 
     }
 }

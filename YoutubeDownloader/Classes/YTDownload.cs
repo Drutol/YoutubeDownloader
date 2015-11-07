@@ -107,20 +107,21 @@ namespace YoutubeDownloader
             return info;
         }
 
-        public static IdType IsIdValid(string id,out string finalId)
+        public static async Task<Tuple<IdType,string>> IsIdValid(string id)
         {
+            string finalId;
             if (id.Length != 11 && id.Length != 34)
             {
-                id = Utils.TryNormalizeYoutubeUrl(id);
+                id = await Utils.TryNormalizeYoutubeUrl(id);
                 if (id.Length != 11 && id.Length != 34)
                 {
                     finalId = "";
-                    return IdType.INVALID;
+                    return new Tuple<IdType, string>(IdType.INVALID,finalId);
                 }
             }
             finalId = id;
-            if (id.Length == 11) return IdType.TYPE_VIDEO;
-            else return IdType.TYPE_PLAYLIST;
+            if (id.Length == 11) return new Tuple<IdType, string>(IdType.TYPE_VIDEO, finalId);
+            else return new Tuple<IdType, string>(IdType.TYPE_PLAYLIST, finalId); ;
         }
 
         static private WebRequest GetWebRequest(RequestTypes RequestType,string id)
@@ -202,15 +203,13 @@ namespace YoutubeDownloader
                 fs.Dispose();
 
                 QueueManager.Instance.DownloadCompleted(id);
-                StorageFile outFile = await VideoFormat.VideoConvert(audioFile, Settings.GetPrefferedEncodingProfile() ,id);
-                TagProcessing.SetTags(new TagsPackage(caller.tagArtist, caller.tagAlbum, caller.tagTitle),outFile);
-                if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_RENAME))
-                    await outFile.RenameAsync(caller.tagTitle);
+                QueueManager.Instance.QueueNewItemConv(caller);
+
                 
             }
             catch (Exception exc)
             {
-                System.Diagnostics.Debug.WriteLine(exc.Message);
+                System.Diagnostics.Debug.WriteLine("DownloadVideo  "+ url + "   " + exc.Message);
             }
 
         }

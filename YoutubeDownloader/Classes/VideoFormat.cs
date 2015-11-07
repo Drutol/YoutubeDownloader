@@ -12,7 +12,7 @@ namespace YoutubeDownloader
 {
     public static class VideoFormat
     {
-        public static async Task<StorageFile> VideoConvert(StorageFile file,MediaEncodingProfile mediaProfile,string id)
+        public static async void VideoConvert(StorageFile file,MediaEncodingProfile mediaProfile,string id,VideoItem caller)
         {
             try
             {
@@ -21,28 +21,28 @@ namespace YoutubeDownloader
 
                 MediaTranscoder transcoder = new MediaTranscoder();
 
-                System.Diagnostics.Debug.WriteLine(file.Name);
-                System.Diagnostics.Debug.WriteLine(audioFile.Name);
-
                 var result = await transcoder.PrepareFileTranscodeAsync(file, audioFile, mediaProfile);
                 
                 if(result.CanTranscode)
                 {
                     var transcodeOp = result.TranscodeAsync();
                     transcodeOp.Progress +=
-                        new AsyncActionProgressHandler<double>((IAsyncActionWithProgress<double> asyncInfo, double percent) =>                 
+                        new AsyncActionProgressHandler<double>((IAsyncActionWithProgress<double> asyncInfo, double percent) =>
                         {
-                            PopulateUI.UpdateVideoManipulationProgress(id,(int)percent,PopulateUI.ProgressType.PROGRESS_CONV);
+                            PopulateUI.UpdateVideoManipulationProgress(id, (int)percent, PopulateUI.ProgressType.PROGRESS_CONV);
                         });
                     transcodeOp.Completed +=
                         new AsyncActionWithProgressCompletedHandler<double>( (IAsyncActionWithProgress<double> asyncInfo, AsyncStatus status) =>
                         {
+                            QueueManager.Instance.ConvCompleted(id);                     
                             Utils.TryToRemoveFile(5, file);
                         });
                 }
 
-                return audioFile;
-                             
+                TagProcessing.SetTags(new TagsPackage(caller.tagArtist, caller.tagAlbum, caller.tagTitle), audioFile);
+                //if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_RENAME))
+                //    await outFile.RenameAsync(caller.tagTitle);
+
             }
             catch (Exception exc)
             {
@@ -50,11 +50,11 @@ namespace YoutubeDownloader
                 throw;
             }
         }
-        public static async void VideoConvert(string fileName,MediaEncodingProfile mediaProfile,string id)
+        public static async void VideoConvert(string fileName,MediaEncodingProfile mediaProfile,string id,VideoItem caller)
         {
             var outFolder = await Settings.GetOutputFolder();
             StorageFile file = await outFolder.GetFileAsync(fileName);
-            await VideoConvert(file, mediaProfile, id);
+            VideoConvert(file, mediaProfile, id,caller);
         }
 
     }

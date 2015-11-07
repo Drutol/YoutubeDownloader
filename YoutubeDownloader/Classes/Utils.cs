@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Popups;
 
 namespace YoutubeDownloader
 {
@@ -43,7 +44,7 @@ namespace YoutubeDownloader
         }
 
         //Snippet from https://github.com/flagbug/YoutubeExtractor
-        public static string TryNormalizeYoutubeUrl(string url)
+        public static async Task<string> TryNormalizeYoutubeUrl(string url)
         {
             url = url.Trim();
 
@@ -70,6 +71,21 @@ namespace YoutubeDownloader
             {
                 string[] strings = Regex.Split(vp, "=");
                 dictionary.Add(strings[0], strings.Length == 2 ? System.Net.WebUtility.UrlDecode(strings[1]) : string.Empty);
+            }
+            if (dictionary.ContainsKey("list") && dictionary.ContainsKey("v"))
+            {
+                MessageDialog md = new MessageDialog("There's both playlist and video id in provided string.\nWhich one would you like to be processed?");
+                bool? result = null;
+                md.Commands.Add(
+                   new UICommand("Playlist", new UICommandInvokedHandler((cmd) => result = true)));
+                md.Commands.Add(
+                   new UICommand("Video", new UICommandInvokedHandler((cmd) => result = false)));
+
+                await md.ShowAsync();
+                if (result == true)
+                    return dictionary["list"];
+                else
+                    return dictionary["v"];
             }
 
             if (dictionary.ContainsKey("list"))
