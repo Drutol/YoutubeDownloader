@@ -44,6 +44,7 @@ namespace YoutubeDownloader
 
             List<string> titles = new List<string>();
             List<string> authors = new List<string>();
+            string suggTitle ="", suggArtist = "";
 
             // Check known rules
 
@@ -110,11 +111,16 @@ namespace YoutubeDownloader
                 else
                 {
                     titles[i] = titles[i].Trim();
+                    if (title.Contains(titles[i]))
+                        suggTitle = titles[i];
+
                 }
             }
             for (int i = 0; i < authors.Count; i++)
             {
                 authors[i] = authors[i].Trim();
+                if (title.Contains(authors[i]))
+                    suggArtist = authors[i];
             }
             authors.Add(vidAuthor);
             authors = authors.Distinct().ToList();
@@ -122,6 +128,8 @@ namespace YoutubeDownloader
             SuggestedTagsPackage pkg = new SuggestedTagsPackage();
             pkg.titles = titles;
             pkg.authors = authors;
+            pkg.suggestedTitle = suggTitle;
+            pkg.suggestedAuthor = suggArtist;
 
             return pkg;
         } 

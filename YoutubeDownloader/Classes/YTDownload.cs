@@ -201,8 +201,12 @@ namespace YoutubeDownloader
                 inputStream.Dispose();
                 fs.Dispose();
 
+                QueueManager.Instance.DownloadCompleted(id);
                 StorageFile outFile = await VideoFormat.VideoConvert(audioFile, Settings.GetPrefferedEncodingProfile() ,id);
                 TagProcessing.SetTags(new TagsPackage(caller.tagArtist, caller.tagAlbum, caller.tagTitle),outFile);
+                if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_RENAME))
+                    await outFile.RenameAsync(caller.tagTitle);
+                
             }
             catch (Exception exc)
             {

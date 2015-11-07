@@ -102,6 +102,10 @@ namespace YoutubeDownloader
         {
             SettingOutputFolder.Text = name == "" ? "Music library" : name;
         }
+        public void SetMaxPararellDownloads(int value)
+        {
+            SettingMaxPararellDownloads.Value = value;
+        }
         #endregion
        
         #region Settings Controls
@@ -118,6 +122,11 @@ namespace YoutubeDownloader
             Settings.ChangeSetting(toggle.Name, Convert.ToString(toggle.IsOn));
         }
 
+        private void ChangeSliderSetting(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Slider slider = (Slider)sender;
+            Settings.ChangeSetting(slider.Name, (int)slider.Value);
+        }
 
         #endregion
 
@@ -192,12 +201,6 @@ namespace YoutubeDownloader
 
         #endregion
 
-        private void EnableMultiSelection(object sender, RoutedEventArgs e)
-        {
-            var btn = (ToggleButton)sender;
-            VideoList.SelectionMode = (bool)btn.IsChecked ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
-        }
-
         private void VideoItemSelected(object sender, SelectionChangedEventArgs e)
         {
             if (VideoList.SelectedItems.Count > 0)
@@ -237,7 +240,7 @@ namespace YoutubeDownloader
         {
             foreach (VideoItem item in VideoList.SelectedItems)
             {
-                item.StartDownload(null,null);
+                item.QueueDownload();
             }
         }
 
@@ -270,5 +273,7 @@ namespace YoutubeDownloader
                 vidListItems.Remove(item);
             }
         }
+
+
     }
 }

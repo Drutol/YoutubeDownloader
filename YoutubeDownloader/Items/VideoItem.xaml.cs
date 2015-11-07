@@ -49,13 +49,16 @@ namespace YoutubeDownloader
             {
                 Dictionary<string, string> info = await YTDownload.GetVideoDetails(id);
                 suggestions = TagParser.AttemptToParseTags(info["title"], info["details"], "",info["author"]);
+                if (suggestions.suggestedAuthor != "")
+                    tagArtist = suggestions.suggestedAuthor;
+                if (suggestions.suggestedTitle != "")
+                    tagTitle = suggestions.suggestedTitle;
                 // Use dispatcher only to interact with the UI , putting the async method in there will block UI thread.
                 // Info is obtained in the line above and populated on the UI thread.
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
                         VideoTitle.Text = info["title"];
-                        //VideoTitle.Text = string.Join(",", package.titles.ToArray());
                         VideoAuthor.Text = info["author"];
 
                         thumbUrl = info["thumbHigh"];
@@ -70,8 +73,9 @@ namespace YoutubeDownloader
                         PopulateVideoDownloadInfo();
                     });
 
-                if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))              
-                    YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
+                if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))
+                    QueueManager.Instance.QueueNewItem(this);
+                //YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
                 else
                 {
                     // Wait for manual download action.
@@ -159,6 +163,16 @@ namespace YoutubeDownloader
             YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
         }
 
+        public void ForceDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            QueueManager.Instance.ForceDownload(this);
+        }
+
+        public void QueueDownload()
+        {
+            QueueManager.Instance.QueueNewItem(this);
+        }
+
         private void SetMusicTags(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             tagArtist = TagArtist.Text;
@@ -235,5 +249,6 @@ namespace YoutubeDownloader
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri("https://www.youtube.com/watch?v=" + id));
         }
+
     }
 }

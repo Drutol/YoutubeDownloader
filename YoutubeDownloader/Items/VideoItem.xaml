@@ -30,7 +30,7 @@
             </Button>
         </StackPanel>
         <StackPanel x:Name="ActionButtons" Orientation="Horizontal" Grid.Column="2">
-            <Button x:Name="btnDownload"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="StartDownload">
+            <Button x:Name="btnDownload"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
                 <SymbolIcon Symbol="Download"/>
             </Button>
             <Button x:Name="btnEditTags"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333">

@@ -16,7 +16,7 @@ namespace YoutubeDownloader
         {
             try
             {
-                var outFolder = await Settings.GetOutputFolder();                                          
+                var outFolder = await Settings.GetOutputFolder();
                 var audioFile = await outFolder.CreateFileAsync(file.Name.Replace("mp4","mp3"), CreationCollisionOption.ReplaceExisting);
 
                 MediaTranscoder transcoder = new MediaTranscoder();

@@ -17,6 +17,7 @@ namespace YoutubeDownloader
         {
             SETTING_AUTO_DL,
             SETTING_ALBUM_PLAYLIST_NAME,
+            SETTING_AUTO_RENAME,
         }
 
         public enum PossibleOutputFormats
@@ -41,7 +42,7 @@ namespace YoutubeDownloader
                 page.SetOutputFormat((int)ApplicationData.Current.LocalSettings.Values["outFormat"]);
                 page.SetOutputFolderName((string)ApplicationData.Current.LocalSettings.Values["outFolder"]);
                 page.SetOutputQuality((int)ApplicationData.Current.LocalSettings.Values["outQuality"]);
-
+                page.SetMaxPararellDownloads((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"]);
             });
 
         }
@@ -72,6 +73,10 @@ namespace YoutubeDownloader
             if (ApplicationData.Current.LocalSettings.Values["outFolder"] == null)
                 ApplicationData.Current.LocalSettings.Values["outFolder"] = ""; //empty as for default Music folder.
 
+            //slider
+            if (ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"] == null)
+                ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"] = 3; //empty as for default Music folder.
+
         }
 
         public static bool GetBoolSettingValueForKey(PossibleSettingsBool setting)
@@ -84,6 +89,9 @@ namespace YoutubeDownloader
                     break;
                 case PossibleSettingsBool.SETTING_ALBUM_PLAYLIST_NAME:
                     value = (string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"];
+                    break;
+                case PossibleSettingsBool.SETTING_AUTO_RENAME:
+                    value = (string)ApplicationData.Current.LocalSettings.Values["SettingRenameFile"];
                     break;
                 default:
                     throw new Exception("Ivalid enum");
@@ -103,6 +111,10 @@ namespace YoutubeDownloader
         }
 
         public static void ChangeSetting(string key,string value)
+        {
+            ApplicationData.Current.LocalSettings.Values[key] = value;
+        }
+        public static void ChangeSetting(string key, int value)
         {
             ApplicationData.Current.LocalSettings.Values[key] = value;
         }

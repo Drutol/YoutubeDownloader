@@ -53,7 +53,7 @@
                         <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
                         <Button x:Name="BtnSettingsText" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                     </StackPanel>
-                    <Grid x:Name="GridSettings" Height="434" Background="#7FE2E2E2" Visibility="Collapsed">
+                    <Grid x:Name="GridSettings" Height="434" Background="#7FE2E2E2" Visibility="Visible">
                         <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
                             <TextBlock Text="Start download automatically:" TextAlignment="Center"/>
                             <Grid>
@@ -66,6 +66,11 @@
                             <TextBlock Text="Set album name to playlist name: " TextAlignment="Center"/>
                             <Grid>
                                 <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
+                            </Grid>
+                            <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
+                            <Grid Height="40">
+                                <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
+                                <Slider x:Name="SettingMaxPararellDownloads" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting"/>
                             </Grid>
                             <TextBlock Text="Output format:" TextAlignment="Center"/>
                             <Grid Height="60">
