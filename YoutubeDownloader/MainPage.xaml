@@ -67,11 +67,19 @@
                             <Grid>
                                 <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
                             </Grid>
+                            
                             <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
                             <Grid Height="40">
                                 <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
                                 <Slider x:Name="SettingMaxPararellDownloads" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
                             </Grid>
+
+                            <TextBlock Text="Max pararell conversions: " TextAlignment="Center"/>
+                            <Grid Height="40">
+                                <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellConv, Path=Value}" TextAlignment="Center"/>
+                                <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
+                            </Grid>
+
                             <TextBlock Text="Output format:" TextAlignment="Center"/>
                             <Grid Height="60">
                                 <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedFormat">
@@ -97,7 +105,7 @@
                         </StackPanel>
                     </Grid>
                     <StackPanel Orientation="Horizontal">
-                        <Button x:Name="BtnOpenOutputFolder" FontFamily="Segoe MDL2 Assets" Content="&#57736;" Width="50" Height="50" Background="Transparent" Click="OpenOutputFolder"/>
+                        <Button x:Name="BtnOpenOutputFolder" FontFamily="Segoe MDL2 Assets" Content="&#57736;" Width="50" Height="50" Background="Transparent"/>
                         <TextBlock Text="Downloaded" FontSize="18" VerticalAlignment="Center" TextAlignment="Center" />
                     </StackPanel>
 

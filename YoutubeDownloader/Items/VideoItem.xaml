@@ -45,11 +45,11 @@
                                 </Style>
                             </StackPanel.Resources>
                             <TextBlock Text="Title"></TextBlock>
-                            <ComboBox x:Name="ComboTitles" Width="Auto" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestionTitle">
+                            <ComboBox x:Name="ComboTitles" Width="Auto" SelectedIndex="0" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestionTitle" DropDownClosed="SuggestionClosed" >
                                 <TextBox x:Name="TagTitle"></TextBox>
                             </ComboBox>
                             <TextBlock Text="Artist"></TextBlock>
-                            <ComboBox x:Name="ComboArtist" Width="Auto" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestionAuthor">
+                            <ComboBox x:Name="ComboArtist" Width="Auto" SelectedIndex="0" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestionAuthor">
                                 <TextBox x:Name="TagArtist"></TextBox>
                             </ComboBox>
                             <TextBlock Text="Album"></TextBlock>

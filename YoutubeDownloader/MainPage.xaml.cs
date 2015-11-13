@@ -2,13 +2,8 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
-using Windows.Storage;
-using YoutubeExtractor;
 using Windows.UI.Popups;
-using System.Linq;
-using System.IO;
 using System;
-using Windows.Media.Transcoding;
 using Windows.Storage.Pickers;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
@@ -16,13 +11,8 @@ using Windows.Media.MediaProperties;
 using Windows.UI.Xaml.Controls.Primitives;
 
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace YoutubeDownloader
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public partial class MainPage : Page
     {
         public MainPage()
@@ -33,14 +23,17 @@ namespace YoutubeDownloader
 
 
         public ObservableCollection<VideoItem> vidListItems;
-        
+
+        /// <summary>
+        /// This is where it all begun...
+        /// </summary>
         private async void BtnDownload_Click(object sender, RoutedEventArgs e)
-        {          
+        {
             VideoItem vidItem;
             EmptyNotice.Visibility = Visibility.Collapsed;
             SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
-            vidListItems = new ObservableCollection<VideoItem>();
-            string contentID = BoxID.Text;
+            vidListItems = new ObservableCollection<VideoItem>(); //prevent from adding same ids
+            string contentID = BoxID.Text; // this is going to be probably overwritten
             VideoList.ItemsSource = vidListItems;
             var inputData = await YTDownload.IsIdValid(contentID);
             contentID = inputData.Item2;
@@ -58,7 +51,7 @@ namespace YoutubeDownloader
                     List<string> videos = await YTDownload.GetVideosInPlaylist(contentID);
                     foreach (var video in videos)
                     {
-                        vidItem = new VideoItem(video,playlistName);
+                        vidItem = new VideoItem(video, playlistName);
                         vidListItems.Add(vidItem);
                     }
                     break;
@@ -70,15 +63,17 @@ namespace YoutubeDownloader
                 default:
                     throw new Exception("Invalid enumm - id valid");
             }
-            SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed; 
+            SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed;
         }
-        
+
+
+
         #region Setting Setters
         public void SetSetAlbumAsPlaylistNameSetting(string val)
         {
             SettingSetAlbumAsPlaylistName.IsOn = val == "True" ? true : false;
         }
-        
+
         public void SetAutoDownloadSetting(string val)
         {
             SettingAutoDownload.IsOn = val == "True" ? true : false;
@@ -107,8 +102,12 @@ namespace YoutubeDownloader
         {
             SettingMaxPararellDownloads.Value = value;
         }
+        internal void SetMaxPararellConv(int value)
+        {
+            SettingMaxPararellConv.Value = value;
+        }
         #endregion
-       
+
         #region Settings Controls
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
@@ -125,15 +124,16 @@ namespace YoutubeDownloader
 
         private void ChangeSliderSetting(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (MainMenu.IsPaneOpen) //Cause it was triggering on app load. Seems like reasonable workaroud ^^
+            if (MainMenu.IsPaneOpen) //Cause it was triggering on app load. Seems like a reasonable workaroud ^^
             {
                 Slider slider = (Slider)sender;
                 Settings.ChangeSetting(slider.Name, (int)slider.Value);
-                QueueManager.Instance.MaxPararellDownloadChanged((int)slider.Value);
+                if(!slider.Name.Contains("Conv"))
+                    QueueManager.Instance.MaxPararellDownloadChanged((int)slider.Value);
+                else
+                    QueueManager.Instance.MaxPararellConvChanged((int)slider.Value);
             }
         }
-
-        #endregion
 
         private void ChangePrefferedFormat(object sender, object e)
         {
@@ -154,15 +154,15 @@ namespace YoutubeDownloader
             try
             {
                 var picker = new FolderPicker { ViewMode = PickerViewMode.List };
-                picker.FileTypeFilter.Add(".fake"); //Avoid random files from displaying
+                picker.FileTypeFilter.Add(".fake"); //Avoid random files from displaying , is there .fake extension?
 
                 var folder = await picker.PickSingleFolderAsync();
-                if (folder == null) return;
+                if (folder == null) return; //No folder no fun
 
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("outFolder", folder);
-                
+
                 Settings.SetOutputFolderName(folder.Name);
-                SettingOutputFolder.Text = folder.Name;         
+                SettingOutputFolder.Text = folder.Name;
             }
             catch (TaskCanceledException ex)
             {
@@ -170,14 +170,11 @@ namespace YoutubeDownloader
             }
         }
 
-        private void OpenOutputFolder(object sender, RoutedEventArgs e)
-        {
 
-        }
 
         private void BtnSettings_Click(object sender, RoutedEventArgs e)
         {
-            HamburgerButton_Click(null,null);
+            HamburgerButton_Click(null, null);
             GridSettings.Visibility = MainMenu.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -185,6 +182,7 @@ namespace YoutubeDownloader
         {
             GridSettings.Visibility = GridSettings.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
         }
+        #endregion
 
         #region Helpers
         private void HideAllPaneGrids()
@@ -201,11 +199,33 @@ namespace YoutubeDownloader
         {
             HideAllPaneGrids();
         }
-
-
-
         #endregion
 
+        #region SelectionManip
+        private void SelectionInvert(object sender, RoutedEventArgs e)
+        {
+            List<string> disabledIds = new List<string>();
+            foreach (var item in VideoList.SelectedItems)
+            {
+                VideoItem vid = (VideoItem)item;
+                disabledIds.Add(vid.id);
+            }
+            VideoList.SelectedItems.Clear();
+            foreach (var item in VideoList.Items)
+            {
+                VideoItem vid = (VideoItem)item;
+                if (disabledIds.Find(video => video == vid.id) == null)
+                    VideoList.SelectedItems.Add(item);
+            }
+        }
+
+        private void SelectionAll(object sender, RoutedEventArgs e)
+        {
+            VideoList.SelectAll();
+        }
+        #endregion
+
+        #region SelectionActions
         private void VideoItemSelected(object sender, SelectionChangedEventArgs e)
         {
             if (VideoList.SelectedItems.Count > 0)
@@ -216,7 +236,7 @@ namespace YoutubeDownloader
 
         private void MassEditTags(object sender, RoutedEventArgs e)
         {
-            foreach(VideoItem item in VideoList.SelectedItems)
+            foreach (VideoItem item in VideoList.SelectedItems)
             {
                 item.tagAlbum = MassEditTagAlbum.Text;
                 item.tagArtist = MassEditTagArtist.Text;
@@ -249,28 +269,6 @@ namespace YoutubeDownloader
             }
         }
 
-        private void SelectionInvert(object sender, RoutedEventArgs e)
-        {
-            List<string> disabledIds = new List<string>();
-            foreach (var item in VideoList.SelectedItems)
-            {
-                VideoItem vid = (VideoItem)item;
-                disabledIds.Add(vid.id);
-            }
-            VideoList.SelectedItems.Clear();
-            foreach (var item in VideoList.Items)
-            {
-                VideoItem vid = (VideoItem)item;
-                if (disabledIds.Find(video => video == vid.id) == null)
-                    VideoList.SelectedItems.Add(item);
-            }
-        }
-
-        private void SelectionAll(object sender, RoutedEventArgs e)
-        {
-            VideoList.SelectAll();
-        }
-
         private void SelectionRemove(object sender, RoutedEventArgs e)
         {
             foreach (VideoItem item in VideoList.SelectedItems)
@@ -278,7 +276,7 @@ namespace YoutubeDownloader
                 vidListItems.Remove(item);
             }
         }
-
+        #endregion
 
     }
 }

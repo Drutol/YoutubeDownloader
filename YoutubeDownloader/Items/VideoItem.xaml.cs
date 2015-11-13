@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using YoutubeExtractor;
 using System.Threading.Tasks;
+using System.Linq;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -110,7 +111,7 @@ namespace YoutubeDownloader
 
                 IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
 
-                VideoInfo vid = null;
+                VideoInfo vid = null;// videoInfos.Where(info => info.CanExtractAudio).OrderByDescending(info => info.AudioBitrate).First();
 
                 string format = "";
 
@@ -164,7 +165,7 @@ namespace YoutubeDownloader
 
         public void StartDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
+            YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat),this);
         }
 
         public void ForceDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -240,20 +241,28 @@ namespace YoutubeDownloader
 
         private void SelectSuggestionTitle(object sender, SelectionChangedEventArgs e)
         {
+            
             ComboBox cmb = (ComboBox)sender;
-            TextBlock btn = (TextBlock)cmb.SelectedItem;
-            TagTitle.Text = btn.Text;
-            ComboTitles.SelectedIndex = 0;
-            ComboTitles.IsDropDownOpen = false;
+            if (cmb.SelectedIndex > 0)
+            {
+                TextBlock btn = (TextBlock)cmb.SelectedItem;
+                TagTitle.Text = btn.Text;
+                ComboTitles.SelectedIndex = 0;
+                ComboTitles.IsDropDownOpen = false;
+            }
+
         }
 
         private void SelectSuggestionAuthor(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cmb = (ComboBox)sender;
-            TextBlock btn = (TextBlock)cmb.SelectedItem;
-            TagArtist.Text = btn.Text;
-            ComboArtist.SelectedIndex = 0;
-            ComboArtist.IsDropDownOpen = false;
+            if (cmb.SelectedIndex > 0)
+            {
+                TextBlock btn = (TextBlock)cmb.SelectedItem;
+                TagArtist.Text = btn.Text;
+                ComboArtist.SelectedIndex = 0;
+                ComboArtist.IsDropDownOpen = false;
+            }
         }
 
         private async void OpenInBrowswer(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -261,5 +270,10 @@ namespace YoutubeDownloader
             await Windows.System.Launcher.LaunchUriAsync(new Uri("https://www.youtube.com/watch?v=" + id));
         }
 
+        private void SuggestionClosed(object sender, object e)
+        {
+            var cmb = sender as ComboBox;
+            cmb.SelectedIndex = 0;
+        }
     }
 }

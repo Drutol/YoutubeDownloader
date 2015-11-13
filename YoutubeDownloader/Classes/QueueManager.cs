@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 namespace YoutubeDownloader
 {
     /// <summary>
-    /// Singleton class that manages queueing items.
+    /// Singleton class that manages queueing items (DL and Conv).
     /// </summary>
     public class QueueManager
     {
         private int maxPararellDownloads = Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTINGS_PARARELL_DL);
+        private int maxPararellConv = Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTINGS_PARARELL_CONV);
 
         private static QueueManager instance;
 
@@ -34,6 +35,8 @@ namespace YoutubeDownloader
                 return instance;
             }
         }
+
+        #region Download
 
         public void QueueNewItem(VideoItem item)
         {
@@ -77,6 +80,10 @@ namespace YoutubeDownloader
         {
             maxPararellDownloads = to;
         }
+        #endregion
+
+        #region Conversion
+
 
         public void QueueNewItemConv(VideoItem item)
         {
@@ -86,11 +93,11 @@ namespace YoutubeDownloader
 
         private void CheckQueueConv()
         {
-            if (queuedItemsConv.Count > 0 && convertingItems.Count < 2)
+            if (queuedItemsConv.Count > 0 && convertingItems.Count < maxPararellConv)
             {
                 var item = queuedItemsConv.First();
                 convertingItems.Add(item);
-                VideoFormat.VideoConvert(Utils.CleanFileName(item.title + item.fileFormat), Settings.GetPrefferedEncodingProfile(), item.id , item);
+                VideoFormat.VideoConvert(Utils.CleanFileName(item.title + item.fileFormat), Settings.GetPrefferedEncodingProfile(),item);
                 queuedItemsConv.RemoveAt(0);
             }
 
@@ -109,6 +116,13 @@ namespace YoutubeDownloader
             }
             CheckQueueConv();
         }
+
+        public void MaxPararellConvChanged(int to)
+        {
+            maxPararellConv = to;
+        }
+        #endregion
+
 
     }
 }

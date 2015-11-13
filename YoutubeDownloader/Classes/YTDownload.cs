@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace YoutubeDownloader
 {
-
+    #region Enums
     enum RequestTypes
     {
         REQUEST_PLAYLIST_ITEMS,
@@ -28,10 +28,10 @@ namespace YoutubeDownloader
         TYPE_VIDEO,
         INVALID,
     }
-
+    #endregion
     static class YTDownload
     {
-        const string API_KEY = "AIzaSyCC1bN7iQNMc60AoocV7V0ub1VKPiib0zA";
+        const string API_KEY = "AIzaSyCC1bN7iQNMc60AoocV7V0ub1VKPiib0zA"; //don't hate me :(
         static public async System.Threading.Tasks.Task<List<string>> GetVideosInPlaylist(string playlistID)
         {
             List<string> videos = new List<string>();
@@ -65,7 +65,50 @@ namespace YoutubeDownloader
             return videos;
         }
 
-        internal static async Task<string> GetPlaylistDetails(string id)
+        #region Helpers
+        static private WebRequest GetWebRequest(RequestTypes RequestType, string id)
+        {
+            string uri;
+
+            switch (RequestType)
+            {
+                case RequestTypes.REQUEST_PLAYLIST_ITEMS:
+                    uri = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=" + id + "&key=" + API_KEY;
+                    break;
+                case RequestTypes.REQUEST_VIDEO:
+                    uri = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&part=snippet&key=" + API_KEY;
+                    break;
+                case RequestTypes.REQUEST_PLAYLIST:
+                    uri = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&maxResults=50&id=" + id + "&key=" + API_KEY;
+                    break;
+                default:
+                    throw new Exception("Invalid Request");
+            }
+            WebRequest request = WebRequest.Create(Uri.EscapeUriString(uri));
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.Method = "GET";
+
+            return request;
+        }
+
+        static async private System.Threading.Tasks.Task<dynamic> GetRequestResponse(WebRequest request)
+        {
+            var response = await request.GetResponseAsync();
+
+            string responseString = "";
+            using (Stream stream = response.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                responseString = reader.ReadToEnd();
+            }
+
+            dynamic objResponse = JsonConvert.DeserializeObject(responseString);
+
+            return objResponse;
+        }
+        #endregion
+
+        public static async Task<string> GetPlaylistDetails(string id) // GetPlaylistName in short.
         {
             WebRequest request = GetWebRequest(RequestTypes.REQUEST_PLAYLIST, id);
             dynamic objResponse = await GetRequestResponse(request);
@@ -103,10 +146,14 @@ namespace YoutubeDownloader
                 await dialog.ShowAsync();
             }
             
-
             return info;
         }
-
+        /// <summary>
+        /// Checks if video or playlist id can be extracted from provided string
+        /// <returns>
+        /// Tuple consisting of enum and new id.
+        /// </returns>
+        /// </summary>
         public static async Task<Tuple<IdType,string>> IsIdValid(string id)
         {
             string finalId;
@@ -124,48 +171,7 @@ namespace YoutubeDownloader
             else return new Tuple<IdType, string>(IdType.TYPE_PLAYLIST, finalId); ;
         }
 
-        static private WebRequest GetWebRequest(RequestTypes RequestType,string id)
-        {
-            string uri;
-
-            switch (RequestType)
-            {
-                case RequestTypes.REQUEST_PLAYLIST_ITEMS:
-                    uri = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=" + id +"&key=" + API_KEY;
-                    break;
-                case RequestTypes.REQUEST_VIDEO:
-                    uri = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&part=snippet&key=" + API_KEY;
-                    break;
-                case RequestTypes.REQUEST_PLAYLIST:
-                    uri = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&maxResults=50&id=" + id + "&key=" + API_KEY;
-                    break;
-                default:
-                    throw new Exception("Invalid Request");
-            }
-            WebRequest request = WebRequest.Create(Uri.EscapeUriString(uri));
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.Method = "GET";
-
-            return request;
-        }
-
-        static async private System.Threading.Tasks.Task<dynamic> GetRequestResponse(WebRequest request)
-        {
-            var response = await request.GetResponseAsync();
-
-            string responseString = "";
-            using (Stream stream = response.GetResponseStream())
-            {
-                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                responseString = reader.ReadToEnd();
-            }
-
-            dynamic objResponse = JsonConvert.DeserializeObject(responseString);
-
-            return objResponse;
-        }
-
-        static async public void DownloadVideo(string url,string filename,string id,VideoItem caller = null)
+        static async public void DownloadVideo(string url,string filename,VideoItem caller)
         {
             try
             {
@@ -190,11 +196,11 @@ namespace YoutubeDownloader
                     buffer = await inputStream.ReadAsync(buffer, buffer.Capacity, InputStreamOptions.None);
 
                     if (buffer.Length == 0)
-                        break;
+                        break; //we're done nothing left to read... cya!
 
                     // Report progress.
                     totalBytesRead += buffer.Length;
-                    PopulateUI.UpdateVideoManipulationProgress(id, (int)((100 * totalBytesRead) / totalBytes),PopulateUI.ProgressType.PROGRESS_DL); 
+                    PopulateUI.UpdateVideoManipulationProgress(caller.id, (int)((100 * totalBytesRead) / totalBytes),PopulateUI.ProgressType.PROGRESS_DL); 
 
                     // Write to file.
                     await fs.WriteAsync(buffer);
@@ -202,10 +208,12 @@ namespace YoutubeDownloader
                 inputStream.Dispose();
                 fs.Dispose();
 
-                QueueManager.Instance.DownloadCompleted(id);
+                //Once we're done we are calling manager with info that item has been donwloaded.
+                QueueManager.Instance.DownloadCompleted(caller.id);
+                //And we have to queue it's conversion to different format.
                 QueueManager.Instance.QueueNewItemConv(caller);
-
-                
+         
+                //TODO Handle failure
             }
             catch (Exception exc)
             {
@@ -223,7 +231,6 @@ namespace YoutubeDownloader
                 {
                     await Task.Run(async () =>
                     {
-
                         try
                         {
                             var thumb = await folder.CreateFileAsync(Utils.CleanFileName(url.Key + ".png"), CreationCollisionOption.ReplaceExisting);
@@ -237,6 +244,7 @@ namespace YoutubeDownloader
 
                             writer.WriteBytes(response);
                             await writer.StoreAsync();
+                            //TODO dispose writer?
                         }
                         catch (Exception exce)
                         {
@@ -251,8 +259,5 @@ namespace YoutubeDownloader
                 }
             }
         }
-
-
-
     }
 }

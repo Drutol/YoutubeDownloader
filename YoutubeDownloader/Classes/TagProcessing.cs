@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Windows.Media.Transcoding;
-using Windows.Media.MediaProperties;
-using Windows.Media.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Storage.Streams;
 using System.Threading.Tasks;
 
 namespace YoutubeDownloader
@@ -45,12 +36,12 @@ namespace YoutubeDownloader
                 MusicProperties tags = await file.Properties.GetMusicPropertiesAsync();
                 tags.Artist = tagsPck.artist;
                 tags.Title = tagsPck.title;
-                tags.Album = tagsPck.album;         
+                tags.Album = tagsPck.album;
                 await tags.SavePropertiesAsync();
             }
             catch (Exception exc)
             {
-                System.Diagnostics.Debug.WriteLine("TagsProcessing(StorageFile) " + exc.Message);
+                System.Diagnostics.Debug.WriteLine("TagsProcessing : " + exc.Message);
                 await Task.Delay(TimeSpan.FromSeconds(5));
                 if (nRetries >= 0)
                     SetTags(tagsPck, file, nRetries - 1);

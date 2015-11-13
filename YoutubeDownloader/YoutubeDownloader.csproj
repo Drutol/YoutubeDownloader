@@ -149,6 +149,12 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="YoutubeExtractor\YoutubeExtractor_Portable.csproj">
+      <Project>{1bb4cf4d-3617-4a23-b51a-da7711e6f8eb}</Project>
+      <Name>YoutubeExtractor_Portable</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

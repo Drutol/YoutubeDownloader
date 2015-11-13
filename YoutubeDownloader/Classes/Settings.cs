@@ -29,6 +29,7 @@ namespace YoutubeDownloader
         public enum PossibleValueSettings
         {
             SETTINGS_PARARELL_DL,
+            SETTINGS_PARARELL_CONV,
         }
         //private static IEnumerable<string> SettingsKeys = new List<string>() { "SettingAutoDownload" };
 
@@ -48,6 +49,7 @@ namespace YoutubeDownloader
                 page.SetOutputFolderName((string)ApplicationData.Current.LocalSettings.Values["outFolder"]);
                 page.SetOutputQuality((int)ApplicationData.Current.LocalSettings.Values["outQuality"]);
                 page.SetMaxPararellDownloads((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"]);
+                page.SetMaxPararellConv((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"]);
             });
 
         }
@@ -56,7 +58,7 @@ namespace YoutubeDownloader
         /// </summary>
         public static void CheckDefaultSettings()
         {
-            //bools
+            //booleans
             if (ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"] == null)
                 ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"] = "True";
 
@@ -78,9 +80,12 @@ namespace YoutubeDownloader
             if (ApplicationData.Current.LocalSettings.Values["outFolder"] == null)
                 ApplicationData.Current.LocalSettings.Values["outFolder"] = ""; //empty as for default Music folder.
 
-            //slider
+            //sliders
             if (ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"] == null)
-                ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"] = 3; //empty as for default Music folder.
+                ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"] = 3;
+
+            if (ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"] == null)
+                ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"] = 2;
 
         }
 
@@ -111,6 +116,8 @@ namespace YoutubeDownloader
             {
                 case PossibleValueSettings.SETTINGS_PARARELL_DL:
                     return (int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"];
+                case PossibleValueSettings.SETTINGS_PARARELL_CONV:
+                    return (int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"];
                 default:
                     break;
             }
