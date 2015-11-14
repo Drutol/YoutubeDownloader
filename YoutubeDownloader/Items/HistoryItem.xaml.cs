@@ -1,27 +1,66 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+using System.Diagnostics;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.System;
+using Windows.UI.Xaml;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace YoutubeDownloader.Items
+namespace YoutubeDownloader
 {
     public sealed partial class HistoryItem : UserControl
     {
-        public HistoryItem()
+        HistoryEntry myInfo;
+
+        public HistoryItem(HistoryEntry info)
         {
-            this.InitializeComponent();
+            myInfo = info;
+            InitializeComponent();
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                PopulateInfo();
+            });
+            
+        }
+
+        private async void LoadEntry(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                var frame = (Frame)Window.Current.Content;
+                var page = (MainPage)frame.Content;
+                page.BeginWork(myInfo.id);
+            });
+        }
+
+        private async void OpenURL(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri(myInfo.playlist ? "https://www.youtube.com/playlist?list=" + myInfo.id : "https://www.youtube.com/watch?v=" + myInfo.id));
+        }
+
+        private async void PopulateInfo()
+        {
+            try
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                     {
+                         Thumb.Source = new BitmapImage(new Uri(myInfo.thumb));
+                         Title.Text = myInfo.title;
+                         Author.Text = myInfo.author;
+                     });
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(exc.Message);
+            }
+        }
+
+        private void ShowFlyout(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            Flyout.ShowAt(this);
         }
     }
 }

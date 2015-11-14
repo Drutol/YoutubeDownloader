@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
 using Windows.Media.MediaProperties;
 using Windows.UI.Xaml.Controls.Primitives;
-
+using Windows.System;
 
 namespace YoutubeDownloader
 {
@@ -18,36 +18,44 @@ namespace YoutubeDownloader
         public MainPage()
         {
             InitializeComponent();
-            Settings.Init();
+            Settings.Init();          
         }
 
 
         public ObservableCollection<VideoItem> vidListItems;
+        public ObservableCollection<HistoryItem> historyListItems = new ObservableCollection<HistoryItem>();
 
+        bool ShouldPopulateHistory = true;
+
+        private void BtnDownload_Click(object sender, RoutedEventArgs e)
+        {
+            BeginWork();
+        }
         /// <summary>
         /// This is where it all begun...
         /// </summary>
-        private async void BtnDownload_Click(object sender, RoutedEventArgs e)
+        public async void BeginWork(string url = "")
         {
             VideoItem vidItem;
             EmptyNotice.Visibility = Visibility.Collapsed;
             SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
             vidListItems = new ObservableCollection<VideoItem>(); //prevent from adding same ids
-            string contentID = BoxID.Text; // this is going to be probably overwritten
+            string contentID = url == "" ? BoxID.Text : url; // this is going to be probably overwritten
             VideoList.ItemsSource = vidListItems;
             var inputData = await YTDownload.IsIdValid(contentID);
             contentID = inputData.Item2;
             switch (inputData.Item1)
             {
                 case IdType.TYPE_VIDEO:
-                    vidItem = new VideoItem(contentID);
+                    vidItem = new VideoItem(contentID, "", true);
                     vidListItems.Add(vidItem);
                     break;
                 case IdType.TYPE_PLAYLIST:
-                    string playlistName = "";
-                    if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_ALBUM_PLAYLIST_NAME))
-                        playlistName = await YTDownload.GetPlaylistDetails(contentID);
 
+                    bool setAlbumTag = Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_ALBUM_PLAYLIST_NAME);
+                    var info = await YTDownload.GetPlaylistDetails(contentID);
+                    HistoryManager.AddNewEntry(new HistoryEntry(info.Item3, info.Item1, info.Item2, contentID));
+                    string playlistName = setAlbumTag ? info.Item1 : "";
                     List<string> videos = await YTDownload.GetVideosInPlaylist(contentID);
                     foreach (var video in videos)
                     {
@@ -64,6 +72,7 @@ namespace YoutubeDownloader
                     throw new Exception("Invalid enumm - id valid");
             }
             SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed;
+            
         }
 
         #region Setting Setters
@@ -197,11 +206,14 @@ namespace YoutubeDownloader
             }
             else
                 GridHistory.Visibility = GridHistory.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+
+            PopulateHistory();
         }
 
         private void BtnHistoryInner_Click(object sender, RoutedEventArgs e)
         {
             GridHistory.Visibility = GridHistory.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+            PopulateHistory();
         }
 
         private bool AreAllGridPanesClosed()
@@ -305,6 +317,30 @@ namespace YoutubeDownloader
         }
         #endregion
 
+        #region History
+        private async void PopulateHistory()
+        {
+            if (!ShouldPopulateHistory)
+                return;
+            HistoryWorking.Visibility = Visibility.Visible;
+            historyListItems.Clear();
 
+            var history = new List<HistoryEntry>();
+            await Task.Run(() => { history = HistoryManager.GetHistoryEntries(); });
+            foreach (var item in history)
+            {
+                historyListItems.Add(new HistoryItem(item));
+            }
+            HistoryWorking.Visibility = Visibility.Collapsed;
+            HistoryList.ItemsSource = historyListItems;
+            ShouldPopulateHistory = false;
+        }
+
+        #endregion
+
+        private async void OpenOututFolder(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchFolderAsync(await Settings.GetOutputFolder());
+        }
     }
 }

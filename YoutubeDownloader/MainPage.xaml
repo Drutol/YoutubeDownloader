@@ -50,6 +50,11 @@
                         <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
+                        <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
+                            <SymbolIcon Symbol="Folder"/>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
                         <Button x:Name="BtnSettingsText" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                     </StackPanel>
@@ -109,7 +114,8 @@
                         <Button x:Name="BtnHistory" FontFamily="Segoe MDL2 Assets" Content="&#57692;" Width="50" Height="50" Background="Transparent" Click="BtnHistory_Click"/>
                         <Button x:Name="BtnInnerHistory" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                     </StackPanel>
-                    <Grid x:Name="GridHistory" Height="311" Background="#7FE2E2E2">
+                    <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FE2E2E2" Visibility="Collapsed">
+                        <ProgressRing x:Name="HistoryWorking" Margin="5" Width="50" Height="50" IsActive="True" Visibility="Collapsed"/>
                         <ListView x:Name="HistoryList" Margin="5" MaxHeight="100">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">

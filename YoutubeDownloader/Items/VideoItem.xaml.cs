@@ -27,21 +27,21 @@ namespace YoutubeDownloader
         public string tagTitle = "";
         public string tagArtist = "";
 
-        public int queuePos = 0;
+        bool report; //history
 
         SuggestedTagsPackage suggestions;
 
-        public object Task { get; private set; }
 
-        public  VideoItem(string id,string origin = "") // as for playlist title
+        public  VideoItem(string id,string origin = "",bool report = false) // as for playlist title
         {
             InitializeComponent();
             //Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             this.id = id;
             this.origin = origin;
+            this.report = report;
             tagAlbum = origin;
             suggestions = new SuggestedTagsPackage();
-            System.Threading.Tasks.Task.Run(() =>
+            Task.Run(() =>
             {
                 PopulateVideoInfo();
             });
@@ -53,6 +53,8 @@ namespace YoutubeDownloader
             try
             {
                 Dictionary<string, string> info = await YTDownload.GetVideoDetails(id);
+                if(report)
+                    HistoryManager.AddNewEntry(new HistoryEntry(info["thumbSmall"], info["title"], info["author"], id));
                 suggestions = TagParser.AttemptToParseTags(info["title"], info["details"], "",info["author"]);
                 if (suggestions.suggestedAuthor != "")
                     tagArtist = suggestions.suggestedAuthor;

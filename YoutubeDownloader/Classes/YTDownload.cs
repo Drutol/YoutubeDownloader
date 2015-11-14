@@ -108,17 +108,23 @@ namespace YoutubeDownloader
         }
         #endregion
 
-        public static async Task<string> GetPlaylistDetails(string id) // GetPlaylistName in short.
+        public static async Task<Tuple<string,string,string>> GetPlaylistDetails(string id) // GetPlaylistName in short.
         {
             WebRequest request = GetWebRequest(RequestTypes.REQUEST_PLAYLIST, id);
             dynamic objResponse = await GetRequestResponse(request);
 
+            string name = "";
+            string auth = "";
+            string thumb = "";
+
             foreach (var item in objResponse.items)
             {
-                return item.snippet.title;
+                thumb = item.snippet.thumbnails.medium.url;
+                auth = item.snippet.channelTitle;
+                name = item.snippet.title;
             }
 
-            return "";
+            return new Tuple<string, string,string>(name,auth,thumb);
         }
 
         static public async System.Threading.Tasks.Task<Dictionary<string,string>> GetVideoDetails(string videoId)

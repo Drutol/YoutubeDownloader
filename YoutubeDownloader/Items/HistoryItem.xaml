@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="YoutubeDownloader.Items.HistoryItem"
+    x:Class="YoutubeDownloader.HistoryItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:YoutubeDownloader.Items"
@@ -9,7 +9,33 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid>
-        
+    <Grid Width="Auto" Height="50" Background="#4CD1D1D1" Tapped="ShowFlyout">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Image x:Name="Thumb" Stretch="UniformToFill" Grid.Column="0"/>
+        <StackPanel Orientation="Vertical" Grid.Column="1">
+            <TextBlock x:Name="Title"></TextBlock>
+            <TextBlock x:Name="Author"></TextBlock>
+        </StackPanel>
+        <FlyoutBase.AttachedFlyout>
+            <Flyout x:Name="Flyout">
+                <StackPanel Orientation="Vertical">
+                    <Button Margin="2" HorizontalAlignment="Stretch" Click="OpenURL">
+                        <StackPanel Orientation="Horizontal">
+                            <SymbolIcon Symbol="Globe"></SymbolIcon>
+                            <TextBlock Text="  Open in browswer"></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Margin="2" HorizontalAlignment="Stretch" Click="LoadEntry">
+                        <StackPanel Orientation="Horizontal">
+                            <SymbolIcon Symbol="Redo"></SymbolIcon>
+                            <TextBlock Text="  Load"></TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Flyout>
+        </FlyoutBase.AttachedFlyout>
     </Grid>
 </UserControl>
