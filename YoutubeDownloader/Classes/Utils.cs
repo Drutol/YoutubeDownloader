@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 
 namespace YoutubeDownloader
 {
@@ -94,6 +95,18 @@ namespace YoutubeDownloader
                 return dictionary["v"];
 
             return "";
+        }
+        /// <summary>
+        /// Visible = true , Collapsed = false
+        /// </summary>
+        /// <param name="vis"></param>
+        /// <returns></returns>
+        public static bool VisibilityConverter(Visibility vis)
+        {
+            if (vis == Visibility.Visible)
+                return true;
+
+            return false;
         }
 
     }

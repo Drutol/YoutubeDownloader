@@ -104,10 +104,20 @@
 
                         </StackPanel>
                     </Grid>
+                    
                     <StackPanel Orientation="Horizontal">
-                        <Button x:Name="BtnOpenOutputFolder" FontFamily="Segoe MDL2 Assets" Content="&#57736;" Width="50" Height="50" Background="Transparent"/>
-                        <TextBlock Text="Downloaded" FontSize="18" VerticalAlignment="Center" TextAlignment="Center" />
+                        <Button x:Name="BtnHistory" FontFamily="Segoe MDL2 Assets" Content="&#57692;" Width="50" Height="50" Background="Transparent" Click="BtnHistory_Click"/>
+                        <Button x:Name="BtnInnerHistory" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                     </StackPanel>
+                    <Grid x:Name="GridHistory" Height="311" Background="#7FE2E2E2">
+                        <ListView x:Name="HistoryList" Margin="5" MaxHeight="100">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </Grid>
 
 
                     <StackPanel Orientation="Horizontal"/>

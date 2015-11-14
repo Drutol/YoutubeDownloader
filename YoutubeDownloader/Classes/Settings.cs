@@ -30,8 +30,8 @@ namespace YoutubeDownloader
         {
             SETTINGS_PARARELL_DL,
             SETTINGS_PARARELL_CONV,
+            HISTORY_COUNTER,
         }
-        //private static IEnumerable<string> SettingsKeys = new List<string>() { "SettingAutoDownload" };
 
         public static async void Init()
         {
@@ -41,7 +41,7 @@ namespace YoutubeDownloader
                 var frame = (Frame)Window.Current.Content;
                 var page = (MainPage)frame.Content;
 
-                // TODO : Move this to main page class.
+                // TODO : Move this to main page class. (maybe?)
                 page.SetAutoDownloadSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"]);
                 page.SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
                 page.SetRenameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingRenameFile"]);
@@ -87,6 +87,10 @@ namespace YoutubeDownloader
             if (ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"] == null)
                 ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"] = 2;
 
+            //History counter
+            if (ApplicationData.Current.LocalSettings.Values["HistoryCounter"] == null)
+                ApplicationData.Current.LocalSettings.Values["HistoryCounter"] = 0;
+
         }
 
         public static bool GetBoolSettingValueForKey(PossibleSettingsBool setting)
@@ -118,6 +122,8 @@ namespace YoutubeDownloader
                     return (int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"];
                 case PossibleValueSettings.SETTINGS_PARARELL_CONV:
                     return (int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"];
+                case PossibleValueSettings.HISTORY_COUNTER:
+                    return (int)ApplicationData.Current.LocalSettings.Values["HistoryCounter"];
                 default:
                     break;
             }
@@ -139,6 +145,7 @@ namespace YoutubeDownloader
         {
             ApplicationData.Current.LocalSettings.Values[key] = value;
         }
+
         public static void ChangeSetting(string key, int value)
         {
             ApplicationData.Current.LocalSettings.Values[key] = value;

@@ -66,8 +66,6 @@ namespace YoutubeDownloader
             SpinnerLoadingPlaylist.Visibility = Visibility.Collapsed;
         }
 
-
-
         #region Setting Setters
         public void SetSetAlbumAsPlaylistNameSetting(string val)
         {
@@ -171,16 +169,44 @@ namespace YoutubeDownloader
         }
 
 
+        #endregion
 
+        #region PaneGrids
         private void BtnSettings_Click(object sender, RoutedEventArgs e)
         {
-            HamburgerButton_Click(null, null);
-            GridSettings.Visibility = MainMenu.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+            if (AreAllGridPanesClosed() || !MainMenu.IsPaneOpen)
+            {
+                HamburgerButton_Click(null, null); //Closes main pane
+                GridSettings.Visibility = MainMenu.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else
+                GridSettings.Visibility = GridSettings.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void BtnSettingsInner_Click(object sender, RoutedEventArgs e)
         {
             GridSettings.Visibility = GridSettings.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void BtnHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (AreAllGridPanesClosed() || !MainMenu.IsPaneOpen)
+            {
+                HamburgerButton_Click(null, null);
+                GridHistory.Visibility = MainMenu.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else
+                GridHistory.Visibility = GridHistory.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void BtnHistoryInner_Click(object sender, RoutedEventArgs e)
+        {
+            GridHistory.Visibility = GridHistory.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private bool AreAllGridPanesClosed()
+        {
+            return !Utils.VisibilityConverter(GridHistory.Visibility) && !Utils.VisibilityConverter(GridSettings.Visibility);
         }
         #endregion
 
@@ -188,6 +214,7 @@ namespace YoutubeDownloader
         private void HideAllPaneGrids()
         {
             GridSettings.Visibility = Visibility.Collapsed;
+            GridHistory.Visibility = Visibility.Collapsed;
         }
 
         private void HideAllPaneGrids(Grid exception)
@@ -277,6 +304,7 @@ namespace YoutubeDownloader
             }
         }
         #endregion
+
 
     }
 }

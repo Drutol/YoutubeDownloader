@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace YoutubeDownloader
 {
@@ -15,8 +13,6 @@ namespace YoutubeDownloader
         public string suggestedAuthor;
         public bool foundStuffInDetails;
     }
-
-    
 
     class TagParser
     {

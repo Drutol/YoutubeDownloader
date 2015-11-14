@@ -94,7 +94,7 @@ namespace YoutubeDownloader
             }
             catch(Exception exc)
             {
-                System.Diagnostics.Debug.WriteLine(exc.Message);
+                Debug.WriteLine(exc.Message);
             }
         }
 
@@ -108,34 +108,22 @@ namespace YoutubeDownloader
             try
             {
                 string link = "https://www.youtube.com/watch?v=" + id;
-
+                //TODO : I've id -> why bother extractor with id extracting? -> Edit Extractor code
                 IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
 
-                VideoInfo vid = null;// videoInfos.Where(info => info.CanExtractAudio).OrderByDescending(info => info.AudioBitrate).First();
-
+                VideoInfo vid = null;
+                List<VideoInfo> items = new List<VideoInfo>();
                 string format = "";
 
                 foreach (var item in videoInfos)
                 {
                     if (item.DownloadUrl.Contains("mime=audio/mp4"))
                     {
-                        vid = item;
-                        format = ".mp4";
-                        break;
+                        items.Add(item);
                     }
                 }
-                if (vid == null)
-                {
-                    foreach (var item in videoInfos)
-                    {
-                        if (item.DownloadUrl.Contains("mime=audio"))
-                        {
-                            vid = item;
-                            format = ".webm";
-                            break;
-                        }
-                    }
-                }
+                // Almost always there will be one entry , almost..
+                vid = items.OrderByDescending(info => info.AudioBitrate).First();
 
                 if (vid != null)
                 {
@@ -143,16 +131,18 @@ namespace YoutubeDownloader
                     {
                         DownloadUrlResolver.DecryptDownloadUrl(vid);
                     }
+                    // Same thing here , restrain from intense work down there!
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        downloadUrl = vid.DownloadUrl;
+                        title = vid.Title;
+                        fileFormat = format;
+                    });
                 }
-                // Same thing here , don't block UI thread;
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() =>
-                {                                  
-                    downloadUrl = vid.DownloadUrl;
-                    title = vid.Title;
-                    fileFormat = format;
-                });
+                
+
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 SetErrorState();
             }
@@ -177,7 +167,6 @@ namespace YoutubeDownloader
         {
             if (downloadUrl == null && retries >= 0)
             {
-                Debug.WriteLine("Waiting...");
                 System.Threading.Tasks.Task.Delay(1000);
                 QueueDownload(retries - 1);
             }
