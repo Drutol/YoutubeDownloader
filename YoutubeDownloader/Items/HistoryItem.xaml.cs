@@ -50,6 +50,8 @@ namespace YoutubeDownloader
                          Thumb.Source = new BitmapImage(new Uri(myInfo.thumb));
                          Title.Text = myInfo.title;
                          Author.Text = myInfo.author;
+                         if (!myInfo.playlist)
+                             PlaylistMark.Visibility = Visibility.Collapsed;
                      });
             }
             catch (Exception exc)

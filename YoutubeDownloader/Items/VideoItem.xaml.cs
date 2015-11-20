@@ -75,6 +75,7 @@ namespace YoutubeDownloader
                     tagTitle = suggestions.suggestedTitle;
                 // Use dispatcher only to interact with the UI , putting the async method in there will block UI thread.
                 // Info is obtained in the line above and populated on the UI thread.
+                //Data loaded , 1/2 steps
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
@@ -84,6 +85,7 @@ namespace YoutubeDownloader
                         thumbUrl = info["thumbHigh"];
 
                         LoadingInfo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                        progressYoutubeExtraction.Visibility = Windows.UI.Xaml.Visibility.Visible;
                     });
 
 
@@ -132,12 +134,14 @@ namespace YoutubeDownloader
                         DownloadUrlResolver.DecryptDownloadUrl(vid);
                     }
                     // Same thing here , restrain from intense work down there!
+                    //Data loaded from youtube , 2/2
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         downloadUrl = vid.DownloadUrl;
                         title = vid.Title;
                         targetedFileFormat = format;
                         btnDownload.IsEnabled = true;
+                        progressYoutubeExtraction.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                         if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))
                             QueueDownload();
                     });
@@ -226,6 +230,8 @@ namespace YoutubeDownloader
                 VideoTitle.Text += "  -  Failed parsing info , is video still available?";
                 ActionButtons.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 ErrorButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                progressYoutubeExtraction.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                ErrorImage.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 //IsEnabled = false;
             });
         }

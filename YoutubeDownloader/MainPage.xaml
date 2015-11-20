@@ -41,112 +41,128 @@
     </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
-
         <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay"  IsPaneOpen="False" 
-               CompactPaneLength="50" OpenPaneLength="280" PaneClosed="HideAllPaneGrids">
+               CompactPaneLength="50" OpenPaneLength="290" PaneClosed="HideAllPaneGrids">
             <SplitView.Pane>
-                <StackPanel Background="#FFEEEEEE">
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
-                            <SymbolIcon Symbol="Folder"/>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
-                        <Button x:Name="BtnSettingsText" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
-                    </StackPanel>
-                    <Grid x:Name="GridSettings" Height="460" Background="#7FE2E2E2" Visibility="Collapsed">
-                        <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
-                            <TextBlock Text="Start download automatically:" TextAlignment="Center"/>
-                            <Grid>
-                                <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
-                            </Grid>
-                            <TextBlock Text="Set album name to playlist name: " TextAlignment="Center"/>
-                            <Grid>
-                                <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
-                            </Grid>
-                            <TextBlock Text="Set album name to playlist name: " TextAlignment="Center"/>
-                            <Grid>
-                                <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
-                            </Grid>
-                            
-                            <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
-                            <Grid Height="40">
-                                <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
-                                <Slider x:Name="SettingMaxPararellDownloads" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
-                            </Grid>
-
-                            <TextBlock Text="Max pararell conversions: " TextAlignment="Center"/>
-                            <Grid Height="40">
-                                <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellConv, Path=Value}" TextAlignment="Center"/>
-                                <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
-                            </Grid>
-
-                            <TextBlock Text="Output format:" TextAlignment="Center"/>
-                            <Grid Height="60">
-                                <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedFormat">
-                                    <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
-                                    <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
-                                </ComboBox>
-                            </Grid>
-                            <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5"/>
-                            <Grid Height="60">
-                                <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedQuality">
-                                    <TextBlock x:Name="OptQualityAuto" Text="Auto" HorizontalAlignment="Stretch" />
-                                    <TextBlock x:Name="OptQualityLow" Text="High" HorizontalAlignment="Stretch" />
-                                    <TextBlock x:Name="OptQualityMedium" Text="Low" HorizontalAlignment="Stretch" />
-                                    <TextBlock x:Name="OptQualityHigh" Text="Medium" HorizontalAlignment="Stretch" />
-                                </ComboBox>
-                            </Grid>
-                            <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
-                            <Grid Height="50">
-                                <Button Margin="179,12,0,11" Width="41"  FontFamily="Segoe MDL2 Assets" Content="&#xE10C;" Click="SelectOutputFolder" />
-                                <TextBox x:Name="SettingOutputFolder" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="164" IsReadOnly="True"/>
-                            </Grid>
-
+                <ScrollViewer x:Name="PaneScrollViewer" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Background="#FFDEDEDE">
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
                         </StackPanel>
-                    </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
+                                <SymbolIcon Symbol="Folder"/>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
+                            <Button x:Name="BtnSettingsText" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
+                        </StackPanel>
+                        <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Collapsed">
+                            <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
+                                <TextBlock Text="Start download automatically:" TextAlignment="Center"/>
+                                <Grid>
+                                    <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
+                                </Grid>
+                                <TextBlock Text="Set album name to playlist name: " TextAlignment="Center"/>
+                                <Grid>
+                                    <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
+                                </Grid>
+                                <TextBlock Text="Set album name to playlist name: " TextAlignment="Center"/>
+                                <Grid>
+                                    <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
+                                </Grid>
+                            
+                                <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
+                                <Grid Height="40">
+                                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
+                                    <Slider x:Name="SettingMaxPararellDownloads" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
+                                </Grid>
+
+                                <TextBlock Text="Max pararell conversions: " TextAlignment="Center"/>
+                                <Grid Height="40">
+                                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellConv, Path=Value}" TextAlignment="Center"/>
+                                    <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
+                                </Grid>
+
+                                <TextBlock Text="Output format:" TextAlignment="Center"/>
+                                <Grid Height="60">
+                                    <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedFormat">
+                                        <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
+                                        <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
+                                    </ComboBox>
+                                </Grid>
+                                <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5"/>
+                                <Grid Height="60">
+                                    <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedQuality">
+                                        <TextBlock x:Name="OptQualityAuto" Text="Auto" HorizontalAlignment="Stretch" />
+                                        <TextBlock x:Name="OptQualityLow" Text="High" HorizontalAlignment="Stretch" />
+                                        <TextBlock x:Name="OptQualityMedium" Text="Low" HorizontalAlignment="Stretch" />
+                                        <TextBlock x:Name="OptQualityHigh" Text="Medium" HorizontalAlignment="Stretch" />
+                                    </ComboBox>
+                                </Grid>
+                                <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
+                                <Grid Height="50">
+                                    <Button Margin="179,12,0,11" Width="41"  FontFamily="Segoe MDL2 Assets" Content="&#xE10C;" Click="SelectOutputFolder" />
+                                    <TextBox x:Name="SettingOutputFolder" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="164" IsReadOnly="True"/>
+                                </Grid>
+
+                            </StackPanel>
+                        </Grid>
                     
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="BtnHistory" FontFamily="Segoe MDL2 Assets" Content="&#57692;" Width="50" Height="50" Background="Transparent" Click="BtnHistory_Click"/>
-                        <Button x:Name="BtnInnerHistory" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="BtnHistory" FontFamily="Segoe MDL2 Assets" Content="&#57692;" Width="50" Height="50" Background="Transparent" Click="BtnHistory_Click"/>
+                            <Button x:Name="BtnInnerHistory" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
+                        </StackPanel>
+                        <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FE2E2E2" Visibility="Visible" HorizontalAlignment="Left" Width="275">
+                            <ProgressRing x:Name="HistoryWorking" Margin="5" Width="50" Height="50" IsActive="True" Visibility="Collapsed"/>
+                            <ListView x:Name="HistoryList" Margin="5" MaxHeight="156">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </Grid>
                     </StackPanel>
-                    <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FE2E2E2" Visibility="Collapsed">
-                        <ProgressRing x:Name="HistoryWorking" Margin="5" Width="50" Height="50" IsActive="True" Visibility="Collapsed"/>
-                        <ListView x:Name="HistoryList" Margin="5" MaxHeight="100">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
-                    </Grid>
-
-
-                    <StackPanel Orientation="Horizontal"/>
-
-
-                </StackPanel>
+                </ScrollViewer>
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid Margin="4,10,16,56">
-                    <TextBox x:Name="BoxID" Margin="100,10,200,0" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" VerticalAlignment="Top" Width="Auto" Height="50"/>
-                    <Button x:Name="BtnDownload" Content="Get videos" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Height="50" Width="185" Click="BtnDownload_Click"/>
-                    <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="4,11,0,0" TextWrapping="Wrap" Text="Youtube URL:" VerticalAlignment="Top" Height="20" Width="96"/>
-                    <ListView x:Name="VideoList" Margin="10,65,10,0" VerticalAlignment="Top" BorderThickness="6" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple">
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition MinWidth="150" MaxWidth="200"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock HorizontalAlignment="Left" Margin="4,11,0,0" TextWrapping="Wrap" Text="Youtube URL:" VerticalAlignment="Top" Height="20" Width="100" Grid.Column="0"/>
+                        <StackPanel Margin="0,36,0,0" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Center">
+                            <Button x:Name="SelectAll" FontFamily="Segoe MDL2 Assets" Content="&#57678;" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionAll" ToolTipService.ToolTip="Select all." />
+                            <Button x:Name="SelectInvert" FontFamily="Segoe MDL2 Assets" Content="&#57797;" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionInvert" ToolTipService.ToolTip="Invert Selection" />
+                        </StackPanel>
+                        <TextBox x:Name="BoxID" Margin="10" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" HorizontalAlignment="Stretch" Height="Auto" Grid.Column="1"/>
+                        <Button x:Name="BtnDownload" Content="Get videos" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="BtnDownload_Click" Grid.Column="2"/>
+                    </Grid>
+
+
+               
+                    <ListView x:Name="VideoList" Margin="10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple" Grid.Row="2">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9"></TextBlock>
-                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed"/>
-                    <Button x:Name="SelectAll" FontFamily="Segoe MDL2 Assets" Content="&#57678;" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionAll" ToolTipService.ToolTip="Select all."/>
-                    <Button x:Name="SelectInvert" FontFamily="Segoe MDL2 Assets" Content="&#57797;" HorizontalAlignment="Left" Margin="55,31,0,0" VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionInvert" ToolTipService.ToolTip="Invert Selection"/>
+                    <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="2"/>
+                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"/>
+                    
                 </Grid>
             </SplitView.Content>
         </SplitView>

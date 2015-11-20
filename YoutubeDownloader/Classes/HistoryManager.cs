@@ -38,6 +38,7 @@ namespace YoutubeDownloader
             }
 
             Settings.ChangeSetting("HistoryEntry" + counter, Newtonsoft.Json.JsonConvert.SerializeObject(info));
+            Settings.ChangeSetting("HistoryCounter",counter + 1);
         }
 
         public static List<HistoryEntry> GetHistoryEntries()

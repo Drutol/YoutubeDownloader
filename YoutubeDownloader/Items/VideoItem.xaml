@@ -16,6 +16,7 @@
         <ProgressBar x:Name="Progress" HorizontalAlignment="Stretch" Height="50" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Opacity="0.4"/>
         <ProgressBar x:Name="ConversionProgress" HorizontalAlignment="Stretch" Height="7" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Opacity=".5" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,43,0,0"/>
         <Image x:Name="VideoThumb" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="94" Stretch="UniformToFill" Grid.Column="0"/>
+        <SymbolIcon x:Name="ErrorImage" Symbol="Cancel" Visibility="Collapsed" Grid.Column="0"/>
         <TextBlock Grid.Column="0" Margin="0,35,79,0" TextAlignment="Center"/>
         <StackPanel Orientation="Vertical" Grid.Column="1">
             <StackPanel Orientation="Horizontal" Width="Auto">
@@ -68,6 +69,7 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
+        <ProgressBar x:Name="progressYoutubeExtraction" IsIndeterminate="True" Grid.Column="2" VerticalAlignment="Bottom" Visibility="Collapsed"></ProgressBar>
 
     </Grid>
 
