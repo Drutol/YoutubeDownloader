@@ -21,8 +21,11 @@ namespace YoutubeDownloader
         public string downloadUrl;
         public string thumbUrl;
         public string title;
-        public string fileFormat;
-        
+        public string targetedFileFormat;
+        public string sourceFileFormat = ".mp4";
+        public string fileName;
+        public bool requiresConv = true;
+
         public string tagAlbum = "";
         public string tagTitle = "";
         public string tagArtist = "";
@@ -35,12 +38,15 @@ namespace YoutubeDownloader
         public  VideoItem(string id,string origin = "",bool report = false) // as for playlist title
         {
             InitializeComponent();
-            //Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
             this.id = id;
             this.origin = origin;
             this.report = report;
+            if (Settings.GetPrefferedOutputFormat() == Settings.PossibleOutputFormats.FORMAT_MP4)
+                requiresConv = false;
             tagAlbum = origin;
             suggestions = new SuggestedTagsPackage();
+
             Task.Run(() =>
             {
                 PopulateVideoInfo();
@@ -55,7 +61,14 @@ namespace YoutubeDownloader
                 Dictionary<string, string> info = await YTDownload.GetVideoDetails(id);
                 if(report)
                     HistoryManager.AddNewEntry(new HistoryEntry(info["thumbSmall"], info["title"], info["author"], id));
-                suggestions = TagParser.AttemptToParseTags(info["title"], info["details"], "",info["author"]);
+                try
+                {
+                    suggestions = TagParser.AttemptToParseTags(info["title"], info["details"], "", info["author"]);
+                }
+                catch (Exception exce)
+                {
+                    Debug.WriteLine(exce.Message);
+                }
                 if (suggestions.suggestedAuthor != "")
                     tagArtist = suggestions.suggestedAuthor;
                 if (suggestions.suggestedTitle != "")
@@ -73,26 +86,11 @@ namespace YoutubeDownloader
                         LoadingInfo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                     });
 
-                
 
-                await System.Threading.Tasks.Task.Run(() =>
+                await Task.Run(() =>
                     {
                         PopulateVideoDownloadInfo();
-                    });
-
-                if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))
-                    QueueDownload();
-                //YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat), id,this);
-                else
-                {
-                    // Wait for manual download action.
-                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        btnDownload.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                    });
-                }
-                
-                
+                    });                         
             }
             catch(Exception exc)
             {
@@ -138,7 +136,10 @@ namespace YoutubeDownloader
                     {
                         downloadUrl = vid.DownloadUrl;
                         title = vid.Title;
-                        fileFormat = format;
+                        targetedFileFormat = format;
+                        btnDownload.IsEnabled = true;
+                        if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))
+                            QueueDownload();
                     });
                 }
                 
@@ -157,7 +158,7 @@ namespace YoutubeDownloader
 
         public void StartDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + fileFormat),this);
+            YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + targetedFileFormat),this);
         }
 
         public void ForceDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -222,8 +223,7 @@ namespace YoutubeDownloader
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                VideoTitle.Text = "Failed parsing info , is video still available?";
-                VideoAuthor.Text = "";
+                VideoTitle.Text += "  -  Failed parsing info , is video still available?";
                 ActionButtons.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 ErrorButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 //IsEnabled = false;

@@ -27,7 +27,7 @@ namespace YoutubeDownloader
                 MediaTranscoder transcoder = new MediaTranscoder();
 
                 var result = await transcoder.PrepareFileTranscodeAsync(file, audioFile, mediaProfile);
-                Debug.WriteLine(result.FailureReason);
+                //Debug.WriteLine(result.FailureReason);
                 if(result.CanTranscode)
                 {
                     var transcodeOp = result.TranscodeAsync();
@@ -47,8 +47,7 @@ namespace YoutubeDownloader
             }
             catch (Exception exc)
             {
-                System.Diagnostics.Debug.WriteLine("Conversion : " + exc.Message);
-                throw;
+                Debug.WriteLine("Conversion : " + exc.Message);
             }
         }
         public static async void VideoConvert(string fileName,MediaEncodingProfile mediaProfile,VideoItem caller)

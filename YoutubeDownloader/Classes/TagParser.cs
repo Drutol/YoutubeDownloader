@@ -37,31 +37,9 @@ namespace YoutubeDownloader
             details = Purify(details);
             //Debug.WriteLine(details);
 
-
             List<string> titles = new List<string>();
             List<string> authors = new List<string>();
             string suggTitle ="", suggArtist = "";
-
-            // Check known rules
-
-            //// Check keywords in details
-            //bool prevSuspicious = false;
-            //foreach (string word in details.Split(' '))
-            //{
-            //    bool? IsTitle = IsTitleWord(word);
-            //    if (IsTitle == true) // Yeah it is!
-            //    {
-
-            //    }
-            //    else if(IsTitle == false) // Nope , nothing like that.
-            //    {
-
-            //    }
-            //    else if(IsTitle == null) // It may be , gotta be careful...
-            //    {
-            //        prevSuspicious = true;
-            //    }
-            //}
             // Do the same with title - separate strings
             foreach (char separator in separators)
             {
@@ -72,8 +50,7 @@ namespace YoutubeDownloader
                         if(IsTitlePartValid(part,vidAuthor)) titles.Add(part);
                     }
             }
-            
-
+           
             // Separate lines in details
             foreach (string line in details.Split("\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries))
             {
@@ -182,7 +159,8 @@ namespace YoutubeDownloader
                 }
             }
 
-            return details.ToString();
+
+            return Utils.CleanFileName(details.ToString());
         }
 
         private static bool ContainsIllegals(string part)

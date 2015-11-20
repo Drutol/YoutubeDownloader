@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Media.MediaProperties;
@@ -22,8 +23,8 @@ namespace YoutubeDownloader
 
         public enum PossibleOutputFormats
         {
-            FORMAT_MP3 = 1,
-            FORMAT_MP4 = 2,
+            FORMAT_MP3,
+            FORMAT_MP4,
         }
 
         public enum PossibleValueSettings
@@ -133,6 +134,7 @@ namespace YoutubeDownloader
 
         public static PossibleOutputFormats GetPrefferedOutputFormat()
         {
+            
             return (PossibleOutputFormats)ApplicationData.Current.LocalSettings.Values["outFormat"];
         }
 
@@ -178,7 +180,7 @@ namespace YoutubeDownloader
                     break;
             }
 
-            throw new Exception("Unknown format");
+            throw new Exception("Custom : Unknown format");
             
         }
         /// <summary>

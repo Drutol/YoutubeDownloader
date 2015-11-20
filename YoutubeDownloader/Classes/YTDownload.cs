@@ -188,7 +188,7 @@ namespace YoutubeDownloader
                 HttpResponseMessage response = await aClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead); // Important! ResponseHeadersRead.
 
                 var outputFolder = await Settings.GetOutputFolder();
-                var audioFile = await outputFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+                var audioFile = await outputFolder.CreateFileAsync(filename+caller.sourceFileFormat, CreationCollisionOption.ReplaceExisting);
                 var fs = await audioFile.OpenAsync(FileAccessMode.ReadWrite);
 
                 Stream stream = await response.Content.ReadAsStreamAsync();
@@ -242,15 +242,16 @@ namespace YoutubeDownloader
                             var thumb = await folder.CreateFileAsync(Utils.CleanFileName(url.Key + ".png"), CreationCollisionOption.ReplaceExisting);
 
                             HttpClient http = new System.Net.Http.HttpClient();
-                            byte[] response = await http.GetByteArrayAsync(url.Value);
+                            byte[] response = await http.GetByteArrayAsync(url.Value); //get bytes
 
-                            var fs = await thumb.OpenStreamForWriteAsync();
+                            var fs = await thumb.OpenStreamForWriteAsync(); //get stream
 
-                            var writer = new DataWriter(fs.AsOutputStream());
-
-                            writer.WriteBytes(response);
-                            await writer.StoreAsync();
-                            //TODO dispose writer?
+                            using (DataWriter writer = new DataWriter(fs.AsOutputStream()))
+                            {                              
+                                writer.WriteBytes(response); //write
+                                await writer.StoreAsync(); 
+                                await writer.FlushAsync();
+                            }
                         }
                         catch (Exception exce)
                         {

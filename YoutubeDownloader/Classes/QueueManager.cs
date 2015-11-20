@@ -87,6 +87,8 @@ namespace YoutubeDownloader
 
         public void QueueNewItemConv(VideoItem item)
         {
+            if (!item.requiresConv) // it's already mp4
+                return;
             queuedItemsConv.Add(item);
             CheckQueueConv();
         }
@@ -97,7 +99,7 @@ namespace YoutubeDownloader
             {
                 var item = queuedItemsConv.First();
                 convertingItems.Add(item);
-                VideoFormat.VideoConvert(Utils.CleanFileName(item.title + item.fileFormat), Settings.GetPrefferedEncodingProfile(),item);
+                VideoFormat.VideoConvert(Utils.CleanFileName(item.title + item.sourceFileFormat), Settings.GetPrefferedEncodingProfile(),item);
                 queuedItemsConv.RemoveAt(0);
             }
 
