@@ -134,25 +134,34 @@
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
+
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
                             <ColumnDefinition MinWidth="150" MaxWidth="200"/>
                         </Grid.ColumnDefinitions>
-                        
+
                         <TextBlock HorizontalAlignment="Left" Margin="4,11,0,0" TextWrapping="Wrap" Text="Youtube URL:" VerticalAlignment="Top" Height="20" Width="100" Grid.Column="0"/>
                         <StackPanel Margin="0,36,0,0" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Center">
                             <Button x:Name="SelectAll" FontFamily="Segoe MDL2 Assets" Content="&#57678;" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionAll" ToolTipService.ToolTip="Select all." />
                             <Button x:Name="SelectInvert" FontFamily="Segoe MDL2 Assets" Content="&#57797;" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="29" Width="40" Background="{x:Null}" Click="SelectionInvert" ToolTipService.ToolTip="Invert Selection" />
                         </StackPanel>
-                        <TextBox x:Name="BoxID" Margin="10" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" HorizontalAlignment="Stretch" Height="Auto" Grid.Column="1"/>
-                        <Button x:Name="BtnDownload" Content="Get videos" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="BtnDownload_Click" Grid.Column="2"/>
+                        <TextBox x:Name="BoxID" Margin="10" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" HorizontalAlignment="Stretch" Height="Auto" Grid.Column="1" Grid.ColumnSpan="2"/>
+
+                        <StackPanel x:Name="Pages" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Visibility="Collapsed">
+                            <Button x:Name="NextPage" Background="{x:Null}" Click="NextPage_Click">
+                                <SymbolIcon Symbol="Forward"/>
+                            </Button>
+                            <Button x:Name="PrevPage" Background="{x:Null}" Click="PrevPage_Click" Margin="0,2,0,0">
+                                <SymbolIcon Symbol="Back"/>
+                            </Button>
+                        </StackPanel>
+                        
+                        <Button x:Name="BtnDownload" Content="Get videos" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="BtnDownload_Click" Grid.Column="3"/>
                     </Grid>
-
-
-               
+                    
                     <ListView x:Name="VideoList" Margin="10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple" Grid.Row="2">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -161,8 +170,7 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                     <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="2"/>
-                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"/>
-                    
+                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"/>             
                 </Grid>
             </SplitView.Content>
         </SplitView>

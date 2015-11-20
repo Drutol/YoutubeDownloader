@@ -21,6 +21,8 @@ namespace YoutubeDownloader
             Settings.Init();          
         }
 
+        private string nextPageToken = "";
+        private string prevPageToken = "";
 
         public ObservableCollection<VideoItem> vidListItems;
         public ObservableCollection<HistoryItem> historyListItems = new ObservableCollection<HistoryItem>();
@@ -34,7 +36,7 @@ namespace YoutubeDownloader
         /// <summary>
         /// This is where it all begun...
         /// </summary>
-        public async void BeginWork(string url = "")
+        public async void BeginWork(string url = "",string token = "")
         {
             VideoItem vidItem;
             EmptyNotice.Visibility = Visibility.Collapsed;
@@ -47,6 +49,7 @@ namespace YoutubeDownloader
             switch (inputData.Item1)
             {
                 case IdType.TYPE_VIDEO:
+                    ResetPageTokens();
                     vidItem = new VideoItem(contentID, "", true);
                     vidListItems.Add(vidItem);
                     break;
@@ -56,8 +59,10 @@ namespace YoutubeDownloader
                     var info = await YTDownload.GetPlaylistDetails(contentID);
                     HistoryManager.AddNewEntry(new HistoryEntry(info.Item3, info.Item1, info.Item2, contentID));
                     string playlistName = setAlbumTag ? info.Item1 : "";
-                    List<string> videos = await YTDownload.GetVideosInPlaylist(contentID);
-                    foreach (var video in videos)
+                    //List<string> videos = 
+                    var playlistItems = await YTDownload.GetVideosInPlaylist(contentID,token);
+                    ProcessPageTokens(playlistItems.Item3, playlistItems.Item2); //next,prev
+                    foreach (var video in playlistItems.Item1)
                     {
                         vidItem = new VideoItem(video, playlistName);
                         vidListItems.Add(vidItem);
@@ -342,5 +347,57 @@ namespace YoutubeDownloader
         {
             await Launcher.LaunchFolderAsync(await Settings.GetOutputFolder());
         }
+
+        #region Pages
+        private void ProcessPageTokens(string tp,string tn) // previous and next
+        {
+            if (tp != null || tn != null)
+            {
+                Pages.Visibility = Visibility.Visible;
+                BoxID.SetValue(Grid.ColumnSpanProperty, 1);
+            }
+            else
+            {
+                Pages.Visibility = Visibility.Collapsed;
+                BoxID.SetValue(Grid.ColumnSpanProperty, 2);
+            }
+
+            if (tp != null)
+            {
+                prevPageToken = tp;
+                PrevPage.IsEnabled = true;
+            }
+            else
+                PrevPage.IsEnabled = false;
+
+            if (tn != null)
+            {
+                nextPageToken = tn;
+                NextPage.IsEnabled = true;
+            }
+            else
+                NextPage.IsEnabled = false;
+        }
+
+        private void NextPage_Click(object sender, RoutedEventArgs e)
+        {
+            BeginWork("", nextPageToken);
+        }
+
+        private void PrevPage_Click(object sender, RoutedEventArgs e)
+        {
+            BeginWork("", prevPageToken);
+        }
+
+        private void ResetPageTokens()
+        {
+            nextPageToken = "";
+            prevPageToken = "";
+            Pages.Visibility = Visibility.Collapsed;
+            BoxID.SetValue(Grid.ColumnSpanProperty, 2);
+        }
+        #endregion
+
+
     }
 }

@@ -11,6 +11,7 @@ using System.Net.Http;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace YoutubeDownloader
 {
@@ -29,19 +30,29 @@ namespace YoutubeDownloader
         INVALID,
     }
     #endregion
+
+
+
     static class YTDownload
     {
+
+
         const string API_KEY = "AIzaSyCC1bN7iQNMc60AoocV7V0ub1VKPiib0zA"; //don't hate me :(
-        static public async System.Threading.Tasks.Task<List<string>> GetVideosInPlaylist(string playlistID)
+        static public async Task<Tuple<List<string>,string,string>> GetVideosInPlaylist(string playlistID,string pageToken = "")
         {
             List<string> videos = new List<string>();
-
+            string nextPage = "", prevPage="";
             try
             {
-                WebRequest request = GetWebRequest(RequestTypes.REQUEST_PLAYLIST_ITEMS, playlistID);
-
+                WebRequest request = GetWebRequest(RequestTypes.REQUEST_PLAYLIST_ITEMS, playlistID,pageToken);
+                
                 dynamic objResponse = await GetRequestResponse(request);
-
+                try
+                {
+                    nextPage = objResponse.nextPageToken;
+                    prevPage = objResponse.prevPageToken;
+                }
+                catch (Exception) { };
                 foreach (var item in objResponse.items)
                 {
                     try
@@ -50,8 +61,9 @@ namespace YoutubeDownloader
                     }
                     catch (Exception e)
                     {
-                        MessageDialog dialog = new MessageDialog(e.Message, item.contentDetails.videoId.ToString());
-                        await dialog.ShowAsync();
+                        Debug.WriteLine("Error adding video <GetVideosInPlaylist>");
+                        //MessageDialog dialog = new MessageDialog(e.Message, item.contentDetails.videoId.ToString());
+                        //await dialog.ShowAsync();
                     }
                 }
 
@@ -62,18 +74,18 @@ namespace YoutubeDownloader
                 await dialog.ShowAsync();
             }
 
-            return videos;
+            return new Tuple<List<string>, string, string>(videos,nextPage,prevPage);
         }
 
         #region Helpers
-        static private WebRequest GetWebRequest(RequestTypes RequestType, string id)
+        static private WebRequest GetWebRequest(RequestTypes RequestType, string id,string pageToken = "")
         {
             string uri;
 
             switch (RequestType)
             {
                 case RequestTypes.REQUEST_PLAYLIST_ITEMS:
-                    uri = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=" + id + "&key=" + API_KEY;
+                    uri = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=5&playlistId=" + id + "&key=" + API_KEY;
                     break;
                 case RequestTypes.REQUEST_VIDEO:
                     uri = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&part=snippet&key=" + API_KEY;
@@ -84,6 +96,8 @@ namespace YoutubeDownloader
                 default:
                     throw new Exception("Invalid Request");
             }
+            if (pageToken != "")
+                uri += "&pageToken=" + pageToken;
             WebRequest request = WebRequest.Create(Uri.EscapeUriString(uri));
             request.ContentType = "application/x-www-form-urlencoded";
             request.Method = "GET";
@@ -91,7 +105,7 @@ namespace YoutubeDownloader
             return request;
         }
 
-        static async private System.Threading.Tasks.Task<dynamic> GetRequestResponse(WebRequest request)
+        static async private Task<dynamic> GetRequestResponse(WebRequest request)
         {
             var response = await request.GetResponseAsync();
 
@@ -108,7 +122,7 @@ namespace YoutubeDownloader
         }
         #endregion
 
-        public static async Task<Tuple<string,string,string>> GetPlaylistDetails(string id) // GetPlaylistName in short.
+        public static async Task<Tuple<string,string,string>> GetPlaylistDetails(string id) // GetPlaylistName auth and thumb in short.
         {
             WebRequest request = GetWebRequest(RequestTypes.REQUEST_PLAYLIST, id);
             dynamic objResponse = await GetRequestResponse(request);
@@ -127,7 +141,7 @@ namespace YoutubeDownloader
             return new Tuple<string, string,string>(name,auth,thumb);
         }
 
-        static public async System.Threading.Tasks.Task<Dictionary<string,string>> GetVideoDetails(string videoId)
+        static public async Task<Dictionary<string, string>> GetVideoDetails(string videoId)
         {
             Dictionary<string, string> info = new Dictionary<string, string>();
 
