@@ -19,6 +19,7 @@ namespace YoutubeDownloader
             SETTING_AUTO_DL,
             SETTING_ALBUM_PLAYLIST_NAME,
             SETTING_AUTO_RENAME,
+            
         }
 
         public enum PossibleOutputFormats
@@ -29,8 +30,9 @@ namespace YoutubeDownloader
 
         public enum PossibleValueSettings
         {
-            SETTINGS_PARARELL_DL,
-            SETTINGS_PARARELL_CONV,
+            SETTING_PARARELL_DL,
+            SETTING_PARARELL_CONV,
+            SETTING_PER_PAGE,
             HISTORY_COUNTER,
         }
 
@@ -51,6 +53,7 @@ namespace YoutubeDownloader
                 page.SetOutputQuality((int)ApplicationData.Current.LocalSettings.Values["outQuality"]);
                 page.SetMaxPararellDownloads((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"]);
                 page.SetMaxPararellConv((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"]);
+                page.SetResultsPerPage((int)ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"]);
             });
 
         }
@@ -88,6 +91,10 @@ namespace YoutubeDownloader
             if (ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"] == null)
                 ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"] = 2;
 
+            if (ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"] == null)
+                ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"] = 5;
+
+            //Misc
             //History counter
             if (ApplicationData.Current.LocalSettings.Values["HistoryCounter"] == null)
                 ApplicationData.Current.LocalSettings.Values["HistoryCounter"] = 0;
@@ -119,12 +126,14 @@ namespace YoutubeDownloader
         {
             switch (setting)
             {
-                case PossibleValueSettings.SETTINGS_PARARELL_DL:
+                case PossibleValueSettings.SETTING_PARARELL_DL:
                     return (int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"];
-                case PossibleValueSettings.SETTINGS_PARARELL_CONV:
+                case PossibleValueSettings.SETTING_PARARELL_CONV:
                     return (int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"];
                 case PossibleValueSettings.HISTORY_COUNTER:
                     return (int)ApplicationData.Current.LocalSettings.Values["HistoryCounter"];
+                case PossibleValueSettings.SETTING_PER_PAGE:
+                    return (int)ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"];
                 default:
                     break;
             }

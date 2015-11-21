@@ -11,8 +11,8 @@ namespace YoutubeDownloader
     /// </summary>
     public class QueueManager
     {
-        private int maxPararellDownloads = Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTINGS_PARARELL_DL);
-        private int maxPararellConv = Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTINGS_PARARELL_CONV);
+        private int maxPararellDownloads = Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTING_PARARELL_DL);
+        private int maxPararellConv = Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTING_PARARELL_CONV);
 
         private static QueueManager instance;
 

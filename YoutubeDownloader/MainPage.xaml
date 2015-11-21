@@ -6,6 +6,64 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="ButtonDisabledStyle" TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="8,4,8,4"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar x:Name="SelectionMenu" Visibility="Collapsed">
             <CommandBar.Content>
@@ -45,7 +103,7 @@
                CompactPaneLength="50" OpenPaneLength="290" PaneClosed="HideAllPaneGrids">
             <SplitView.Pane>
                 <ScrollViewer x:Name="PaneScrollViewer" VerticalScrollBarVisibility="Auto">
-                    <StackPanel Background="#FFDEDEDE">
+                    <StackPanel Background="White">
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
                         </StackPanel>
@@ -58,7 +116,7 @@
                             <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
                             <Button x:Name="BtnSettingsText" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                         </StackPanel>
-                        <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Collapsed">
+                        <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Visible">
                             <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
                                 <TextBlock Text="Start download automatically:" TextAlignment="Center"/>
                                 <Grid>
@@ -68,11 +126,11 @@
                                 <Grid>
                                     <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
                                 </Grid>
-                                <TextBlock Text="Set album name to playlist name: " TextAlignment="Center"/>
+                                <TextBlock Text="Set filename to title: " TextAlignment="Center"/>
                                 <Grid>
                                     <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
                                 </Grid>
-                            
+
                                 <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
                                 <Grid Height="40">
                                     <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
@@ -85,22 +143,34 @@
                                     <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
                                 </Grid>
 
-                                <TextBlock Text="Output format:" TextAlignment="Center"/>
-                                <Grid Height="60">
-                                    <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedFormat">
-                                        <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
-                                        <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
-                                    </ComboBox>
+                                <TextBlock Text="Max results per page: " TextAlignment="Center"/>
+                                <Grid Height="40">
+                                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingResultsPerPage, Path=Value}" TextAlignment="Center"/>
+                                    <Slider x:Name="SettingResultsPerPage" Maximum="30" Minimum="5" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="5"/>
                                 </Grid>
-                                <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5"/>
-                                <Grid Height="60">
-                                    <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" SelectionChanged="ChangePrefferedQuality">
-                                        <TextBlock x:Name="OptQualityAuto" Text="Auto" HorizontalAlignment="Stretch" />
-                                        <TextBlock x:Name="OptQualityLow" Text="High" HorizontalAlignment="Stretch" />
-                                        <TextBlock x:Name="OptQualityMedium" Text="Low" HorizontalAlignment="Stretch" />
-                                        <TextBlock x:Name="OptQualityHigh" Text="Medium" HorizontalAlignment="Stretch" />
-                                    </ComboBox>
-                                </Grid>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <StackPanel>
+                                        <TextBlock Text="Output format:" TextAlignment="Center" Margin="0,0,5,0"/>
+                                        <Grid Height="60">
+                                            <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedFormat">
+                                                <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
+                                                <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
+                                            </ComboBox>
+                                        </Grid>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5,0,0,0"/>
+                                        <Grid Height="60">
+                                            <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedQuality">
+                                                <TextBlock x:Name="OptQualityAuto" Text="Auto" HorizontalAlignment="Stretch" />
+                                                <TextBlock x:Name="OptQualityLow" Text="High" HorizontalAlignment="Stretch" />
+                                                <TextBlock x:Name="OptQualityMedium" Text="Low" HorizontalAlignment="Stretch" />
+                                                <TextBlock x:Name="OptQualityHigh" Text="Medium" HorizontalAlignment="Stretch" />
+                                            </ComboBox>
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                                
                                 <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
                                 <Grid Height="50">
                                     <Button Margin="179,12,0,11" Width="41"  FontFamily="Segoe MDL2 Assets" Content="&#xE10C;" Click="SelectOutputFolder" />
@@ -109,14 +179,15 @@
 
                             </StackPanel>
                         </Grid>
-                    
+
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="BtnHistory" FontFamily="Segoe MDL2 Assets" Content="&#57692;" Width="50" Height="50" Background="Transparent" Click="BtnHistory_Click"/>
                             <Button x:Name="BtnInnerHistory" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                         </StackPanel>
-                        <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FE2E2E2" Visibility="Visible" HorizontalAlignment="Left" Width="275">
-                            <ProgressRing x:Name="HistoryWorking" Margin="5" Width="50" Height="50" IsActive="True" Visibility="Collapsed"/>
-                            <ListView x:Name="HistoryList" Margin="5" MaxHeight="156">
+
+                        <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FF1F1F1" Visibility="Collapsed" HorizontalAlignment="Left" Width="275">
+                            <ProgressRing x:Name="HistoryWorking" Margin="5" Width="50" Height="50" Visibility="Collapsed" IsActive="True"/>
+                            <ListView x:Name="HistoryList" Margin="5" Height="Auto">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -129,7 +200,7 @@
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid Margin="4,10,16,56">
-                    
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="*"/>
@@ -151,17 +222,19 @@
                         <TextBox x:Name="BoxID" Margin="10" TextWrapping="Wrap" Text="PLr2_DSCNkZZMfkTdMverA_1tAPS9dwguS" HorizontalAlignment="Stretch" Height="Auto" Grid.Column="1" Grid.ColumnSpan="2"/>
 
                         <StackPanel x:Name="Pages" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Visibility="Collapsed">
-                            <Button x:Name="NextPage" Background="{x:Null}" Click="NextPage_Click">
+                            <Button x:Name="NextPage" Background="{x:Null}" Click="NextPage_Click" Style="{StaticResource ButtonDisabledStyle}">
                                 <SymbolIcon Symbol="Forward"/>
                             </Button>
-                            <Button x:Name="PrevPage" Background="{x:Null}" Click="PrevPage_Click" Margin="0,2,0,0">
+                            <Button x:Name="PrevPage" Background="{x:Null}" Click="PrevPage_Click" Margin="0,2,0,0" Style="{StaticResource ButtonDisabledStyle}">
                                 <SymbolIcon Symbol="Back"/>
                             </Button>
                         </StackPanel>
-                        
+
+
+
                         <Button x:Name="BtnDownload" Content="Get videos" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="BtnDownload_Click" Grid.Column="3"/>
                     </Grid>
-                    
+
                     <ListView x:Name="VideoList" Margin="10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple" Grid.Row="2">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -170,7 +243,7 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                     <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="2"/>
-                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"/>             
+                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"/>
                 </Grid>
             </SplitView.Content>
         </SplitView>

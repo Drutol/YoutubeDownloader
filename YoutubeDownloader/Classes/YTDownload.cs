@@ -85,7 +85,7 @@ namespace YoutubeDownloader
             switch (RequestType)
             {
                 case RequestTypes.REQUEST_PLAYLIST_ITEMS:
-                    uri = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=5&playlistId=" + id + "&key=" + API_KEY;
+                    uri = $"https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults={Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTING_PER_PAGE)}&playlistId={id}&key={API_KEY}";
                     break;
                 case RequestTypes.REQUEST_VIDEO:
                     uri = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&part=snippet&key=" + API_KEY;

@@ -10,6 +10,8 @@ using Windows.Storage.AccessCache;
 using Windows.Media.MediaProperties;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.System;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
 
 namespace YoutubeDownloader
 {
@@ -117,6 +119,10 @@ namespace YoutubeDownloader
         internal void SetMaxPararellConv(int value)
         {
             SettingMaxPararellConv.Value = value;
+        }
+        internal void SetResultsPerPage(int value)
+        {
+            SettingResultsPerPage.Value = value;
         }
         #endregion
 
@@ -366,17 +372,29 @@ namespace YoutubeDownloader
             {
                 prevPageToken = tp;
                 PrevPage.IsEnabled = true;
+                SymbolIcon ico = PrevPage.Content as SymbolIcon;
+                ico.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
             }
             else
+            {
                 PrevPage.IsEnabled = false;
+                SymbolIcon ico = PrevPage.Content as SymbolIcon;
+                ico.Foreground = new SolidColorBrush(Colors.Black);
+            }
 
             if (tn != null)
             {
                 nextPageToken = tn;
                 NextPage.IsEnabled = true;
+                SymbolIcon ico = NextPage.Content as SymbolIcon;
+                ico.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
             }
             else
+            {
                 NextPage.IsEnabled = false;
+                SymbolIcon ico = NextPage.Content as SymbolIcon;
+                ico.Foreground = new SolidColorBrush(Colors.Black);
+            }
         }
 
         private void NextPage_Click(object sender, RoutedEventArgs e)
