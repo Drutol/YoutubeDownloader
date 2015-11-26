@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.System;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
+using Windows.UI.Xaml.Data;
+using System.Diagnostics;
 
 namespace YoutubeDownloader
 {
@@ -38,12 +40,12 @@ namespace YoutubeDownloader
         /// <summary>
         /// This is where it all begun...
         /// </summary>
-        public async void BeginWork(string url = "",string token = "")
+        public async void BeginWork(string url = "", string token = "", bool reset = true)
         {
-            VideoItem vidItem;
             EmptyNotice.Visibility = Visibility.Collapsed;
             SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
-            vidListItems = new ObservableCollection<VideoItem>(); //prevent from adding same ids
+            if (vidListItems == null || reset)
+                vidListItems = new ObservableCollection<VideoItem>(); //prevent from adding same ids
             string contentID = url == "" ? BoxID.Text : url; // this is going to be probably overwritten
             VideoList.ItemsSource = vidListItems;
             var inputData = await YTDownload.IsIdValid(contentID);
@@ -52,22 +54,33 @@ namespace YoutubeDownloader
             {
                 case IdType.TYPE_VIDEO:
                     ResetPageTokens();
-                    vidItem = new VideoItem(contentID, "", true);
-                    vidListItems.Add(vidItem);
+                    vidListItems.Add(new VideoItem(contentID, "", true));
                     break;
                 case IdType.TYPE_PLAYLIST:
-
                     bool setAlbumTag = Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_ALBUM_PLAYLIST_NAME);
                     var info = await YTDownload.GetPlaylistDetails(contentID);
                     HistoryManager.AddNewEntry(new HistoryEntry(info.Item3, info.Item1, info.Item2, contentID));
                     string playlistName = setAlbumTag ? info.Item1 : "";
-                    //List<string> videos = 
                     var playlistItems = await YTDownload.GetVideosInPlaylist(contentID,token);
-                    ProcessPageTokens(playlistItems.Item3, playlistItems.Item2); //next,prev
-                    foreach (var video in playlistItems.Item1)
+                    List<string> allVideos = new List<string>(playlistItems.Item1);
+                    string nextToken = playlistItems.Item2;
+                    if (Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTING_PER_PAGE) == 31)
                     {
-                        vidItem = new VideoItem(video, playlistName);
-                        vidListItems.Add(vidItem);
+                        while (true)
+                        {
+                            if (nextToken == null) break;
+                            var morePlaylistItems = await YTDownload.GetVideosInPlaylist(contentID, nextToken);
+                            allVideos.AddRange(morePlaylistItems.Item1);
+                            nextToken = morePlaylistItems.Item2;
+                        }
+                        ResetPageTokens();
+                    }
+                    else
+                        ProcessPageTokens(playlistItems.Item3, playlistItems.Item2); //next,prev
+
+                    foreach (var video in allVideos)
+                    {
+                        vidListItems.Add(new VideoItem(video, playlistName));
                     }
                     break;
                 case IdType.INVALID:
@@ -417,5 +430,9 @@ namespace YoutubeDownloader
         #endregion
 
 
+
+
     }
+
+
 }

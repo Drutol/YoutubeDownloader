@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
+        <local:PageResultsFormatter x:Key="PageConverter" />
         <Style x:Key="ButtonDisabledStyle" TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
@@ -103,9 +104,9 @@
                CompactPaneLength="50" OpenPaneLength="290" PaneClosed="HideAllPaneGrids">
             <SplitView.Pane>
                 <ScrollViewer x:Name="PaneScrollViewer" VerticalScrollBarVisibility="Auto">
-                    <StackPanel Background="White">
+                    <StackPanel Background="LightGray">
                         <StackPanel Orientation="Horizontal">
-                            <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
+                            <Button x:Name="HamburgerButton"  FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
@@ -114,22 +115,24 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
-                            <Button x:Name="BtnSettingsText" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
+                            <Button x:Name="BtnSettingsText" FontWeight="Bold" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                         </StackPanel>
-                        <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Visible">
+                        <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Collapsed">
                             <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
-                                <TextBlock Text="Start download automatically:" TextAlignment="Center"/>
-                                <Grid>
-                                    <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
-                                </Grid>
-                                <TextBlock Text="Set album name to playlist name: " TextAlignment="Center"/>
-                                <Grid>
-                                    <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
-                                </Grid>
-                                <TextBlock Text="Set filename to title: " TextAlignment="Center"/>
-                                <Grid>
-                                    <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Width="137" Margin="64,0,-18,0" Toggled="ChangeSetting"/>
-                                </Grid>
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <TextBlock Text="Start download automatically:" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
+                                    <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <TextBlock Text="Set album name to playlist name:" TextAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
+                                    <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Left" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <TextBlock Text="Set filename to title: " TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
+                                    <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
+                                </StackPanel>
+
 
                                 <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
                                 <Grid Height="40">
@@ -145,8 +148,8 @@
 
                                 <TextBlock Text="Max results per page: " TextAlignment="Center"/>
                                 <Grid Height="40">
-                                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingResultsPerPage, Path=Value}" TextAlignment="Center"/>
-                                    <Slider x:Name="SettingResultsPerPage" Maximum="30" Minimum="5" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="5"/>
+                                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingResultsPerPage, Path=Value , Converter={StaticResource PageConverter}}" TextAlignment="Center"/>
+                                    <Slider x:Name="SettingResultsPerPage" Maximum="31" Minimum="5" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="5"/>
                                 </Grid>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <StackPanel>
@@ -182,7 +185,7 @@
 
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="BtnHistory" FontFamily="Segoe MDL2 Assets" Content="&#57692;" Width="50" Height="50" Background="Transparent" Click="BtnHistory_Click"/>
-                            <Button x:Name="BtnInnerHistory" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
+                            <Button x:Name="BtnInnerHistory" FontWeight="Bold" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                         </StackPanel>
 
                         <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FF1F1F1" Visibility="Collapsed" HorizontalAlignment="Left" Width="275">
@@ -243,7 +246,7 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                     <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="2"/>
-                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"/>
+                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Margin}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"/>
                 </Grid>
             </SplitView.Content>
         </SplitView>

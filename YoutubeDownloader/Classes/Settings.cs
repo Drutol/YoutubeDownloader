@@ -143,13 +143,15 @@ namespace YoutubeDownloader
 
         public static PossibleOutputFormats GetPrefferedOutputFormat()
         {
+
             
             return (PossibleOutputFormats)ApplicationData.Current.LocalSettings.Values["outFormat"];
         }
 
         public static AudioEncodingQuality GetPrefferedOutputQuality()
         {
-            return (AudioEncodingQuality)ApplicationData.Current.LocalSettings.Values["outQuality"];
+            var qual = (AudioEncodingQuality)ApplicationData.Current.LocalSettings.Values["outQuality"];
+            return qual == AudioEncodingQuality.Auto ? AudioEncodingQuality.High : qual;
         }
 
         public static void ChangeSetting(string key,string value)

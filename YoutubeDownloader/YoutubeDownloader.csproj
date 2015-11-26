@@ -107,6 +107,7 @@
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\TagProcessing.cs" />
     <Compile Include="Classes\VideoFormat.cs" />
+    <Compile Include="Classes\XamlConverters.cs" />
     <Compile Include="Items\HistoryItem.xaml.cs">
       <DependentUpon>HistoryItem.xaml</DependentUpon>
     </Compile>

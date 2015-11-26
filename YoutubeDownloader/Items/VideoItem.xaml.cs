@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using YoutubeExtractor;
 using System.Threading.Tasks;
@@ -30,12 +30,14 @@ namespace YoutubeDownloader
         public string tagTitle = "";
         public string tagArtist = "";
 
+        private bool isOk = true;
+
         bool report; //history
 
         SuggestedTagsPackage suggestions;
 
 
-        public  VideoItem(string id,string origin = "",bool report = false) // as for playlist title
+        public VideoItem(string id,string origin = "",bool report = false) // as for playlist title
         {
             InitializeComponent();
 
@@ -217,7 +219,7 @@ namespace YoutubeDownloader
 
         private void MouseButtonDown(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+            if (isOk && e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
             {
                 VideoItemFlyout.ShowAt(this);
             }
@@ -228,11 +230,13 @@ namespace YoutubeDownloader
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 VideoTitle.Text += "  -  Failed parsing info , is video still available?";
-                ActionButtons.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                ErrorButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                progressYoutubeExtraction.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                ErrorImage.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                //IsEnabled = false;
+                ErrorButton.Visibility = Visibility.Visible;
+                progressYoutubeExtraction.Visibility = Visibility.Collapsed;
+                ErrorImage.Visibility = Visibility.Visible;
+                btnEditTags.IsEnabled = false;
+                ActionButtons.Visibility = Visibility.Collapsed;
+                CompactContainer.Visibility = Visibility.Collapsed;
+                isOk = false;
             });
         }
 
@@ -271,6 +275,12 @@ namespace YoutubeDownloader
         {
             var cmb = sender as ComboBox;
             cmb.SelectedIndex = 0;
+        }
+
+        private void btnEditTags_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if(isOk)
+                VideoItemFlyout.ShowAt(sender as Button);
         }
     }
 }
