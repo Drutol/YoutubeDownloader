@@ -12,7 +12,6 @@
         <x:Boolean x:Key="False">False</x:Boolean>
     </UserControl.Resources>
     <Grid Background="#4CD1D1D1" Width="Auto" x:Name="RootLayout">
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="94" />
             <ColumnDefinition Width="*" />
@@ -28,7 +27,7 @@
                         <Setter Target="SelectedTagTitle.Visibility" Value="Collapsed"/>
                         <Setter Target="SelectedTagArtist.Visibility" Value="Collapsed"/>
                         <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="60"/>
-                        <Setter Target="ButtonCompact.Visibility" Value="Visible"/>
+                        <Setter Target="CompactContainer.Visibility" Value="Visible"/>
                         <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=False}"/>
                    </VisualState.Setters>
                 </VisualState>
@@ -40,7 +39,7 @@
                         <Setter Target="SelectedTagTitle.Visibility" Value="Visible"/>
                         <Setter Target="SelectedTagArtist.Visibility" Value="Visible"/>
                         <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="120"/>
-                        <Setter  Target="ButtonCompact.Visibility" Value="Collapsed"/>
+                        <Setter Target="CompactContainer.Visibility" Value="Collapsed"/>
                         <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=True}"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -49,6 +48,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        
         <ProgressRing x:Name="LoadingInfo" Grid.Column="0" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Top" Height="30" Width="30" IsActive="True"/>
         <ProgressBar x:Name="Progress" HorizontalAlignment="Stretch" Height="50" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Opacity="0.4"/>
         <ProgressBar x:Name="ConversionProgress" HorizontalAlignment="Stretch" Height="7" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Opacity=".5" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,43,0,0"/>
@@ -63,9 +63,9 @@
                 <TextBlock x:Name="VideoAuthor" Text="--" HorizontalAlignment="Left" Margin="10,0,-6,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="25" Width="Auto"/>              
             </StackPanel>
         </StackPanel>
-        <StackPanel HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock x:Name="SelectedTagTitle" Text=""/>
-            <TextBlock x:Name="SelectedTagArtist" Text=""/>
+        <StackPanel HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+            <TextBlock x:Name="TrimStart" Text=""/>
+            <TextBlock x:Name="TrimEnd" Text=""/>
         </StackPanel>
         
         <StackPanel x:Name="ErrorButton" Orientation="Horizontal" Grid.Column="2" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -73,29 +73,54 @@
                 <SymbolIcon Symbol="Globe"/>
             </Button>
         </StackPanel>
-        <StackPanel x:Name="CompactContainer" Grid.Column="2">
+        <StackPanel x:Name="CompactContainer" Grid.Column="2" Visibility="Collapsed">
             <Button x:Name="ButtonCompact" HorizontalAlignment="Center" Margin="8" VerticalAlignment="Center" Height="35" FontSize="13.333" Grid.Column="2">
                 <SymbolIcon Symbol="More"/>
                 <Button.Flyout>
                     <Flyout>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button x:Name="btnDownload" IsEnabled="False" HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
-                                <SymbolIcon Symbol="Download"/>
-                            </Button>
-                            <Button x:Name="btnEditTags"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="btnEditTags_Click">
-                                <SymbolIcon Symbol="MusicInfo"/>
-                            </Button>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button x:Name="btnDownload" IsEnabled="False" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
+                                    <SymbolIcon Symbol="Download"/>
+                                </Button>
+                                <Button x:Name="btnEditTags"  HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="btnEditTags_Click">
+                                    <SymbolIcon Symbol="MusicInfo"/>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="OpenInBrowswer">
+                                    <SymbolIcon Symbol="Globe"/>
+                                </Button>
+                                <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="PreviewVideo">
+                                    <SymbolIcon Symbol="Play"/>
+                                </Button>
+                            </StackPanel>
                         </StackPanel>
                     </Flyout>
                 </Button.Flyout>
             </Button>
         </StackPanel>
         <StackPanel x:Name="ActionButtons" Orientation="Horizontal" Grid.Column="2">
-            <Button x:Name="btnDownloadMore" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
+            <Button x:Name="btnDownloadMore" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}"  HorizontalAlignment="Right" Margin="0,8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
                 <SymbolIcon Symbol="Download"/>
             </Button>
-            <Button x:Name="btnEditTagsMore"  HorizontalAlignment="Right" Margin="8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="btnEditTags_Click">
+            <Button x:Name="btnEditTagsMore"  HorizontalAlignment="Right" Margin="0,8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="btnEditTags_Click">
                 <SymbolIcon Symbol="MusicInfo"/>
+            </Button>
+            <Button x:Name="btnMore" HorizontalAlignment="Right" Margin="0,8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333">
+                <SymbolIcon Symbol="More"/>
+                <Button.Flyout>
+                    <Flyout>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="OpenInBrowswer">
+                                <SymbolIcon Symbol="Globe"/>
+                            </Button>
+                            <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="PreviewVideo">
+                                <SymbolIcon Symbol="Play"/>
+                            </Button>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
             </Button>
         </StackPanel>
         <ProgressBar x:Name="progressYoutubeExtraction" IsIndeterminate="True" Grid.Column="2" VerticalAlignment="Bottom" Visibility="Collapsed"></ProgressBar>

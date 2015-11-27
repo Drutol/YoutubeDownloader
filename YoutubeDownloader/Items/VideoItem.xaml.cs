@@ -6,6 +6,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
+
 using YoutubeExtractor;
 using System.Threading.Tasks;
 using System.Linq;
@@ -29,6 +30,34 @@ namespace YoutubeDownloader
         public string tagAlbum = "";
         public string tagTitle = "";
         public string tagArtist = "";
+
+        private int? _trimStart;
+        private int? _trimEnd;
+
+        public int? trimStart
+        {
+            get
+            {
+                return _trimStart;
+            }
+            set
+            {
+                _trimStart = value;
+                TrimStart.Text = $"Trim start : {value}";
+            }
+        }
+        public int? trimEnd
+        {
+            get
+            {
+                return _trimEnd;
+            }
+            set
+            {
+                _trimEnd = value;
+                TrimEnd.Text = $"Trim end : {value}";
+            }
+        }
 
         private bool isOk = true;
 
@@ -281,6 +310,13 @@ namespace YoutubeDownloader
         {
             if(isOk)
                 VideoItemFlyout.ShowAt(sender as Button);
+        }
+
+        private void PreviewVideo(object sender, RoutedEventArgs e)
+        {
+            var frame = (Frame)Window.Current.Content;
+            var page = (MainPage)frame.Content;
+            page.BeginVideoPreview(new Uri(downloadUrl),this);
         }
     }
 }

@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI;
 using Windows.UI.Xaml.Data;
 using System.Diagnostics;
+using Windows.Media;
 
 namespace YoutubeDownloader
 {
@@ -22,8 +23,10 @@ namespace YoutubeDownloader
         public MainPage()
         {
             InitializeComponent();
-            Settings.Init();          
+            Settings.Init();
         }
+
+
 
         private string nextPageToken = "";
         private string prevPageToken = "";
@@ -429,7 +432,25 @@ namespace YoutubeDownloader
         }
         #endregion
 
+        #region Preview
+        VideoItem currentlyPreviewedItem;
+        public void BeginVideoPreview(Uri uri,VideoItem caller)
+        {
+            Preview.Source = uri;
+            Preview.Play();
+            currentlyPreviewedItem = caller;
+        }
+        private void TrimSetStart(object sender, RoutedEventArgs e)
+        {
+            currentlyPreviewedItem.trimStart = Preview.Position.Seconds;
+        }
 
+        private void TrimSetEnd(object sender, RoutedEventArgs e)
+        {
+
+            currentlyPreviewedItem.trimEnd = Preview.Position.Seconds;
+        }
+        #endregion
 
 
     }

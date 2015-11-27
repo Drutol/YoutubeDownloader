@@ -108,6 +108,7 @@
     <Compile Include="Classes\TagProcessing.cs" />
     <Compile Include="Classes\VideoFormat.cs" />
     <Compile Include="Classes\XamlConverters.cs" />
+    <Compile Include="Classes\XamlDerivedClasses.cs" />
     <Compile Include="Items\HistoryItem.xaml.cs">
       <DependentUpon>HistoryItem.xaml</DependentUpon>
     </Compile>
@@ -153,6 +154,15 @@
     <Page Include="Items\VideoItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlResources\ResourcesDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
   <ItemGroup>
