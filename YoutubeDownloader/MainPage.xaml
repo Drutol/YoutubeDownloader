@@ -53,7 +53,7 @@
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel x:Name="TrimControls" Orientation="Horizontal" Grid.Column="1" Height="48" Width="100" VerticalAlignment="Bottom" Background="LightGray" HorizontalAlignment="Left">
+        <StackPanel x:Name="TrimControls" Orientation="Horizontal" Grid.Column="1" Height="48" Width="205" VerticalAlignment="Bottom" Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed">
             <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim start" Click="TrimSetStart" >
                 <SymbolIcon Symbol="Import" RenderTransformOrigin="0.5,0.5">
                     <SymbolIcon.RenderTransform>
@@ -61,11 +61,14 @@
                     </SymbolIcon.RenderTransform>
                 </SymbolIcon>
             </Button>
+            <TextBlock x:Name="TrimControlsStartLabel" Text="0:00" VerticalAlignment="Center" Margin="5,0"/>
+            <SymbolIcon Symbol="More"/>
+            <TextBlock x:Name="TrimControlsEndLabel" Text="0:00" VerticalAlignment="Center" Margin="5,0"/>
             <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim end" Click="TrimSetEnd">
                 <SymbolIcon Symbol="Import"/>
             </Button>
         </StackPanel>
-        <MediaElement Margin="100,0,0,0" Height="100" AreTransportControlsEnabled="True" Width="Auto" x:Name="Preview" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Column="1">
+        <MediaElement Margin="205,0,0,0" Height="100" AreTransportControlsEnabled="True" Width="Auto" x:Name="Preview" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Column="1" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" MediaOpened="PreviewMediaOpened">
             <!--<MediaElement.TransportControls> TODO
                                 <local:CustomMediaTransportControls/>
                             </MediaElement.TransportControls>-->
@@ -73,105 +76,110 @@
                 <MediaTransportControls IsCompact="True" IsFullWindowButtonVisible="False" Background="Transparent"/>
             </MediaElement.TransportControls>
         </MediaElement>
-        <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay"  IsPaneOpen="False" 
-               CompactPaneLength="50" OpenPaneLength="290" PaneClosed="HideAllPaneGrids" Grid.ColumnSpan="2">
+        <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay"  IsPaneOpen="False" CompactPaneLength="50" OpenPaneLength="290" PaneClosed="HideAllPaneGrids" Grid.ColumnSpan="2">
             <SplitView.Pane>
                 <ScrollViewer x:Name="PaneScrollViewer" VerticalScrollBarVisibility="Auto">
-                    <StackPanel Background="LightGray">
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="HamburgerButton"  FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
-                                <SymbolIcon Symbol="Folder"/>
-                            </Button>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
-                            <Button x:Name="BtnSettingsText" FontWeight="Bold" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
-                        </StackPanel>
-                        <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Collapsed">
-                            <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
-                                <StackPanel Orientation="Horizontal" Margin="0,5">
-                                    <TextBlock Text="Start download automatically:" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
-                                    <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,5">
-                                    <TextBlock Text="Set album name to playlist name:" TextAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
-                                    <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Left" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
-                                </StackPanel>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,5">
-                                    <TextBlock Text="Set filename to title: " TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
-                                    <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
-                                </StackPanel>
-
-
-                                <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
-                                <Grid Height="40">
-                                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
-                                    <Slider x:Name="SettingMaxPararellDownloads" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
-                                </Grid>
-
-                                <TextBlock Text="Max pararell conversions: " TextAlignment="Center"/>
-                                <Grid Height="40">
-                                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellConv, Path=Value}" TextAlignment="Center"/>
-                                    <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
-                                </Grid>
-
-                                <TextBlock Text="Max results per page: " TextAlignment="Center"/>
-                                <Grid Height="40">
-                                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingResultsPerPage, Path=Value , Converter={StaticResource PageConverter}}" TextAlignment="Center"/>
-                                    <Slider x:Name="SettingResultsPerPage" Maximum="31" Minimum="5" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="5"/>
-                                </Grid>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <StackPanel>
-                                        <TextBlock Text="Output format:" TextAlignment="Center" Margin="0,0,5,0"/>
-                                        <Grid Height="60">
-                                            <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedFormat">
-                                                <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
-                                                <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
-                                            </ComboBox>
-                                        </Grid>
-                                    </StackPanel>
-                                    <StackPanel>
-                                        <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5,0,0,0"/>
-                                        <Grid Height="60">
-                                            <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedQuality">
-                                                <TextBlock x:Name="OptQualityAuto" Text="Auto" HorizontalAlignment="Stretch" />
-                                                <TextBlock x:Name="OptQualityLow" Text="High" HorizontalAlignment="Stretch" />
-                                                <TextBlock x:Name="OptQualityMedium" Text="Low" HorizontalAlignment="Stretch" />
-                                                <TextBlock x:Name="OptQualityHigh" Text="Medium" HorizontalAlignment="Stretch" />
-                                            </ComboBox>
-                                        </Grid>
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
-                                <Grid Height="50">
-                                    <Button Margin="179,12,0,11" Width="41"  FontFamily="Segoe MDL2 Assets" Content="&#xE10C;" Click="SelectOutputFolder" />
-                                    <TextBox x:Name="SettingOutputFolder" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="164" IsReadOnly="True"/>
-                                </Grid>
-
+                    <Grid Background="LightGray">
+                        <StackPanel Margin="0,0,0,35">
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="HamburgerButton"  FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" Click="HamburgerButton_Click"/>
                             </StackPanel>
-                        </Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
+                                    <SymbolIcon Symbol="Folder"/>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
+                                <Button x:Name="BtnSettingsText" FontWeight="Bold" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
+                            </StackPanel>
+                            <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Collapsed">
+                                <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <TextBlock Text="Start download automatically:" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
+                                        <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <TextBlock Text="Set album name to playlist name:" TextAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
+                                        <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Left" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
+                                    </StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="BtnHistory" FontFamily="Segoe MDL2 Assets" Content="&#57692;" Width="50" Height="50" Background="Transparent" Click="BtnHistory_Click"/>
-                            <Button x:Name="BtnInnerHistory" FontWeight="Bold" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <TextBlock Text="Set filename to title: " TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
+                                        <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
+                                    </StackPanel>
+
+
+                                    <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
+                                    <Grid Height="40">
+                                        <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
+                                        <Slider x:Name="SettingMaxPararellDownloads" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Max pararell conversions: " TextAlignment="Center"/>
+                                    <Grid Height="40">
+                                        <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellConv, Path=Value}" TextAlignment="Center"/>
+                                        <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Max results per page: " TextAlignment="Center"/>
+                                    <Grid Height="40">
+                                        <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingResultsPerPage, Path=Value , Converter={StaticResource PageConverter}}" TextAlignment="Center"/>
+                                        <Slider x:Name="SettingResultsPerPage" Maximum="31" Minimum="5" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="5"/>
+                                    </Grid>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel>
+                                            <TextBlock Text="Output format:" TextAlignment="Center" Margin="0,0,5,0"/>
+                                            <Grid Height="60">
+                                                <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedFormat">
+                                                    <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
+                                                    <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
+                                                </ComboBox>
+                                            </Grid>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5,0,0,0"/>
+                                            <Grid Height="60">
+                                                <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedQuality">
+                                                    <TextBlock x:Name="OptQualityAuto" Text="Auto" HorizontalAlignment="Stretch" />
+                                                    <TextBlock x:Name="OptQualityLow" Text="High" HorizontalAlignment="Stretch" />
+                                                    <TextBlock x:Name="OptQualityMedium" Text="Low" HorizontalAlignment="Stretch" />
+                                                    <TextBlock x:Name="OptQualityHigh" Text="Medium" HorizontalAlignment="Stretch" />
+                                                </ComboBox>
+                                            </Grid>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
+                                    <Grid Height="50">
+                                        <Button Margin="179,12,0,11" Width="41"  FontFamily="Segoe MDL2 Assets" Content="&#xE10C;" Click="SelectOutputFolder" />
+                                        <TextBox x:Name="SettingOutputFolder" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="164" IsReadOnly="True"/>
+                                    </Grid>
+
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="BtnHistory" FontFamily="Segoe MDL2 Assets" Content="&#57692;" Width="50" Height="50" Background="Transparent" Click="BtnHistory_Click"/>
+                                <Button x:Name="BtnInnerHistory" FontWeight="Bold" Content="History" FontSize="18" Background="Transparent" Click="BtnHistoryInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
+                            </StackPanel>
+
+                            <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FF1F1F1" Visibility="Collapsed" HorizontalAlignment="Left" Width="275">
+                                <ProgressRing x:Name="HistoryWorking" Margin="5" Width="50" Height="50" Visibility="Collapsed" IsActive="True"/>
+                                <ListView x:Name="HistoryList" Margin="5" Height="Auto">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                </ListView>
+                            </Grid>
+                        
                         </StackPanel>
-
-                        <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FF1F1F1" Visibility="Collapsed" HorizontalAlignment="Left" Width="275">
-                            <ProgressRing x:Name="HistoryWorking" Margin="5" Width="50" Height="50" Visibility="Collapsed" IsActive="True"/>
-                            <ListView x:Name="HistoryList" Margin="5" Height="Auto">
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-                            </ListView>
-                        </Grid>
-                    </StackPanel>
+                        <Button x:Name="PreviewCancel" Grid.Column="0" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" VerticalAlignment="Bottom" Background="Transparent" Margin="5" Height="35" FontSize="13.333" Click="VideoPreviewCancel">
+                            <SymbolIcon Symbol="Cancel"/>
+                        </Button>
+                    </Grid>
                 </ScrollViewer>
             </SplitView.Pane>
             <SplitView.Content>

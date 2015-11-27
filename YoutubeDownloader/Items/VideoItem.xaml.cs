@@ -43,7 +43,19 @@ namespace YoutubeDownloader
             set
             {
                 _trimStart = value;
-                TrimStart.Text = $"Trim start : {value}";
+
+                if (_trimStart == null)
+                    TrimStart.Text = "";
+                else
+                    TrimStart.Text = $"Trim start : {String.Format("{0:mm\\:ss}", TimeSpan.FromSeconds((double)value))}";
+
+                if (_trimStart > _trimEnd)
+                {
+                    trimEnd = null;
+                    var frame = (Frame)Window.Current.Content;
+                    var page = (MainPage)frame.Content;
+                    page.TrimResetEnd();
+                }             
             }
         }
         public int? trimEnd
@@ -55,7 +67,18 @@ namespace YoutubeDownloader
             set
             {
                 _trimEnd = value;
-                TrimEnd.Text = $"Trim end : {value}";
+                if (_trimEnd == null)
+                    TrimEnd.Text = "";
+                else
+                    TrimEnd.Text = $"Trim end  : {String.Format("{0:mm\\:ss}", TimeSpan.FromSeconds((double)value))}";
+
+                if (_trimEnd < _trimStart)
+                {
+                    trimStart = null;
+                    var frame = (Frame)Window.Current.Content;
+                    var page = (MainPage)frame.Content;
+                    page.TrimResetStart();
+                }                 
             }
         }
 

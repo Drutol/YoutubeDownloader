@@ -26,8 +26,6 @@ namespace YoutubeDownloader
             Settings.Init();
         }
 
-
-
         private string nextPageToken = "";
         private string prevPageToken = "";
 
@@ -433,23 +431,49 @@ namespace YoutubeDownloader
         #endregion
 
         #region Preview
+
+        private void PreviewMediaOpened(object sender, RoutedEventArgs e)
+        {
+            TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}", Preview.NaturalDuration.TimeSpan);
+        }
+        private void VideoPreviewCancel(object sender, RoutedEventArgs e)
+        {
+            Preview.Stop();
+            TrimControls.Visibility = Visibility.Collapsed;
+        }
+
         VideoItem currentlyPreviewedItem;
         public void BeginVideoPreview(Uri uri,VideoItem caller)
         {
             Preview.Source = uri;
             Preview.Play();
             currentlyPreviewedItem = caller;
+            TrimControls.Visibility = Visibility.Visible;
         }
         private void TrimSetStart(object sender, RoutedEventArgs e)
         {
-            currentlyPreviewedItem.trimStart = Preview.Position.Seconds;
+            var time = Preview.Position;
+            currentlyPreviewedItem.trimStart = (int?)time.TotalSeconds;
+            TrimControlsStartLabel.Text = String.Format("{0:mm\\:ss}", time);
         }
 
         private void TrimSetEnd(object sender, RoutedEventArgs e)
         {
-
-            currentlyPreviewedItem.trimEnd = Preview.Position.Seconds;
+            var time = Preview.Position;
+            currentlyPreviewedItem.trimEnd = (int?)time.TotalSeconds;
+            TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}", time);
         }
+        public void TrimResetStart()
+        {
+            TrimControlsStartLabel.Text = "00:00";
+        }
+        public void TrimResetEnd()
+        {
+            TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}",Preview.NaturalDuration.TimeSpan);
+        }
+
+
+
         #endregion
 
 

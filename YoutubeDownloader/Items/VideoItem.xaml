@@ -24,8 +24,8 @@
                         <AdaptiveTrigger MinWindowHeight="250"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SelectedTagTitle.Visibility" Value="Collapsed"/>
-                        <Setter Target="SelectedTagArtist.Visibility" Value="Collapsed"/>
+                        <Setter Target="TrimStart.Visibility" Value="Collapsed"/>
+                        <Setter Target="TrimEnd.Visibility" Value="Collapsed"/>
                         <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="60"/>
                         <Setter Target="CompactContainer.Visibility" Value="Visible"/>
                         <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=False}"/>
@@ -36,8 +36,8 @@
                         <AdaptiveTrigger MinWindowWidth="800"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SelectedTagTitle.Visibility" Value="Visible"/>
-                        <Setter Target="SelectedTagArtist.Visibility" Value="Visible"/>
+                        <Setter Target="TrimStart.Visibility" Value="Visible"/>
+                        <Setter Target="TrimEnd.Visibility" Value="Visible"/>
                         <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="120"/>
                         <Setter Target="CompactContainer.Visibility" Value="Collapsed"/>
                         <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=True}"/>
@@ -64,8 +64,8 @@
             </StackPanel>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
-            <TextBlock x:Name="TrimStart" Text=""/>
-            <TextBlock x:Name="TrimEnd" Text=""/>
+            <TextBlock x:Name="TrimStart" Text="" FontWeight="SemiBold"/>
+            <TextBlock x:Name="TrimEnd" Text="" FontWeight="SemiBold"/>
         </StackPanel>
         
         <StackPanel x:Name="ErrorButton" Orientation="Horizontal" Grid.Column="2" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -144,12 +144,21 @@
                     <TextBox x:Name="TagAlbum"></TextBox>
                     <TextBlock Text="Track No."></TextBlock>
                     <TextBox x:Name="TagNumber"></TextBox>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel Margin="0,0,5,0">
+                            <TextBlock Text="Trim start : "/>
+                            <TextBox x:Name="FlyoutTrimStart"></TextBox>
+                        </StackPanel>
+                        <StackPanel Margin="5,0,0,0">
+                            <TextBlock Text="Trim end : "/>
+                            <TextBox x:Name="FlyoutTrimEnd"></TextBox>
+                        </StackPanel>
+                    </StackPanel>
                     <Button Margin="10" HorizontalAlignment="Stretch" Click="SetMusicTags">
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon HorizontalAlignment="Left" Symbol="Accept"></SymbolIcon>
                             <TextBlock>Accept</TextBlock>
                         </StackPanel>
-
                     </Button>
                 </StackPanel>
             </Flyout>
