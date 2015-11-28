@@ -5,7 +5,7 @@
     xmlns:local="using:YoutubeDownloader"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Height="50" Width="Auto" d:DesignWidth="491" PointerPressed="MouseButtonDown">
+    mc:Ignorable="d" Height="50" Width="Auto" d:DesignWidth="491" PointerPressed="OpenVideoDetails">
     <UserControl.Resources>
         <local:ActionButonsVisibilityConverter x:Key="ActionButtonsVisibility"/>
         <x:Boolean x:Key="True">True</x:Boolean>
@@ -15,7 +15,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="94" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="125" />
         </Grid.ColumnDefinitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -24,8 +24,7 @@
                         <AdaptiveTrigger MinWindowHeight="250"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="TrimStart.Visibility" Value="Collapsed"/>
-                        <Setter Target="TrimEnd.Visibility" Value="Collapsed"/>
+                        <Setter Target="TrimInfo.Visibility" Value="Collapsed"/>
                         <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="60"/>
                         <Setter Target="CompactContainer.Visibility" Value="Visible"/>
                         <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=False}"/>
@@ -36,9 +35,8 @@
                         <AdaptiveTrigger MinWindowWidth="800"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="TrimStart.Visibility" Value="Visible"/>
-                        <Setter Target="TrimEnd.Visibility" Value="Visible"/>
-                        <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="120"/>
+                        <Setter Target="TrimInfo.Visibility" Value="Visible"/>
+                        <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="125"/>
                         <Setter Target="CompactContainer.Visibility" Value="Collapsed"/>
                         <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=True}"/>
                     </VisualState.Setters>
@@ -63,9 +61,26 @@
                 <TextBlock x:Name="VideoAuthor" Text="--" HorizontalAlignment="Left" Margin="10,0,-6,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="25" Width="Auto"/>              
             </StackPanel>
         </StackPanel>
-        <StackPanel HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
-            <TextBlock x:Name="TrimStart" Text="" FontWeight="SemiBold"/>
-            <TextBlock x:Name="TrimEnd" Text="" FontWeight="SemiBold"/>
+        <StackPanel HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0" x:Name="TrimInfo" Visibility="Visible">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="btnTrimRemoveStart" Height="30" Margin="2,0" Click="RemoveTrimStart">
+                    <SymbolIcon Symbol="Cancel"/>
+                    <Button.RenderTransform>
+                        <ScaleTransform ScaleX=".5" ScaleY=".5" CenterX="0" CenterY="25"></ScaleTransform>
+                    </Button.RenderTransform>
+                </Button>
+                <TextBlock x:Name="TrimStart" Height="25" Text="" FontWeight="SemiBold"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="btnTrimRemoveEnd" Height="30"  Margin="2,0" Click="RemoveTrimEnd">
+                    <SymbolIcon Symbol="Cancel"/>
+                    <Button.RenderTransform>
+                        <ScaleTransform ScaleX=".5" ScaleY=".5" CenterX="0" CenterY="0"></ScaleTransform>
+                    </Button.RenderTransform>
+                </Button>
+                <TextBlock x:Name="TrimEnd" Height="25" Text="" FontWeight="SemiBold"/>
+            </StackPanel>
+            
         </StackPanel>
         
         <StackPanel x:Name="ErrorButton" Orientation="Horizontal" Grid.Column="2" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -101,13 +116,13 @@
             </Button>
         </StackPanel>
         <StackPanel x:Name="ActionButtons" Orientation="Horizontal" Grid.Column="2">
-            <Button x:Name="btnDownloadMore" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}"  HorizontalAlignment="Right" Margin="0,8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
+            <Button x:Name="btnDownloadMore" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}"  HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
                 <SymbolIcon Symbol="Download"/>
             </Button>
-            <Button x:Name="btnEditTagsMore"  HorizontalAlignment="Right" Margin="0,8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="btnEditTags_Click">
+            <Button x:Name="btnEditTagsMore"  HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="btnEditTags_Click">
                 <SymbolIcon Symbol="MusicInfo"/>
             </Button>
-            <Button x:Name="btnMore" HorizontalAlignment="Right" Margin="0,8" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333">
+            <Button x:Name="btnMore" HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333">
                 <SymbolIcon Symbol="More"/>
                 <Button.Flyout>
                     <Flyout>
@@ -124,45 +139,6 @@
             </Button>
         </StackPanel>
         <ProgressBar x:Name="progressYoutubeExtraction" IsIndeterminate="True" Grid.Column="2" VerticalAlignment="Bottom" Visibility="Collapsed"></ProgressBar>
-        <FlyoutBase.AttachedFlyout>
-            <Flyout Opened="PopulateFlyout" x:Name="VideoItemFlyout" Placement="Left">
-                <StackPanel Orientation="Vertical" Width="200" Margin="5">
-                    <StackPanel.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Margin" Value="5"/>
-                        </Style>
-                    </StackPanel.Resources>
-                    <TextBlock Text="Title"></TextBlock>
-                    <ComboBox x:Name="ComboTitles" Width="Auto" SelectedIndex="0" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestionTitle" DropDownClosed="SuggestionClosed" >
-                        <TextBox x:Name="TagTitle"></TextBox>
-                    </ComboBox>
-                    <TextBlock Text="Artist"></TextBlock>
-                    <ComboBox x:Name="ComboArtist" Width="Auto" SelectedIndex="0" Margin="0" HorizontalAlignment="Stretch" SelectionChanged="SelectSuggestionAuthor">
-                        <TextBox x:Name="TagArtist"></TextBox>
-                    </ComboBox>
-                    <TextBlock Text="Album"></TextBlock>
-                    <TextBox x:Name="TagAlbum"></TextBox>
-                    <TextBlock Text="Track No."></TextBlock>
-                    <TextBox x:Name="TagNumber"></TextBox>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <StackPanel Margin="0,0,5,0">
-                            <TextBlock Text="Trim start : "/>
-                            <TextBox x:Name="FlyoutTrimStart"></TextBox>
-                        </StackPanel>
-                        <StackPanel Margin="5,0,0,0">
-                            <TextBlock Text="Trim end : "/>
-                            <TextBox x:Name="FlyoutTrimEnd"></TextBox>
-                        </StackPanel>
-                    </StackPanel>
-                    <Button Margin="10" HorizontalAlignment="Stretch" Click="SetMusicTags">
-                        <StackPanel Orientation="Horizontal">
-                            <SymbolIcon HorizontalAlignment="Left" Symbol="Accept"></SymbolIcon>
-                            <TextBlock>Accept</TextBlock>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-            </Flyout>
-        </FlyoutBase.AttachedFlyout>
     </Grid>
 
 

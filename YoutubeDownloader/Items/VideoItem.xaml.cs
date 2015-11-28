@@ -51,11 +51,10 @@ namespace YoutubeDownloader
 
                 if (_trimStart > _trimEnd)
                 {
-                    trimEnd = null;
-                    var frame = (Frame)Window.Current.Content;
-                    var page = (MainPage)frame.Content;
-                    page.TrimResetEnd();
-                }             
+                    RemoveTrimEnd(null, null);
+                }
+
+                CheckTrimRemovalButtons();
             }
         }
         public int? trimEnd
@@ -74,22 +73,35 @@ namespace YoutubeDownloader
 
                 if (_trimEnd < _trimStart)
                 {
-                    trimStart = null;
-                    var frame = (Frame)Window.Current.Content;
-                    var page = (MainPage)frame.Content;
-                    page.TrimResetStart();
-                }                 
+                    RemoveTrimStart(null,null);
+                }
+
+                CheckTrimRemovalButtons();          
             }
+        }
+
+        private void CheckTrimRemovalButtons()
+        {
+            if (_trimEnd != null)
+                btnTrimRemoveEnd.Visibility = Visibility.Visible;
+            else
+                btnTrimRemoveEnd.Visibility = Visibility.Collapsed;
+
+            if (_trimStart != null)
+                btnTrimRemoveStart.Visibility = Visibility.Visible;
+            else
+                btnTrimRemoveStart.Visibility = Visibility.Collapsed;
+
         }
 
         private bool isOk = true;
 
         bool report; //history
 
-        SuggestedTagsPackage suggestions;
+        public SuggestedTagsPackage suggestions;
 
 
-        public VideoItem(string id,string origin = "",bool report = false) // as for playlist title
+        public VideoItem(string id,string origin = "",bool report = false) //origin as for playlist title
         {
             InitializeComponent();
 
@@ -100,7 +112,7 @@ namespace YoutubeDownloader
                 requiresConv = false;
             tagAlbum = origin;
             suggestions = new SuggestedTagsPackage();
-
+            CheckTrimRemovalButtons();
             Task.Run(() =>
             {
                 PopulateVideoInfo();
@@ -235,48 +247,6 @@ namespace YoutubeDownloader
                 QueueManager.Instance.QueueNewItem(this);
         }
 
-        private void SetMusicTags(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            tagArtist = TagArtist.Text;
-            tagAlbum = TagAlbum.Text;
-            tagTitle = TagTitle.Text;
-            VideoItemFlyout.Hide();         
-        }
-
-        private void PopulateFlyout(object sender, object e)
-        {
-            if(ComboTitles.Items.Count == 1 && suggestions.titles.Count != 0)
-                foreach (var item in suggestions.titles)
-                {
-                    TextBlock btn = new TextBlock();
-                    btn.Text = item;
-                    btn.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
-                    btn.Height = 35;
-                    ComboTitles.Items.Add(btn);
-                }
-            if (ComboArtist.Items.Count == 1 && suggestions.authors.Count != 0)
-                foreach (var item in suggestions.authors)
-                {
-                    TextBlock btn = new TextBlock();
-                    btn.Text = item;
-                    btn.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
-                    btn.Height = 35;
-                    ComboArtist.Items.Add(btn);
-                }
-            TagAlbum.Text = tagAlbum;
-            TagTitle.Text = tagTitle;
-            TagArtist.Text = tagArtist;
-            TagNumber.Text = "0";
-        }
-
-        private void MouseButtonDown(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if (isOk && e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
-            {
-                VideoItemFlyout.ShowAt(this);
-            }
-        }
-
         private async void SetErrorState()
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -292,32 +262,6 @@ namespace YoutubeDownloader
             });
         }
 
-        private void SelectSuggestionTitle(object sender, SelectionChangedEventArgs e)
-        {
-            
-            ComboBox cmb = (ComboBox)sender;
-            if (cmb.SelectedIndex > 0)
-            {
-                TextBlock btn = (TextBlock)cmb.SelectedItem;
-                TagTitle.Text = btn.Text;
-                ComboTitles.SelectedIndex = 0;
-                ComboTitles.IsDropDownOpen = false;
-            }
-
-        }
-
-        private void SelectSuggestionAuthor(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cmb = (ComboBox)sender;
-            if (cmb.SelectedIndex > 0)
-            {
-                TextBlock btn = (TextBlock)cmb.SelectedItem;
-                TagArtist.Text = btn.Text;
-                ComboArtist.SelectedIndex = 0;
-                ComboArtist.IsDropDownOpen = false;
-            }
-        }
-
         private async void OpenInBrowswer(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri("https://www.youtube.com/watch?v=" + id));
@@ -331,8 +275,17 @@ namespace YoutubeDownloader
 
         private void btnEditTags_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if(isOk)
-                VideoItemFlyout.ShowAt(sender as Button);
+            var frame = (Frame)Window.Current.Content;
+            var page = (MainPage)frame.Content;
+            page.DetailsPopulate(this);
+        }
+
+        private void OpenVideoDetails(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (isOk && e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+            {
+                btnEditTags_Click(null, null);
+            }
         }
 
         private void PreviewVideo(object sender, RoutedEventArgs e)
@@ -341,5 +294,23 @@ namespace YoutubeDownloader
             var page = (MainPage)frame.Content;
             page.BeginVideoPreview(new Uri(downloadUrl),this);
         }
+
+        private void RemoveTrimStart(object sender, RoutedEventArgs e)
+        {
+            trimStart = null;
+            var frame = (Frame)Window.Current.Content;
+            var page = (MainPage)frame.Content;
+            page.TrimResetStart();
+        }
+
+        private void RemoveTrimEnd(object sender, RoutedEventArgs e)
+        {
+            trimEnd = null;
+            var frame = (Frame)Window.Current.Content;
+            var page = (MainPage)frame.Content;
+            page.TrimResetEnd();
+        }
+
+
     }
 }

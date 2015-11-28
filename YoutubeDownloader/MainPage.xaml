@@ -53,29 +53,75 @@
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel x:Name="TrimControls" Orientation="Horizontal" Grid.Column="1" Height="48" Width="205" VerticalAlignment="Bottom" Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed">
-            <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim start" Click="TrimSetStart" >
-                <SymbolIcon Symbol="Import" RenderTransformOrigin="0.5,0.5">
-                    <SymbolIcon.RenderTransform>
-                        <CompositeTransform Rotation="180"/>
-                    </SymbolIcon.RenderTransform>
-                </SymbolIcon>
-            </Button>
-            <TextBlock x:Name="TrimControlsStartLabel" Text="0:00" VerticalAlignment="Center" Margin="5,0"/>
-            <SymbolIcon Symbol="More"/>
-            <TextBlock x:Name="TrimControlsEndLabel" Text="0:00" VerticalAlignment="Center" Margin="5,0"/>
-            <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim end" Click="TrimSetEnd">
-                <SymbolIcon Symbol="Import"/>
-            </Button>
+        <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+            <Grid VerticalAlignment="Bottom" Background="LightGray" x:Name="VideoDetails" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Title" HorizontalAlignment="Center" ></TextBlock>
+                        <AutoSuggestBox  x:Name="DetailsTitleSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked"/>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0" >
+                        <TextBlock Text="Artist" HorizontalAlignment="Center"></TextBlock>
+                        <AutoSuggestBox x:Name="DetailsArtistSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked"/>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Album" HorizontalAlignment="Center"></TextBlock>
+                        <TextBox x:Name="DetailsAlbum"></TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Track No." HorizontalAlignment="Center"></TextBlock>
+                        <TextBox x:Name="DetailsTrackNumber"></TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Trim start : " HorizontalAlignment="Center"/>
+                        <TextBox x:Name="FlyoutTrimStart"></TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Trim end : " HorizontalAlignment="Center"/>
+                        <TextBox x:Name="FlyoutTrimEnd"></TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="5,0,5,0">
+                        <Button VerticalAlignment="Center" Margin="0,8">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon HorizontalAlignment="Left" Symbol="Accept"></SymbolIcon>
+                                <TextBlock>Accept</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                </StackPanel>
+            </Grid>
+            <StackPanel x:Name="TrimControls" Orientation="Horizontal"  Height="48" Width="205"  Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed" Grid.Row="2">
+                <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim start" Click="TrimSetStart" >
+                    <SymbolIcon Symbol="Import" RenderTransformOrigin="0.5,0.5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform Rotation="180"/>
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button>
+                <TextBlock x:Name="TrimControlsStartLabel" Text="0:00" VerticalAlignment="Center" Margin="5,0"/>
+                <SymbolIcon Symbol="More"/>
+                <TextBlock x:Name="TrimControlsEndLabel" Text="0:00" VerticalAlignment="Center" Margin="5,0"/>
+                <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim end" Click="TrimSetEnd">
+                    <SymbolIcon Symbol="Import"/>
+                </Button>
+            </StackPanel>
         </StackPanel>
-        <MediaElement Margin="205,0,0,0" Height="100" AreTransportControlsEnabled="True" Width="Auto" x:Name="Preview" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Column="1" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" MediaOpened="PreviewMediaOpened">
+
+        <MediaElement Margin="205,0,0,0" Height="100" AreTransportControlsEnabled="True" Width="Auto" x:Name="Preview" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="2" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" MediaOpened="PreviewMediaOpened">
             <!--<MediaElement.TransportControls> TODO
-                                <local:CustomMediaTransportControls/>
-                            </MediaElement.TransportControls>-->
+                <local:CustomMediaTransportControls/>
+            </MediaElement.TransportControls>-->
             <MediaElement.TransportControls>
                 <MediaTransportControls IsCompact="True" IsFullWindowButtonVisible="False" Background="Transparent"/>
             </MediaElement.TransportControls>
         </MediaElement>
+
         <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay"  IsPaneOpen="False" CompactPaneLength="50" OpenPaneLength="290" PaneClosed="HideAllPaneGrids" Grid.ColumnSpan="2">
             <SplitView.Pane>
                 <ScrollViewer x:Name="PaneScrollViewer" VerticalScrollBarVisibility="Auto">
@@ -174,7 +220,7 @@
                                     </ListView.ItemContainerStyle>
                                 </ListView>
                             </Grid>
-                        
+
                         </StackPanel>
                         <Button x:Name="PreviewCancel" Grid.Column="0" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" VerticalAlignment="Bottom" Background="Transparent" Margin="5" Height="35" FontSize="13.333" Click="VideoPreviewCancel">
                             <SymbolIcon Symbol="Cancel"/>
@@ -188,9 +234,8 @@
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
-                    <Grid Grid.Row="0">
 
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
@@ -216,18 +261,17 @@
                         <Button x:Name="BtnDownload" Content="Get videos" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="BtnDownload_Click" Grid.Column="3"/>
                     </Grid>
 
-                    <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple" Grid.Row="1">
+                    <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple" Grid.Row="1" >
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="2"/>
-                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Margin}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"/>
+                    <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="1" />
+                    <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Margin}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="1"  />               
                 </Grid>
             </SplitView.Content>
         </SplitView>
-
     </Grid>
 </Page>

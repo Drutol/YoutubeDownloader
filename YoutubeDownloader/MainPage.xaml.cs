@@ -471,9 +471,34 @@ namespace YoutubeDownloader
         {
             TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}",Preview.NaturalDuration.TimeSpan);
         }
+        #endregion
 
+        #region Details
+        VideoItem currentlyEditedItem;
+        public void DetailsPopulate(VideoItem caller)
+        {
+            DetailsTitleSuggestsBox.Items.Clear();
+            DetailsArtistSuggestsBox.Items.Clear();
 
-
+            DetailsTitleSuggestsBox.Text = caller.suggestions.suggestedTitle;
+            foreach (var item in caller.suggestions.titles)
+            {
+                DetailsTitleSuggestsBox.Items.Add(item);
+            }
+            DetailsArtistSuggestsBox.Text = caller.suggestions.suggestedAuthor;
+            foreach (var item in caller.suggestions.authors)
+            {
+                DetailsArtistSuggestsBox.Items.Add(item);
+            }
+            DetailsAlbum.Text = caller.tagAlbum;
+            DetailsTrackNumber.Text = "0";
+            VideoDetails.Visibility = Visibility.Visible;
+        }
+        private void DetailsSuggestClicked(object sender, RoutedEventArgs e)
+        {
+            AutoSuggestBox box = sender as AutoSuggestBox;
+            box.IsSuggestionListOpen = true;
+        }
         #endregion
 
 
