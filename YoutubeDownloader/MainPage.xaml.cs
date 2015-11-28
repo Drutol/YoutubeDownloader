@@ -440,6 +440,7 @@ namespace YoutubeDownloader
         {
             Preview.Stop();
             TrimControls.Visibility = Visibility.Collapsed;
+            ContentLayoutRoot.Margin = new Thickness(4, 10, 16, 56);
         }
 
         VideoItem currentlyPreviewedItem;
@@ -449,6 +450,8 @@ namespace YoutubeDownloader
             Preview.Play();
             currentlyPreviewedItem = caller;
             TrimControls.Visibility = Visibility.Visible;
+            if (VideoDetails.Visibility == Visibility.Visible)
+                ContentLayoutRoot.Margin = new Thickness(4, 10, 16, 120);
         }
         private void TrimSetStart(object sender, RoutedEventArgs e)
         {
@@ -477,15 +480,17 @@ namespace YoutubeDownloader
         VideoItem currentlyEditedItem;
         public void DetailsPopulate(VideoItem caller)
         {
+            currentlyEditedItem = caller;
+
             DetailsTitleSuggestsBox.Items.Clear();
             DetailsArtistSuggestsBox.Items.Clear();
 
-            DetailsTitleSuggestsBox.Text = caller.suggestions.suggestedTitle;
+            DetailsTitleSuggestsBox.Text = caller.tagTitle;
             foreach (var item in caller.suggestions.titles)
             {
                 DetailsTitleSuggestsBox.Items.Add(item);
             }
-            DetailsArtistSuggestsBox.Text = caller.suggestions.suggestedAuthor;
+            DetailsArtistSuggestsBox.Text = caller.tagArtist;
             foreach (var item in caller.suggestions.authors)
             {
                 DetailsArtistSuggestsBox.Items.Add(item);
@@ -493,11 +498,47 @@ namespace YoutubeDownloader
             DetailsAlbum.Text = caller.tagAlbum;
             DetailsTrackNumber.Text = "0";
             VideoDetails.Visibility = Visibility.Visible;
+
+            if (TrimControls.Visibility == Visibility.Visible)
+                ContentLayoutRoot.Margin = new Thickness(4, 10, 16, 120);
         }
         private void DetailsSuggestClicked(object sender, RoutedEventArgs e)
         {
             AutoSuggestBox box = sender as AutoSuggestBox;
             box.IsSuggestionListOpen = true;
+        }
+        private void DetailsClose(object sender, RoutedEventArgs e)
+        {
+            currentlyEditedItem = null;
+            VideoDetails.Visibility = Visibility.Collapsed;
+            ContentLayoutRoot.Margin = new Thickness(4, 10, 16, 56);
+        }
+        private void DetailsTitleTextChange(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            AutoSuggestBox box = sender as AutoSuggestBox;
+            currentlyEditedItem.tagTitle = box.Text;
+        }
+
+        private void DetailsTitleSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            currentlyEditedItem.tagTitle = args.SelectedItem.ToString();
+        }
+
+        private void DetailsArtistTextChange(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            AutoSuggestBox box = sender as AutoSuggestBox;
+            currentlyEditedItem.tagArtist = box.Text;
+        }
+
+        private void DetailsArtistSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            currentlyEditedItem.tagArtist = args.SelectedItem.ToString();
+        }
+
+        private void DetailsAlbumTextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox box = sender as TextBox;
+            currentlyEditedItem.tagAlbum = box.Text;
         }
         #endregion
 

@@ -53,8 +53,8 @@
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-            <Grid VerticalAlignment="Bottom" Background="LightGray" x:Name="VideoDetails" Visibility="Collapsed">
+        <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Height="Auto">
+            <Grid Background="LightGray" x:Name="VideoDetails" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="4"/>
                     <RowDefinition Height="*"/>
@@ -63,15 +63,15 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="1"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
                     <StackPanel Margin="2,0,5,0">
                         <TextBlock Text="Title" HorizontalAlignment="Center" ></TextBlock>
-                        <AutoSuggestBox  x:Name="DetailsTitleSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked"/>
+                        <AutoSuggestBox  x:Name="DetailsTitleSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsTitleTextChange" SuggestionChosen="DetailsTitleSuggestionChosen"/>
                     </StackPanel>
                     <StackPanel Margin="2,0,5,0" >
                         <TextBlock Text="Artist" HorizontalAlignment="Center"></TextBlock>
-                        <AutoSuggestBox x:Name="DetailsArtistSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked"/>
+                        <AutoSuggestBox x:Name="DetailsArtistSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsArtistTextChange" SuggestionChosen="DetailsArtistSuggestionChosen"/>
                     </StackPanel>
                     <StackPanel Margin="2,0,5,0">
                         <TextBlock Text="Album" HorizontalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="DetailsAlbum"></TextBox>
+                        <TextBox x:Name="DetailsAlbum" TextChanged="DetailsAlbumTextChanged" ></TextBox>
                     </StackPanel>
                     <StackPanel Margin="2,0,5,0">
                         <TextBlock Text="Track No." HorizontalAlignment="Center"></TextBlock>
@@ -85,15 +85,14 @@
                         <TextBlock Text="Trim end : " HorizontalAlignment="Center"/>
                         <TextBox x:Name="FlyoutTrimEnd"></TextBox>
                     </StackPanel>
-                    <StackPanel Margin="5,0,5,0">
-                        <Button VerticalAlignment="Center" Margin="0,8">
+                    <StackPanel Margin="5,0,5,0" VerticalAlignment="Center">
+                        <Button VerticalAlignment="Center" Margin="0,8" Click="DetailsClose">
                             <StackPanel Orientation="Horizontal">
                                 <SymbolIcon HorizontalAlignment="Left" Symbol="Accept"></SymbolIcon>
                                 <TextBlock>Accept</TextBlock>
                             </StackPanel>
                         </Button>
                     </StackPanel>
-
                 </StackPanel>
             </Grid>
             <StackPanel x:Name="TrimControls" Orientation="Horizontal"  Height="48" Width="205"  Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed" Grid.Row="2">
@@ -113,12 +112,12 @@
             </StackPanel>
         </StackPanel>
 
-        <MediaElement Margin="205,0,0,0" Height="100" AreTransportControlsEnabled="True" Width="Auto" x:Name="Preview" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="2" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" MediaOpened="PreviewMediaOpened">
+        <MediaElement Margin="205,0,0,0" Height="48" AreTransportControlsEnabled="True" Width="Auto" x:Name="Preview" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="2" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" MediaOpened="PreviewMediaOpened">
             <!--<MediaElement.TransportControls> TODO
                 <local:CustomMediaTransportControls/>
             </MediaElement.TransportControls>-->
             <MediaElement.TransportControls>
-                <MediaTransportControls IsCompact="True" IsFullWindowButtonVisible="False" Background="Transparent"/>
+                <MediaTransportControls IsCompact="True" Height="48" IsFullWindowButtonVisible="False" Background="Transparent"/>
             </MediaElement.TransportControls>
         </MediaElement>
 
@@ -229,7 +228,7 @@
                 </ScrollViewer>
             </SplitView.Pane>
             <SplitView.Content>
-                <Grid Margin="4,10,16,56">
+                <Grid Margin="4,10,16,56" x:Name="ContentLayoutRoot">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="*"/>
@@ -240,7 +239,7 @@
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="50"/>
-                            <ColumnDefinition MinWidth="150" MaxWidth="200"/>
+                            <ColumnDefinition MinWidth="100" MaxWidth="200"/>
                         </Grid.ColumnDefinitions>
 
                         <TextBlock HorizontalAlignment="Left" Margin="4,11,0,0" TextWrapping="Wrap" Text="Youtube URL:" VerticalAlignment="Top" Height="20" Width="100" Grid.Column="0"/>

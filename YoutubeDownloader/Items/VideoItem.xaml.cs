@@ -137,6 +137,8 @@ namespace YoutubeDownloader
                 }
                 if (suggestions.suggestedAuthor != "")
                     tagArtist = suggestions.suggestedAuthor;
+                else
+                    tagArtist = info["author"];
                 if (suggestions.suggestedTitle != "")
                     tagTitle = suggestions.suggestedTitle;
                 // Use dispatcher only to interact with the UI , putting the async method in there will block UI thread.
@@ -290,9 +292,12 @@ namespace YoutubeDownloader
 
         private void PreviewVideo(object sender, RoutedEventArgs e)
         {
-            var frame = (Frame)Window.Current.Content;
-            var page = (MainPage)frame.Content;
-            page.BeginVideoPreview(new Uri(downloadUrl),this);
+            if (downloadUrl != null)
+            {
+                var frame = (Frame)Window.Current.Content;
+                var page = (MainPage)frame.Content;
+                page.BeginVideoPreview(new Uri(downloadUrl), this);
+            }
         }
 
         private void RemoveTrimStart(object sender, RoutedEventArgs e)

@@ -106,7 +106,7 @@
                                 <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="OpenInBrowswer">
                                     <SymbolIcon Symbol="Globe"/>
                                 </Button>
-                                <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="PreviewVideo">
+                                <Button HorizontalAlignment="Right" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="PreviewVideo">
                                     <SymbolIcon Symbol="Play"/>
                                 </Button>
                             </StackPanel>
@@ -130,7 +130,7 @@
                             <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="OpenInBrowswer">
                                 <SymbolIcon Symbol="Globe"/>
                             </Button>
-                            <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="PreviewVideo">
+                            <Button HorizontalAlignment="Right" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="PreviewVideo">
                                 <SymbolIcon Symbol="Play"/>
                             </Button>
                         </StackPanel>
