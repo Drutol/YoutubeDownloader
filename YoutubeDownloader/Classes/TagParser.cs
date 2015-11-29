@@ -12,6 +12,11 @@ namespace YoutubeDownloader
         public string suggestedTitle;
         public string suggestedAuthor;
         public bool foundStuffInDetails;
+
+        public bool IsEmpty()
+        {
+            return titles == null;
+        }
     }
 
     class TagParser

@@ -106,7 +106,10 @@ namespace YoutubeDownloader
         {
             SettingAutoDownload.IsOn = val == "True" ? true : false;
         }
-
+        public void SetParseTagsSetting(string val)
+        {
+            SettingAttemptToParseTags.IsOn = val == "True" ? true : false;
+        }
         public void SetOutputFormat(int iFormat)
         {
             ComboOutputFormat.SelectedIndex = iFormat;
@@ -169,9 +172,15 @@ namespace YoutubeDownloader
 
         private void ChangePrefferedFormat(object sender, object e)
         {
+            if (!MainMenu.IsPaneOpen)
+                return;
             ComboBox cmb = (ComboBox)sender;
 
             Settings.ChangeFormat((Settings.PossibleOutputFormats)cmb.SelectedIndex);
+            foreach (var item in vidListItems)
+            {
+                item.outputFormat = (Settings.PossibleOutputFormats)cmb.SelectedIndex;
+            }
         }
 
         private void ChangePrefferedQuality(object sender, SelectionChangedEventArgs e)
@@ -481,20 +490,26 @@ namespace YoutubeDownloader
         public void DetailsPopulate(VideoItem caller)
         {
             currentlyEditedItem = caller;
-
+            //Clear
             DetailsTitleSuggestsBox.Items.Clear();
             DetailsArtistSuggestsBox.Items.Clear();
-
-            DetailsTitleSuggestsBox.Text = caller.tagTitle;
-            foreach (var item in caller.suggestions.titles)
+            //Populate data
+            if (!caller.suggestions.IsEmpty())
             {
-                DetailsTitleSuggestsBox.Items.Add(item);
+                //title
+                DetailsTitleSuggestsBox.Text = caller.tagTitle;
+                foreach (var item in caller.suggestions.titles)
+                {
+                    DetailsTitleSuggestsBox.Items.Add(item);
+                }
+                //artist
+                DetailsArtistSuggestsBox.Text = caller.tagArtist;
+                foreach (var item in caller.suggestions.authors)
+                {
+                    DetailsArtistSuggestsBox.Items.Add(item);
+                }
             }
-            DetailsArtistSuggestsBox.Text = caller.tagArtist;
-            foreach (var item in caller.suggestions.authors)
-            {
-                DetailsArtistSuggestsBox.Items.Add(item);
-            }
+            //Misc
             DetailsAlbum.Text = caller.tagAlbum;
             DetailsTrackNumber.Text = "0";
             VideoDetails.Visibility = Visibility.Visible;

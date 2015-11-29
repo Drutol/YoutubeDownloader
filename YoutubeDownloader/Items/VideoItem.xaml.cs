@@ -33,6 +33,27 @@ namespace YoutubeDownloader
 
         private int? _trimStart;
         private int? _trimEnd;
+        private Settings.PossibleOutputFormats _outputFormat;
+
+        public Settings.PossibleOutputFormats outputFormat
+        {
+            get
+            {
+                return _outputFormat;
+            }
+            set
+            {
+                if (value != Settings.PossibleOutputFormats.FORMAT_MP3)
+                    btnEditTags.Visibility = Visibility.Collapsed;
+                else
+                    btnEditTags.Visibility = Visibility.Visible;
+
+                if (_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP4)
+                    requiresConv = false;
+
+                _outputFormat = value;
+            }
+        }
 
         public int? trimStart
         {
@@ -57,6 +78,7 @@ namespace YoutubeDownloader
                 CheckTrimRemovalButtons();
             }
         }
+
         public int? trimEnd
         {
             get
@@ -108,8 +130,7 @@ namespace YoutubeDownloader
             this.id = id;
             this.origin = origin;
             this.report = report;
-            if (Settings.GetPrefferedOutputFormat() == Settings.PossibleOutputFormats.FORMAT_MP4)
-                requiresConv = false;
+            outputFormat = Settings.GetPrefferedOutputFormat();
             tagAlbum = origin;
             suggestions = new SuggestedTagsPackage();
             CheckTrimRemovalButtons();
@@ -127,20 +148,24 @@ namespace YoutubeDownloader
                 Dictionary<string, string> info = await YTDownload.GetVideoDetails(id);
                 if(report)
                     HistoryManager.AddNewEntry(new HistoryEntry(info["thumbSmall"], info["title"], info["author"], id));
-                try
-                {
-                    suggestions = TagParser.AttemptToParseTags(info["title"], info["details"], "", info["author"]);
-                }
-                catch (Exception exce)
-                {
-                    Debug.WriteLine(exce.Message);
-                }
-                if (suggestions.suggestedAuthor != "")
-                    tagArtist = suggestions.suggestedAuthor;
+                if (_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3 && Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_PARSE_TAGS))
+                    try
+                    {
+                        suggestions = TagParser.AttemptToParseTags(info["title"], info["details"], "", info["author"]);
+                        if (suggestions.suggestedAuthor != "")
+                            tagArtist = suggestions.suggestedAuthor;
+                        else
+                            tagArtist = info["author"];
+                        if (suggestions.suggestedTitle != "")
+                            tagTitle = suggestions.suggestedTitle;
+                    }
+                    catch (Exception exce)
+                    {
+                        Debug.WriteLine(exce.Message);
+                    }
                 else
-                    tagArtist = info["author"];
-                if (suggestions.suggestedTitle != "")
-                    tagTitle = suggestions.suggestedTitle;
+                    suggestions = new SuggestedTagsPackage();
+
                 // Use dispatcher only to interact with the UI , putting the async method in there will block UI thread.
                 // Info is obtained in the line above and populated on the UI thread.
                 //Data loaded , 1/2 steps
@@ -242,7 +267,7 @@ namespace YoutubeDownloader
         {
             if (downloadUrl == null && retries >= 0)
             {
-                System.Threading.Tasks.Task.Delay(1000);
+                Task.Delay(1000);
                 QueueDownload(retries - 1);
             }
             else if (downloadUrl != null)
@@ -277,9 +302,8 @@ namespace YoutubeDownloader
 
         private void btnEditTags_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var frame = (Frame)Window.Current.Content;
-            var page = (MainPage)frame.Content;
-            page.DetailsPopulate(this);
+            if(_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3)
+                GetMainPageInstance().DetailsPopulate(this);
         }
 
         private void OpenVideoDetails(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

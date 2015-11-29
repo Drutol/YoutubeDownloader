@@ -157,8 +157,12 @@
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal" Margin="0,5">
-                                        <TextBlock Text="Set filename to title: " TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Set filename to title: " TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
                                         <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <TextBlock Text="Make attempt to parse tags from video info:" TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
+                                        <ToggleSwitch x:Name="SettingAttemptToParseTags" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
                                     </StackPanel>
                                     <!--/ On/Off Swicthes-->
 

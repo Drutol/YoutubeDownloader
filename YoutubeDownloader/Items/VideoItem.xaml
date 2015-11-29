@@ -15,7 +15,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="94" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="125" />
+            <ColumnDefinition MinWidth="42" MaxWidth="125" Width="Auto"/>
         </Grid.ColumnDefinitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -25,7 +25,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="TrimInfo.Visibility" Value="Collapsed"/>
-                        <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="60"/>
+                        <Setter Target="RootLayout.ColumnDefinitions[2].MaxWidth" Value="60"/>
                         <Setter Target="CompactContainer.Visibility" Value="Visible"/>
                         <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=False}"/>
                    </VisualState.Setters>
@@ -36,7 +36,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="TrimInfo.Visibility" Value="Visible"/>
-                        <Setter Target="RootLayout.ColumnDefinitions[2].Width" Value="125"/>
+                        <Setter Target="RootLayout.ColumnDefinitions[2].MaxWidth" Value="125"/>
                         <Setter Target="CompactContainer.Visibility" Value="Collapsed"/>
                         <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=True}"/>
                     </VisualState.Setters>
@@ -88,7 +88,7 @@
                 <SymbolIcon Symbol="Globe"/>
             </Button>
         </StackPanel>
-        <StackPanel x:Name="CompactContainer" Grid.Column="2" Visibility="Collapsed">
+        <StackPanel x:Name="CompactContainer" Grid.Column="2" Visibility="Collapsed" HorizontalAlignment="Center">
             <Button x:Name="ButtonCompact" HorizontalAlignment="Center" Margin="8" VerticalAlignment="Center" Height="35" FontSize="13.333" Grid.Column="2">
                 <SymbolIcon Symbol="More"/>
                 <Button.Flyout>
@@ -115,11 +115,11 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
-        <StackPanel x:Name="ActionButtons" Orientation="Horizontal" Grid.Column="2">
+        <StackPanel x:Name="ActionButtons" HorizontalAlignment="Right" Margin="0,0,1,0" Orientation="Horizontal" Grid.Column="2" Width="Auto">
             <Button x:Name="btnDownloadMore" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}"  HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
                 <SymbolIcon Symbol="Download"/>
             </Button>
-            <Button x:Name="btnEditTagsMore"  HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="btnEditTags_Click">
+            <Button x:Name="btnEditTagsMore"  HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="{Binding ElementName=btnEditTags, Path=Visibility}" FontSize="13.333" Click="btnEditTags_Click">
                 <SymbolIcon Symbol="MusicInfo"/>
             </Button>
             <Button x:Name="btnMore" HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333">

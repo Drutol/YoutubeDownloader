@@ -19,7 +19,7 @@ namespace YoutubeDownloader
             SETTING_AUTO_DL,
             SETTING_ALBUM_PLAYLIST_NAME,
             SETTING_AUTO_RENAME,
-            
+            SETTING_PARSE_TAGS,
         }
 
         public enum PossibleOutputFormats
@@ -55,6 +55,7 @@ namespace YoutubeDownloader
                 page.SetMaxPararellDownloads((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"]);
                 page.SetMaxPararellConv((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"]);
                 page.SetResultsPerPage((int)ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"]);
+                page.SetParseTagsSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAttemptToParseTags"]);
             });
 
         }
@@ -71,7 +72,10 @@ namespace YoutubeDownloader
                 ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"] = "True";
 
             if (ApplicationData.Current.LocalSettings.Values["SettingRenameFile"] == null)
-                ApplicationData.Current.LocalSettings.Values["SettingRenameFile"] = "True";
+                ApplicationData.Current.LocalSettings.Values["SettingRenameFile"] = "True"; 
+
+            if (ApplicationData.Current.LocalSettings.Values["SettingAttemptToParseTags"] == null)
+                ApplicationData.Current.LocalSettings.Values["SettingAttemptToParseTags"] = "False";
 
             //format
             if (ApplicationData.Current.LocalSettings.Values["outFormat"] == null)
@@ -115,6 +119,9 @@ namespace YoutubeDownloader
                     break;
                 case PossibleSettingsBool.SETTING_AUTO_RENAME:
                     value = (string)ApplicationData.Current.LocalSettings.Values["SettingRenameFile"];
+                    break;
+                case PossibleSettingsBool.SETTING_PARSE_TAGS:
+                    value = (string)ApplicationData.Current.LocalSettings.Values["SettingAttemptToParseTags"];
                     break;
                 default:
                     throw new Exception("Ivalid enum");
