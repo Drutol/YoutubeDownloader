@@ -48,19 +48,30 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
-        <Grid.ColumnDefinitions>
+    <Grid Background="{ThemeResource AppBarBorderThemeBrush}"> <!-- Root -->
+        <Grid.ColumnDefinitions> <!-- Split view + Main Content -->
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Height="Auto">
-            <Grid Background="LightGray" x:Name="VideoDetails" Visibility="Collapsed">
+        
+        <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Height="Auto"> <!-- Bottom Details + Media element-->
+            <Grid Background="LightGray" x:Name="VideoDetails" Visibility="Collapsed"> <!-- Details bar -->
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="4"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/> <!--Top color bar-->
+                    <RowDefinition Height="*"/> <!-- Content -->
+                    <RowDefinition Height="3"/> <!--Bottom color bar-->
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
-                <StackPanel Orientation="Horizontal" Grid.Row="1"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3"/> <!-- Left color bar -->
+                    <ColumnDefinition Width="50"/> <!-- Close button-->
+                    <ColumnDefinition Width="*"/> <!-- Content -->
+                    <ColumnDefinition Width="3"/> <!-- Right color bar -->
+                </Grid.ColumnDefinitions>
+                <Grid  Grid.ColumnSpan="4" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                <Grid  Grid.ColumnSpan="4" Grid.Row="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                <Grid  Grid.RowSpan="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                <Grid  Grid.RowSpan="3" Grid.Column="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
                     <StackPanel Margin="2,0,5,0">
                         <TextBlock Text="Title" HorizontalAlignment="Center" ></TextBlock>
                         <AutoSuggestBox  x:Name="DetailsTitleSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsTitleTextChange" SuggestionChosen="DetailsTitleSuggestionChosen"/>
@@ -77,23 +88,18 @@
                         <TextBlock Text="Track No." HorizontalAlignment="Center"></TextBlock>
                         <TextBox x:Name="DetailsTrackNumber"></TextBox>
                     </StackPanel>
-                    <StackPanel Margin="2,0,5,0">
+                    <!--<StackPanel Margin="2,0,5,0">
                         <TextBlock Text="Trim start : " HorizontalAlignment="Center"/>
                         <TextBox x:Name="FlyoutTrimStart"></TextBox>
                     </StackPanel>
                     <StackPanel Margin="2,0,5,0">
                         <TextBlock Text="Trim end : " HorizontalAlignment="Center"/>
                         <TextBox x:Name="FlyoutTrimEnd"></TextBox>
-                    </StackPanel>
-                    <StackPanel Margin="5,0,5,0" VerticalAlignment="Center">
-                        <Button VerticalAlignment="Center" Margin="0,8" Click="DetailsClose">
-                            <StackPanel Orientation="Horizontal">
-                                <SymbolIcon HorizontalAlignment="Left" Symbol="Accept"></SymbolIcon>
-                                <TextBlock>Accept</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
+                    </StackPanel>-->
                 </StackPanel>
+                <Button VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" Height="40" Width="40" Margin="0,8" Click="DetailsClose">
+                    <SymbolIcon Symbol="Cancel"></SymbolIcon>
+                </Button>
             </Grid>
             <StackPanel x:Name="TrimControls" Orientation="Horizontal"  Height="48" Width="205"  Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed" Grid.Row="2">
                 <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim start" Click="TrimSetStart" >
@@ -121,7 +127,7 @@
             </MediaElement.TransportControls>
         </MediaElement>
 
-        <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay"  IsPaneOpen="False" CompactPaneLength="50" OpenPaneLength="290" PaneClosed="HideAllPaneGrids" Grid.ColumnSpan="2">
+        <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay" IsPaneOpen="False" CompactPaneLength="50" OpenPaneLength="290" PaneClosed="HideAllPaneGrids" Grid.ColumnSpan="2"> <!-- Settings <-> LitView -->
             <SplitView.Pane>
                 <ScrollViewer x:Name="PaneScrollViewer" VerticalScrollBarVisibility="Auto">
                     <Grid Background="LightGray">
@@ -138,8 +144,9 @@
                                 <Button x:Name="BtnSettings" FontFamily="Segoe MDL2 Assets" Content="&#57621;" Width="50" Height="50" Background="Transparent" Click="BtnSettings_Click"/>
                                 <Button x:Name="BtnSettingsText" FontWeight="Bold" Content="Settings" FontSize="18" Background="Transparent" Click="BtnSettingsInner_Click" Width="220" HorizontalAlignment="Left" Height="49"/>
                             </StackPanel>
-                            <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Collapsed">
+                            <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Collapsed"> <!-- Settings mess -->
                                 <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
+                                    <!-- On/Off Swicthes -->
                                     <StackPanel Orientation="Horizontal" Margin="0,5">
                                         <TextBlock Text="Start download automatically:" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
                                         <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
@@ -153,8 +160,9 @@
                                         <TextBlock Text="Set filename to title: " TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
                                         <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
                                     </StackPanel>
+                                    <!--/ On/Off Swicthes-->
 
-
+                                    <!-- Sliders -->
                                     <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
                                     <Grid Height="40">
                                         <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
@@ -166,12 +174,14 @@
                                         <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellConv, Path=Value}" TextAlignment="Center"/>
                                         <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
                                     </Grid>
-
                                     <TextBlock Text="Max results per page: " TextAlignment="Center"/>
                                     <Grid Height="40">
                                         <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingResultsPerPage, Path=Value , Converter={StaticResource PageConverter}}" TextAlignment="Center"/>
                                         <Slider x:Name="SettingResultsPerPage" Maximum="31" Minimum="5" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="5"/>
                                     </Grid>
+                                    <!-- / Sliders-->
+                                    
+                                    <!-- Combo boxes -->
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <StackPanel>
                                             <TextBlock Text="Output format:" TextAlignment="Center" Margin="0,0,5,0"/>
@@ -179,6 +189,7 @@
                                                 <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedFormat">
                                                     <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
                                                     <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
+                                                    <TextBlock x:Name="OptFormatM4A" Text="M4A" HorizontalAlignment="Stretch" />
                                                 </ComboBox>
                                             </Grid>
                                         </StackPanel>
@@ -194,6 +205,7 @@
                                             </Grid>
                                         </StackPanel>
                                     </StackPanel>
+                                    <!-- /Combo boxes-->
 
                                     <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
                                     <Grid Height="50">
@@ -228,18 +240,18 @@
                 </ScrollViewer>
             </SplitView.Pane>
             <SplitView.Content>
-                <Grid Margin="4,10,16,56" x:Name="ContentLayoutRoot">
-                    <Grid.RowDefinitions>
+                <Grid Margin="4,10,16,56" x:Name="ContentLayoutRoot"> <!-- Main content display -->
+                    <Grid.RowDefinitions> <!--Top contrrols for URL and bottom for ListView-->
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0">
+                    <Grid Grid.Row="0"> <!-- Grid with top controls-->
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition MinWidth="100" MaxWidth="200"/>
+                            <ColumnDefinition Width="100"/> <!--Label for URL + selection manipulation-->
+                            <ColumnDefinition Width="*"/> <!-- URL text box -->
+                            <ColumnDefinition Width="50"/> <!-- Page buttons -->
+                            <ColumnDefinition MinWidth="100" MaxWidth="200"/> <!-- Get data button -->
                         </Grid.ColumnDefinitions>
 
                         <TextBlock HorizontalAlignment="Left" Margin="4,11,0,0" TextWrapping="Wrap" Text="Youtube URL:" VerticalAlignment="Top" Height="20" Width="100" Grid.Column="0"/>

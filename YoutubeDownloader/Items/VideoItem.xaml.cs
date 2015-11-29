@@ -293,27 +293,29 @@ namespace YoutubeDownloader
         private void PreviewVideo(object sender, RoutedEventArgs e)
         {
             if (downloadUrl != null)
-            {
-                var frame = (Frame)Window.Current.Content;
-                var page = (MainPage)frame.Content;
-                page.BeginVideoPreview(new Uri(downloadUrl), this);
-            }
+                GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl), this);
         }
 
         private void RemoveTrimStart(object sender, RoutedEventArgs e)
         {
             trimStart = null;
-            var frame = (Frame)Window.Current.Content;
-            var page = (MainPage)frame.Content;
-            page.TrimResetStart();
+            GetMainPageInstance().TrimResetStart();
         }
 
         private void RemoveTrimEnd(object sender, RoutedEventArgs e)
         {
             trimEnd = null;
+            GetMainPageInstance().TrimResetEnd();
+        }
+
+        /// <summary>
+        /// Call only from UI thread
+        /// </summary>
+        /// <returns></returns>
+        private static MainPage GetMainPageInstance()
+        {
             var frame = (Frame)Window.Current.Content;
-            var page = (MainPage)frame.Content;
-            page.TrimResetEnd();
+            return (MainPage)frame.Content;
         }
 
 

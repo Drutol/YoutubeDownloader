@@ -26,6 +26,7 @@ namespace YoutubeDownloader
         {
             FORMAT_MP3,
             FORMAT_MP4,
+            FORMAT_M4A,
         }
 
         public enum PossibleValueSettings
@@ -185,12 +186,13 @@ namespace YoutubeDownloader
             {
                 case PossibleOutputFormats.FORMAT_MP3:
                     return MediaEncodingProfile.CreateMp3(GetPrefferedOutputQuality());
+                case PossibleOutputFormats.FORMAT_M4A:
+                    return MediaEncodingProfile.CreateM4a(GetPrefferedOutputQuality());
                 case PossibleOutputFormats.FORMAT_MP4:
                     throw new Exception("Source is MP4");
                 default:
                     break;
             }
-
             throw new Exception("Custom : Unknown format");
             
         }
