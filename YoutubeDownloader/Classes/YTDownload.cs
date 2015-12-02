@@ -12,6 +12,8 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace YoutubeDownloader
 {
@@ -220,7 +222,10 @@ namespace YoutubeDownloader
 
                     // Report progress.
                     totalBytesRead += buffer.Length;
-                    PopulateUI.UpdateVideoManipulationProgress(caller.id, (int)((100 * totalBytesRead) / totalBytes),PopulateUI.ProgressType.PROGRESS_DL); 
+                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        caller.SetProgress((int)((100 * totalBytesRead) / totalBytes));
+                    });
 
                     // Write to file.
                     await fs.WriteAsync(buffer);

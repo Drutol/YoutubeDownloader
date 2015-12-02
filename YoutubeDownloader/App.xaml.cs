@@ -38,7 +38,7 @@ namespace YoutubeDownloader
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                this.DebugSettings.EnableFrameRateCounter = false;
             }
 #endif
 
@@ -95,5 +95,7 @@ namespace YoutubeDownloader
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+
     }
 }

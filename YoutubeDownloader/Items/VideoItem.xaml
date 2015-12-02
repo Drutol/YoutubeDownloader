@@ -80,7 +80,6 @@
                 </Button>
                 <TextBlock x:Name="TrimEnd" Height="25" Text="" FontWeight="SemiBold"/>
             </StackPanel>
-            
         </StackPanel>
         
         <StackPanel x:Name="ErrorButton" Orientation="Horizontal" Grid.Column="2" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">

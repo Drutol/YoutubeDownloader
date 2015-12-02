@@ -30,9 +30,9 @@ namespace YoutubeDownloader
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                var frame = (Frame)Window.Current.Content;
-                var page = (MainPage)frame.Content;
-                page.BeginWork(myInfo.id);
+               // var frame = (Frame)Window.Current.Content;
+               // var page = (Pages.DownloadPage)frame.Content;
+                //page.BeginWork(myInfo.id);
             });
         }
 

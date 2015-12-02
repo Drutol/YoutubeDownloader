@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="YoutubeDownloader.Pages.HistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:YoutubeDownloader.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid x:Name="GridHistory" MaxHeight="300" Background="#7FF1F1F1" Visibility="Collapsed" HorizontalAlignment="Left" Width="275">
+            <ProgressRing x:Name="HistoryWorking" Margin="5" Width="50" Height="50" Visibility="Collapsed" IsActive="True"/>
+            <ListView x:Name="HistoryList" Margin="5" Height="Auto">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>

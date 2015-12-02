@@ -46,16 +46,16 @@ namespace YoutubeDownloader
                 var page = (MainPage)frame.Content;
 
                 // TODO : Move this to main page class. (maybe?)
-                page.SetAutoDownloadSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"]);
-                page.SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
-                page.SetRenameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingRenameFile"]);
-                page.SetOutputFormat((int)ApplicationData.Current.LocalSettings.Values["outFormat"]);
-                page.SetOutputFolderName((string)ApplicationData.Current.LocalSettings.Values["outFolder"]);
-                page.SetOutputQuality((int)ApplicationData.Current.LocalSettings.Values["outQuality"]);
-                page.SetMaxPararellDownloads((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"]);
-                page.SetMaxPararellConv((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"]);
-                page.SetResultsPerPage((int)ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"]);
-                page.SetParseTagsSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAttemptToParseTags"]);
+                //page.SetAutoDownloadSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"]);
+                //page.SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
+                //page.SetRenameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingRenameFile"]);
+                //page.SetOutputFormat((int)ApplicationData.Current.LocalSettings.Values["outFormat"]);
+                //page.SetOutputFolderName((string)ApplicationData.Current.LocalSettings.Values["outFolder"]);
+                //page.SetOutputQuality((int)ApplicationData.Current.LocalSettings.Values["outQuality"]);
+                //page.SetMaxPararellDownloads((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"]);
+                //page.SetMaxPararellConv((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"]);
+                //page.SetResultsPerPage((int)ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"]);
+                //page.SetParseTagsSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAttemptToParseTags"]);
             });
 
         }

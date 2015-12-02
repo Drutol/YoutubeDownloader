@@ -8,6 +8,8 @@ using Windows.Media.Transcoding;
 using Windows.Storage;
 using Windows.Foundation;
 using System.Diagnostics;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace YoutubeDownloader
 {
@@ -37,9 +39,12 @@ namespace YoutubeDownloader
                 {
                     var transcodeOp = result.TranscodeAsync();
                     transcodeOp.Progress +=
-                        new AsyncActionProgressHandler<double>((IAsyncActionWithProgress<double> asyncInfo, double percent) =>
+                        new AsyncActionProgressHandler<double>(async (IAsyncActionWithProgress<double> asyncInfo, double percent) =>
                         {
-                            PopulateUI.UpdateVideoManipulationProgress(caller.id, (int)percent, PopulateUI.ProgressType.PROGRESS_CONV);
+                            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                            {
+                                caller.SetConvProgress((int)percent);
+                            });
                         });
                     transcodeOp.Completed +=
                         new AsyncActionWithProgressCompletedHandler<double>( (IAsyncActionWithProgress<double> asyncInfo, AsyncStatus status) =>
