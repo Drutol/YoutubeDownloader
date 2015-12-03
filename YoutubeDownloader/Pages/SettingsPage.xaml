@@ -16,82 +16,137 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid x:Name="GridSettings" Height="Auto" Background="#7FF1F1F1" Visibility="Visible">
-             <!--Settings mess--> 
-            <StackPanel HorizontalAlignment="Center" Width="230" Margin="19,0,31,0">
-                 <!--On/Off Swicthes--> 
-                <StackPanel Orientation="Horizontal" Margin="0,5">
-                    <TextBlock Text="Start download automatically:" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
-                    <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,5">
-                    <TextBlock Text="Set album name to playlist name:" TextAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
-                    <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Left" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
-                </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0,5">
-                    <TextBlock Text="Set filename to title: " TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
-                    <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,5">
-                    <TextBlock Text="Make attempt to parse tags from video info:" TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
-                    <ToggleSwitch x:Name="SettingAttemptToParseTags" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
+
+    <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Single_Column">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="200"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PanelSliders.(RelativePanel.RightOf)" Value="{x:Null}"/>
+
+                        <Setter Target="PanelSliders.(RelativePanel.Below)" Value="PanelOnOff"/>
+                        <Setter Target="PanelCombo.(RelativePanel.Below)" Value="PanelSliders"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Double_Columns">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="650"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PanelSliders.(RelativePanel.Below)" Value="{x:Null}"/>
+                        <Setter Target="PanelCombo.(RelativePanel.Below)" Value="{x:Null}"/>
+
+                        <Setter Target="PanelSliders.(RelativePanel.RightOf)" Value="PanelOnOff"/>
+                        <Setter Target="PanelCombo.(RelativePanel.Below)" Value="PanelOnOff"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Tri_Columns">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="900"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PanelSliders.(RelativePanel.RightOf)" Value="{x:Null}"/>
+                        <Setter Target="PanelCombo.(RelativePanel.Below)" Value="{x:Null}"/>
+
+                        <Setter Target="PanelSliders.(RelativePanel.RightOf)" Value="PanelOnOff"/>
+                        <Setter Target="PanelCombo.(RelativePanel.RightOf)" Value="PanelSliders"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+
+        <Grid Background="LightGray" HorizontalAlignment="Stretch">
+            <TextBlock Text="Downloader v1.0" FontWeight="Bold" FontSize="20" VerticalAlignment="Center" Margin="20,0"/>
+        </Grid>
+        <Grid x:Name="GridSettings" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1">
+            <!--Settings mess-->
+            <RelativePanel>
+                <!--On/Off Swicthes-->
+                <StackPanel Margin="20,10" x:Name="PanelOnOff" Height="Auto">
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Start download automatically:" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
+                        <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Set album name to playlist name:" TextAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
+                        <ToggleSwitch x:Name="SettingSetAlbumAsPlaylistName" HorizontalAlignment="Left" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Set filename to title: " TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
+                        <ToggleSwitch x:Name="SettingRenameFile" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Make attempt to parse tags from video info:" TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
+                        <ToggleSwitch x:Name="SettingAttemptToParseTags" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
+                    </StackPanel>
                 </StackPanel>
                 <!--/ On/Off Swicthes-->
 
-                 <!--Sliders--> 
-                <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
-                <Grid Height="40">
-                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
-                    <Slider x:Name="SettingMaxPararellDownloads" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
-                </Grid>
+                 <!--Sliders-->
+                <StackPanel Margin="20,15" x:Name="PanelSliders" RelativePanel.RightOf="PanelOnOff">
+                    <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
+                    <Grid Height="40">
+                        <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>
+                        <Slider x:Name="SettingMaxPararellDownloads" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
+                    </Grid>
 
-                <TextBlock Text="Max pararell conversions: " TextAlignment="Center"/>
-                <Grid Height="40">
-                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellConv, Path=Value}" TextAlignment="Center"/>
-                    <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
-                </Grid>
-                <TextBlock Text="Max results per page: " TextAlignment="Center"/>
-                <Grid Height="40">
-                    <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingResultsPerPage, Path=Value , Converter={StaticResource PageConverter}}" TextAlignment="Center"/>
-                    <Slider x:Name="SettingResultsPerPage" Maximum="31" Minimum="5" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="5"/>
-                </Grid>
-                 <!--/ Sliders-->
-
-                 <!--Combo boxes--> 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <StackPanel>
-                        <TextBlock Text="Output format:" TextAlignment="Center" Margin="0,0,5,0"/>
-                        <Grid Height="60">
-                            <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedFormat">
-                                <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
-                                <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
-                                <TextBlock x:Name="OptFormatM4A" Text="M4A" HorizontalAlignment="Stretch" />
-                            </ComboBox>
-                        </Grid>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5,0,0,0"/>
-                        <Grid Height="60">
-                            <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedQuality">
-                                <TextBlock x:Name="OptQualityAuto" Text="Auto" HorizontalAlignment="Stretch" />
-                                <TextBlock x:Name="OptQualityLow" Text="High" HorizontalAlignment="Stretch" />
-                                <TextBlock x:Name="OptQualityMedium" Text="Low" HorizontalAlignment="Stretch" />
-                                <TextBlock x:Name="OptQualityHigh" Text="Medium" HorizontalAlignment="Stretch" />
-                            </ComboBox>
-                        </Grid>
-                    </StackPanel>
+                    <TextBlock Text="Max pararell conversions: " TextAlignment="Center"/>
+                    <Grid Height="40">
+                        <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellConv, Path=Value}" TextAlignment="Center"/>
+                        <Slider x:Name="SettingMaxPararellConv" Maximum="5" Minimum="1" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="2"/>
+                    </Grid>
+                    <TextBlock Text="Max results per page: " TextAlignment="Center"/>
+                    <Grid Height="40">
+                        <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingResultsPerPage, Path=Value , Converter={StaticResource PageConverter}}" TextAlignment="Center"/>
+                        <Slider x:Name="SettingResultsPerPage" Maximum="31" Minimum="5" Margin="0,0,41,0" ValueChanged="ChangeSliderSetting" Value="5"/>
+                    </Grid>
                 </StackPanel>
-                 <!--/Combo boxes-->
+                <!--/ Sliders-->
 
-                <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
-                <Grid Height="50">
-                    <Button Margin="179,12,0,11" Width="41"  FontFamily="Segoe MDL2 Assets" Content="&#xE10C;" Click="SelectOutputFolder" />
-                    <TextBox x:Name="SettingOutputFolder" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="164" IsReadOnly="True"/>
-                </Grid>
-
-            </StackPanel>
+                 <!--Combo boxes-->
+                <StackPanel Margin="20,15" x:Name="PanelCombo" RelativePanel.Below="PanelOnOff">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <StackPanel>
+                            <TextBlock Text="Output format:" TextAlignment="Center" Margin="0,0,5,0"/>
+                            <Grid Height="60">
+                                <ComboBox x:Name="ComboOutputFormat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedFormat">
+                                    <TextBlock x:Name="OptFormatMP3" Text="MP3" HorizontalAlignment="Stretch" />
+                                    <TextBlock x:Name="OptFormatMP4" Text="MP4" HorizontalAlignment="Stretch" />
+                                    <TextBlock x:Name="OptFormatM4A" Text="M4A" HorizontalAlignment="Stretch" />
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Output quality:" TextAlignment="Center" Margin="5,0,0,0"/>
+                            <Grid Height="60">
+                                <ComboBox x:Name="ComboOutputQuality" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,10,5,10" SelectionChanged="ChangePrefferedQuality">
+                                    <TextBlock x:Name="OptQualityAuto" Text="Auto" HorizontalAlignment="Stretch" />
+                                    <TextBlock x:Name="OptQualityLow" Text="High" HorizontalAlignment="Stretch" />
+                                    <TextBlock x:Name="OptQualityMedium" Text="Low" HorizontalAlignment="Stretch" />
+                                    <TextBlock x:Name="OptQualityHigh" Text="Medium" HorizontalAlignment="Stretch" />
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="Output folder:" TextAlignment="Center" Margin="5"/>
+                    <Grid Height="50">
+                        <Button Margin="179,12,0,11" Width="41"  FontFamily="Segoe MDL2 Assets" Content="&#xE10C;" Click="SelectOutputFolder" />
+                        <TextBox x:Name="SettingOutputFolder" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="164" IsReadOnly="True"/>
+                    </Grid>
+                </StackPanel>
+                <!--/Combo boxes-->
+            </RelativePanel>
         </Grid>
     </Grid>
 </Page>

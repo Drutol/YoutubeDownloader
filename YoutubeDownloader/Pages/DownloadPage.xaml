@@ -40,8 +40,8 @@
             <AppBarButton Icon="Download" Label="Download" Click="MassEditDownload"/>
         </CommandBar>
     </Page.BottomAppBar>
-    
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
         <Grid Margin="4,10,16,56" x:Name="ContentLayoutRoot">
             <!-- Main content display -->
             <Grid.RowDefinitions>

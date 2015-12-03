@@ -17,12 +17,10 @@
                     <ColumnDefinition Width="4"/>
                 </Grid.ColumnDefinitions>
                 <Grid Background="{StaticResource SystemControlBackgroundAccentBrush}" Grid.Column="1"/>
-                    <StackPanel>
+                <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button x:Name="HamburgerButton" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" FontSize="20" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Click="HamburgerButton_Click">
-
-                            </Button>
-                        </StackPanel>
+                        <Button x:Name="HamburgerButton" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" FontSize="20" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Click="HamburgerButton_Click"/>
+                    </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
                                 <SymbolIcon Symbol="Folder"/>
@@ -34,7 +32,7 @@
                                     <ColumnDefinition Width="35"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                            <Border BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="2" Visibility="Collapsed"/>
+                            <Border x:Name="Border1" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="1" Visibility="Collapsed"/>
                                 <SymbolIcon HorizontalAlignment="Center" Symbol="Download" Grid.Column="0" VerticalAlignment="Center"  Foreground="{Binding ElementName=txtDownload , Path=Foreground}"/>
                                 <TextBlock x:Name="txtDownload" Text="Downloader" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
                             </Grid>
@@ -45,7 +43,7 @@
                                     <ColumnDefinition Width="35"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                            <Border BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="2" Visibility="Collapsed"/>
+                            <Border x:Name="Border2" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="1" Visibility="Collapsed"/>
                             <SymbolIcon Symbol="Setting" HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Center"  Foreground="{Binding ElementName=txtSettings , Path=Foreground}"/>
                                 <TextBlock x:Name="txtSettings" Text="Settings" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
                             </Grid>
@@ -56,7 +54,7 @@
                                 <ColumnDefinition Width="35"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Border BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="2" Visibility="Collapsed"/>
+                            <Border x:Name="Border3" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="1" Visibility="Collapsed"/>
                             <SymbolIcon Symbol="Clock" HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Center"  Foreground="{Binding ElementName=txtHistory , Path=Foreground}"/>
                             <TextBlock x:Name="txtHistory" Text="History" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
                         </Grid>

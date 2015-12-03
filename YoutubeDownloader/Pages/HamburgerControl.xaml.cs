@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,6 +29,20 @@ namespace YoutubeDownloader.Pages
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
             GetMainPageInstance().ReversePane();
+        }
+
+        internal void PaneOpened()
+        {
+            Border1.SetValue(Grid.ColumnSpanProperty, 2);
+            Border2.SetValue(Grid.ColumnSpanProperty, 2);
+            Border3.SetValue(Grid.ColumnSpanProperty, 2);
+        }
+
+        internal void PaneClosed()
+        {
+            Border1.SetValue(Grid.ColumnSpanProperty, 1);
+            Border2.SetValue(Grid.ColumnSpanProperty, 1);
+            Border3.SetValue(Grid.ColumnSpanProperty, 1);
         }
 
         private void BtnSettings_Click(object sender, RoutedEventArgs e)
