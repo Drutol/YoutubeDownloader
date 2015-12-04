@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.MediaProperties;
+using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
@@ -26,9 +27,22 @@ namespace YoutubeDownloader.Pages
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        private bool initDone = false;
         public SettingsPage()
         {
             this.InitializeComponent();
+            //Current Values
+            SetAutoDownloadSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"]);
+            SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
+            SetRenameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingRenameFile"]);
+            SetOutputFormat((int)ApplicationData.Current.LocalSettings.Values["outFormat"]);
+            SetOutputFolderName((string)ApplicationData.Current.LocalSettings.Values["outFolder"]);
+            SetOutputQuality((int)ApplicationData.Current.LocalSettings.Values["outQuality"]);
+            SetMaxPararellDownloads((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellDownloads"]);
+            SetMaxPararellConv((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"]);
+            SetResultsPerPage((int)ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"]);
+            SetParseTagsSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAttemptToParseTags"]);
+            initDone = true;
         }
 
         #region Setting Setters
@@ -36,7 +50,6 @@ namespace YoutubeDownloader.Pages
         {
             SettingSetAlbumAsPlaylistName.IsOn = val == "True" ? true : false;
         }
-
         public void SetAutoDownloadSetting(string val)
         {
             SettingAutoDownload.IsOn = val == "True" ? true : false;
@@ -49,17 +62,14 @@ namespace YoutubeDownloader.Pages
         {
             ComboOutputFormat.SelectedIndex = iFormat;
         }
-
         public void SetRenameSetting(string val)
         {
             SettingRenameFile.IsOn = val == "True" ? true : false;
         }
-
         public void SetOutputQuality(int iQuality)
         {
             ComboOutputQuality.SelectedIndex = iQuality;
         }
-
         public void SetOutputFolderName(string name)
         {
             SettingOutputFolder.Text = name == "" ? "Music library" : name;
@@ -83,12 +93,16 @@ namespace YoutubeDownloader.Pages
 
         private void ChangeSetting(object sender, RoutedEventArgs e)
         {
+            if (!initDone)
+                return;
             ToggleSwitch toggle = (ToggleSwitch)sender;
             Settings.ChangeSetting(toggle.Name, Convert.ToString(toggle.IsOn));
         }
 
         private void ChangeSliderSetting(object sender, RangeBaseValueChangedEventArgs e)
         {
+            if (!initDone)
+                return;
             Slider slider = (Slider)sender;
             Settings.ChangeSetting(slider.Name, (int)slider.Value);
             if (!slider.Name.Contains("Conv"))
@@ -99,6 +113,8 @@ namespace YoutubeDownloader.Pages
 
         private void ChangePrefferedFormat(object sender, object e)
         {
+            if (!initDone)
+                return;
             ComboBox cmb = (ComboBox)sender;
 
             Settings.ChangeFormat((Settings.PossibleOutputFormats)cmb.SelectedIndex);
@@ -110,6 +126,8 @@ namespace YoutubeDownloader.Pages
 
         private void ChangePrefferedQuality(object sender, SelectionChangedEventArgs e)
         {
+            if (!initDone)
+                return;
             ComboBox cmb = (ComboBox)sender;
 
             Settings.ChangeQuality((AudioEncodingQuality)cmb.SelectedIndex);
@@ -128,7 +146,7 @@ namespace YoutubeDownloader.Pages
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("outFolder", folder);
 
                 Settings.SetOutputFolderName(folder.Name);
-                //SettingOutputFolder.Text = folder.Name;
+                SettingOutputFolder.Text = folder.Name;
             }
             catch (TaskCanceledException ex)
             {

@@ -7,6 +7,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <Storyboard x:Name="DetailsAnimationShow">
+            <DoubleAnimation Storyboard.TargetName="VideoDetails" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" SpeedRatio="2.0" />
+        </Storyboard>
+        <Storyboard x:Name="DetailsAnimationHide">
+            <DoubleAnimation Storyboard.TargetName="VideoDetails" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" SpeedRatio="2.0" />
+        </Storyboard>
+    </Page.Resources>
+    
     <Page.BottomAppBar>
         <CommandBar x:Name="SelectionMenu" Visibility="Collapsed">
             <CommandBar.Content>
@@ -42,6 +51,8 @@
     </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
+        
+        
         <Grid Margin="4,10,16,56" x:Name="ContentLayoutRoot">
             <!-- Main content display -->
             <Grid.RowDefinitions>
@@ -80,7 +91,9 @@
                 </StackPanel>
                 <Button x:Name="BtnDownload" Content="Get videos" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="BtnDownload_Click" Grid.Column="3"/>
             </Grid>
-
+            
+            
+            
             <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple" Grid.Row="1" >
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -88,8 +101,65 @@
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
+
+            <Grid Background="LightGray" x:Name="VideoDetails" Visibility="Visible" Height="100" Width="1000" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Opacity="0">
+                <!--Details bar-->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3"/>
+                    <!--Top color bar-->
+                    <RowDefinition Height="*"/>
+                    <!--Content-->
+                    <RowDefinition Height="3"/>
+                    <!--Bottom color bar-->
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3"/>
+                    <!--Left color bar-->
+                    <ColumnDefinition Width="50"/>
+                    <!--Close button-->
+                    <ColumnDefinition Width="*"/>
+                    <!--Content-->
+                    <ColumnDefinition Width="3"/>
+                    <!--Right color bar-->
+                </Grid.ColumnDefinitions>
+                <Grid Grid.RowSpan="3" Grid.Column="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                <Grid Grid.RowSpan="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Title" HorizontalAlignment="Center" ></TextBlock>
+                        <AutoSuggestBox  x:Name="DetailsTitleSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsTitleTextChange" SuggestionChosen="DetailsTitleSuggestionChosen"/>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0" >
+                        <TextBlock Text="Artist" HorizontalAlignment="Center"></TextBlock>
+                        <AutoSuggestBox x:Name="DetailsArtistSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsArtistTextChange" SuggestionChosen="DetailsArtistSuggestionChosen"/>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Album" HorizontalAlignment="Center"></TextBlock>
+                        <TextBox x:Name="DetailsAlbum" TextChanged="DetailsAlbumTextChanged" ></TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Track No." HorizontalAlignment="Center"></TextBlock>
+                        <TextBox x:Name="DetailsTrackNumber"></TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Trim start : " HorizontalAlignment="Center"/>
+                        <TextBox x:Name="FlyoutTrimStart"></TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="2,0,5,0">
+                        <TextBlock Text="Trim end : " HorizontalAlignment="Center"/>
+                        <TextBox x:Name="FlyoutTrimEnd"></TextBox>
+                    </StackPanel>
+                </StackPanel>
+                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Height="40" Width="40" Background="Transparent" Click="DetailsClose">
+                    <SymbolIcon Symbol="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SystemControlBackgroundAccentBrush}"/>
+
+                </Button>
+            </Grid>
+
             <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="1" />
             <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Margin}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="1"  />
+
+            
         </Grid>
     </Grid>
 </Page>

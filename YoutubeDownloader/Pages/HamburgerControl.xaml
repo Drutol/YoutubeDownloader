@@ -18,37 +18,37 @@
                 </Grid.ColumnDefinitions>
                 <Grid Background="{StaticResource SystemControlBackgroundAccentBrush}" Grid.Column="1"/>
                 <StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
                         <Button x:Name="HamburgerButton" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" FontSize="20" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Click="HamburgerButton_Click"/>
                     </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
-                                <SymbolIcon Symbol="Folder"/>
-                            </Button>
-                        </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Background="Transparent" Width="50" Height="50" Click="OpenOututFolder">
+                            <SymbolIcon Symbol="Folder"/>
+                        </Button>
+                    </StackPanel>
                     <Button VerticalContentAlignment="Center" Background="Transparent" Click="BtnDownload_Click" BorderThickness="0" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited">
                         <Grid Width="290" Height="50">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="35"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="35"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
                             <Border x:Name="Border1" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="1" Visibility="Collapsed"/>
-                                <SymbolIcon HorizontalAlignment="Center" Symbol="Download" Grid.Column="0" VerticalAlignment="Center"  Foreground="{Binding ElementName=txtDownload , Path=Foreground}"/>
-                                <TextBlock x:Name="txtDownload" Text="Downloader" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
-                            </Grid>
-                        </Button>
+                            <SymbolIcon HorizontalAlignment="Center" Symbol="Download" Grid.Column="0" VerticalAlignment="Center"  Foreground="{Binding ElementName=txtDownload , Path=Foreground}"/>
+                            <TextBlock x:Name="txtDownload" Text="Downloader" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
+                        </Grid>
+                    </Button>
                     <Button VerticalContentAlignment="Center" Background="Transparent" Click="BtnSettings_Click" BorderThickness="0" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited">
-                            <Grid Width="290" Height="50">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="35"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                        <Grid Width="290" Height="50">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="35"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
                             <Border x:Name="Border2" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="1" Visibility="Collapsed"/>
                             <SymbolIcon Symbol="Setting" HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Center"  Foreground="{Binding ElementName=txtSettings , Path=Foreground}"/>
-                                <TextBlock x:Name="txtSettings" Text="Settings" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
-                            </Grid>
-                        </Button>
-                     <Button VerticalContentAlignment="Center" Background="Transparent" Click="BtnHistory_Click" BorderThickness="0" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited">
+                            <TextBlock x:Name="txtSettings" Text="Settings" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
+                        </Grid>
+                    </Button>
+                    <Button VerticalContentAlignment="Center" Background="Transparent" Click="BtnHistory_Click" BorderThickness="0" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited">
                         <Grid Width="290" Height="50">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="35"/>
@@ -60,9 +60,6 @@
                         </Grid>
                     </Button>
                 </StackPanel>
-                <!--<Button x:Name="PreviewCancel" Grid.Column="0" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" VerticalAlignment="Bottom" Background="Transparent" Margin="5" Height="35" FontSize="13.333" Click="VideoPreviewCancel">
-                    <SymbolIcon Symbol="Cancel"/>
-                </Button>-->
             </Grid>
         </ScrollViewer>
     </Grid>

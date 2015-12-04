@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace YoutubeDownloader
 {
@@ -105,9 +106,23 @@ namespace YoutubeDownloader
         {
             if (vis == Visibility.Visible)
                 return true;
-
             return false;
         }
+        /// <summary>
+        /// Use only from main thread
+        /// </summary>
+        /// <returns></returns>
+        public static MainPage GetMainPageInstance()
+        {
+            var frame = (Frame)Window.Current.Content;
+            return (MainPage)frame.Content;
+        }
 
+        internal static void DetailsPopulate(VideoItem videoItem)
+        {
+            var page = GetMainPageInstance();
+            var dlPage = page.GetDownloaderPage();
+            dlPage.DetailsPopulate(videoItem);
+        }
     }
 }

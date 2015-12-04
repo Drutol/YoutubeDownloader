@@ -166,7 +166,6 @@ namespace YoutubeDownloader.Pages
         }
         #endregion
 
-
         #region SelectionManip
         private void SelectionInvert(object sender, RoutedEventArgs e)
         {
@@ -195,9 +194,15 @@ namespace YoutubeDownloader.Pages
         private void VideoItemSelected(object sender, SelectionChangedEventArgs e)
         {
             if (VideoList.SelectedItems.Count > 0)
+            {
                 SelectionMenu.Visibility = Visibility.Visible;
+                Utils.GetMainPageInstance().AppBarOpened();
+            }
             else
+            {
                 SelectionMenu.Visibility = Visibility.Collapsed;
+                Utils.GetMainPageInstance().AppBarClosed();
+            }
         }
 
         private void MassEditTags(object sender, RoutedEventArgs e)
@@ -241,6 +246,76 @@ namespace YoutubeDownloader.Pages
             {
                 vidListItems.Remove(item);
             }
+        }
+        #endregion
+
+        #region Details
+        VideoItem currentlyEditedItem;
+        public void DetailsPopulate(VideoItem caller)
+        {
+            if(currentlyEditedItem == null)
+                DetailsAnimationShow.Begin();
+            currentlyEditedItem = caller;
+            //Clear
+            DetailsTitleSuggestsBox.Items.Clear();
+            DetailsArtistSuggestsBox.Items.Clear();
+            //Populate data
+            if (!caller.suggestions.IsEmpty())
+            {
+                //title
+                DetailsTitleSuggestsBox.Text = caller.tagTitle;
+                foreach (var item in caller.suggestions.titles)
+                {
+                    DetailsTitleSuggestsBox.Items.Add(item);
+                }
+                //artist
+                DetailsArtistSuggestsBox.Text = caller.tagArtist;
+                foreach (var item in caller.suggestions.authors)
+                {
+                    DetailsArtistSuggestsBox.Items.Add(item);
+                }
+            }
+            //Misc
+            DetailsAlbum.Text = caller.tagAlbum;
+            DetailsTrackNumber.Text = "0";
+            
+        }
+        private void DetailsSuggestClicked(object sender, RoutedEventArgs e)
+        {
+            AutoSuggestBox box = sender as AutoSuggestBox;
+            box.IsSuggestionListOpen = true;
+        }
+        private void DetailsClose(object sender, RoutedEventArgs e)
+        {
+            currentlyEditedItem = null;
+            DetailsAnimationHide.Begin();
+        }
+        private void DetailsTitleTextChange(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            AutoSuggestBox box = sender as AutoSuggestBox;
+            currentlyEditedItem.tagTitle = box.Text;
+        }
+
+        private void DetailsTitleSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            currentlyEditedItem.tagTitle = args.SelectedItem.ToString();
+        }
+
+        private void DetailsArtistTextChange(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            AutoSuggestBox box = sender as AutoSuggestBox;
+            currentlyEditedItem.tagArtist = box.Text;
+        }
+
+        private void DetailsArtistSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            currentlyEditedItem.tagArtist = args.SelectedItem.ToString();
+        }
+
+        private void DetailsAlbumTextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox box = sender as TextBox;
+            currentlyEditedItem.tagAlbum = box.Text;
         }
         #endregion
 

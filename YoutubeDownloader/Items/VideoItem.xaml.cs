@@ -302,8 +302,8 @@ namespace YoutubeDownloader
 
         private void btnEditTags_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            //if(_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3)
-                //GetMainPageInstance().DetailsPopulate(this);
+           if(_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3)
+               Utils.DetailsPopulate(this);
         }
 
         private void OpenVideoDetails(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -317,19 +317,19 @@ namespace YoutubeDownloader
         private void PreviewVideo(object sender, RoutedEventArgs e)
         {
             if (downloadUrl != null) ;
-                //GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl), this);
+                GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl), this);
         }
 
         private void RemoveTrimStart(object sender, RoutedEventArgs e)
         {
             trimStart = null;
-            //GetMainPageInstance().TrimResetStart();
+            GetMainPageInstance().TrimResetStart();
         }
 
         private void RemoveTrimEnd(object sender, RoutedEventArgs e)
         {
             trimEnd = null;
-           // GetMainPageInstance().TrimResetEnd();
+            GetMainPageInstance().TrimResetEnd();
         }
 
         /// <summary>
@@ -338,8 +338,7 @@ namespace YoutubeDownloader
         /// <returns></returns>
         private static MainPage GetMainPageInstance()
         {
-            var frame = (Frame)Window.Current.Content;
-            return (MainPage)frame.Content;
+            return Utils.GetMainPageInstance();
         }
 
 

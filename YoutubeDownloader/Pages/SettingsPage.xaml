@@ -70,10 +70,10 @@
         </Grid>
         <Grid x:Name="GridSettings" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1">
             <!--Settings mess-->
-            <RelativePanel>
+            <RelativePanel Width="Auto">
                 <!--On/Off Swicthes-->
-                <StackPanel Margin="20,10" x:Name="PanelOnOff" Height="Auto">
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                <StackPanel Margin="20,10" x:Name="PanelOnOff" Height="Auto" Width="250">
+                    <StackPanel Orientation="Horizontal" Margin="0,5" >
                         <TextBlock Text="Start download automatically:" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="130"/>
                         <ToggleSwitch x:Name="SettingAutoDownload" HorizontalAlignment="Center" VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Margin="10,0,0,0" Toggled="ChangeSetting"/>
                     </StackPanel>
@@ -94,7 +94,7 @@
                 <!--/ On/Off Swicthes-->
 
                  <!--Sliders-->
-                <StackPanel Margin="20,15" x:Name="PanelSliders" RelativePanel.RightOf="PanelOnOff">
+                <StackPanel Margin="10,15" x:Name="PanelSliders" RelativePanel.RightOf="PanelOnOff" Width="225">
                     <TextBlock Text="Max pararell downloads: " TextAlignment="Center"/>
                     <Grid Height="40">
                         <TextBlock Margin="193,10,0,10" Text="{Binding ElementName=SettingMaxPararellDownloads, Path=Value}" TextAlignment="Center"/>

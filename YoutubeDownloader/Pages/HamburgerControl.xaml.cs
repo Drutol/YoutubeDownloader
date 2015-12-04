@@ -100,11 +100,10 @@ namespace YoutubeDownloader.Pages
                 }
             }
         }
-
+    
         private MainPage GetMainPageInstance()
         {
-            var frame = (Frame)Window.Current.Content;
-            return (MainPage)frame.Content;
+            return Utils.GetMainPageInstance();
         }
 
         private async void OpenOututFolder(object sender, RoutedEventArgs e)
