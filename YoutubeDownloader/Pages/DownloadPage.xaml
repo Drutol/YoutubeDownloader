@@ -51,8 +51,30 @@
     </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
-        
-        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DetailsRow1.Orientation" Value="Horizontal"/>
+                        <Setter Target="DetailsRow2.Orientation" Value="Horizontal"/>
+                        <Setter Target="DetailsRow3.Orientation" Value="Horizontal"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="500"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DetailsRow1.Orientation" Value="Vertical"/>
+                        <Setter Target="DetailsRow2.Orientation" Value="Vertical"/>
+                        <Setter Target="VideoDetails.Height" Value="150"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid Margin="4,10,16,56" x:Name="ContentLayoutRoot">
             <!-- Main content display -->
             <Grid.RowDefinitions>
@@ -102,7 +124,7 @@
                 </ListView.ItemContainerStyle>
             </ListView>
 
-            <Grid Background="LightGray" x:Name="VideoDetails" Visibility="Visible" Height="100" Width="1000" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Opacity="0">
+            <Grid Background="LightGray" x:Name="VideoDetails" Visibility="Visible" Height="100" MinWidth="400" MaxWidth="1000" Width="Auto" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Opacity="1">
                 <!--Details bar-->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="3"/>
@@ -115,42 +137,48 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3"/>
                     <!--Left color bar-->
-                    <ColumnDefinition Width="50"/>
-                    <!--Close button-->
                     <ColumnDefinition Width="*"/>
                     <!--Content-->
                     <ColumnDefinition Width="3"/>
                     <!--Right color bar-->
                 </Grid.ColumnDefinitions>
+
                 <Grid Grid.RowSpan="3" Grid.Column="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
                 <Grid Grid.RowSpan="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
-                    <StackPanel Margin="2,0,5,0">
-                        <TextBlock Text="Title" HorizontalAlignment="Center" ></TextBlock>
-                        <AutoSuggestBox  x:Name="DetailsTitleSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsTitleTextChange" SuggestionChosen="DetailsTitleSuggestionChosen"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10" >
+                    <StackPanel x:Name="DetailsRow1" Orientation="Horizontal">
+                        <StackPanel Margin="2,0,5,0">
+                            <TextBlock Text="Title" HorizontalAlignment="Center" ></TextBlock>
+                            <AutoSuggestBox  x:Name="DetailsTitleSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsTitleTextChange" SuggestionChosen="DetailsTitleSuggestionChosen"/>
+                        </StackPanel>
+                        <StackPanel Margin="2,0,5,0" >
+                            <TextBlock Text="Artist" HorizontalAlignment="Center"></TextBlock>
+                            <AutoSuggestBox x:Name="DetailsArtistSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsArtistTextChange" SuggestionChosen="DetailsArtistSuggestionChosen"/>
+                        </StackPanel>
                     </StackPanel>
-                    <StackPanel Margin="2,0,5,0" >
-                        <TextBlock Text="Artist" HorizontalAlignment="Center"></TextBlock>
-                        <AutoSuggestBox x:Name="DetailsArtistSuggestsBox" MaxWidth="250" MinWidth="100" GotFocus="DetailsSuggestClicked" TextChanged="DetailsArtistTextChange" SuggestionChosen="DetailsArtistSuggestionChosen"/>
+                    <StackPanel x:Name="DetailsRow2" Orientation="Horizontal">
+                        <StackPanel Margin="2,0,5,0">
+                            <TextBlock Text="Album" HorizontalAlignment="Center"></TextBlock>
+                            <TextBox x:Name="DetailsAlbum" TextChanged="DetailsAlbumTextChanged" ></TextBox>
+                        </StackPanel>
+                        <StackPanel Margin="2,0,5,0">
+                            <TextBlock Text="Track No." HorizontalAlignment="Center"></TextBlock>
+                            <TextBox x:Name="DetailsTrackNumber"></TextBox>
+                        </StackPanel>
                     </StackPanel>
-                    <StackPanel Margin="2,0,5,0">
-                        <TextBlock Text="Album" HorizontalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="DetailsAlbum" TextChanged="DetailsAlbumTextChanged" ></TextBox>
-                    </StackPanel>
-                    <StackPanel Margin="2,0,5,0">
-                        <TextBlock Text="Track No." HorizontalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="DetailsTrackNumber"></TextBox>
-                    </StackPanel>
-                    <StackPanel Margin="2,0,5,0">
-                        <TextBlock Text="Trim start : " HorizontalAlignment="Center"/>
-                        <TextBox x:Name="FlyoutTrimStart"></TextBox>
-                    </StackPanel>
-                    <StackPanel Margin="2,0,5,0">
-                        <TextBlock Text="Trim end : " HorizontalAlignment="Center"/>
-                        <TextBox x:Name="FlyoutTrimEnd"></TextBox>
+                    <StackPanel x:Name="DetailsRow3" Orientation="Horizontal">
+                        <StackPanel Margin="2,0,5,0">
+                            <TextBlock Text="Trim start : " HorizontalAlignment="Center"/>
+                            <TextBox x:Name="FlyoutTrimStart"></TextBox>
+                        </StackPanel>
+                        <StackPanel Margin="2,0,5,0">
+                            <TextBlock Text="Trim end : " HorizontalAlignment="Center"/>
+                            <TextBox x:Name="FlyoutTrimEnd"></TextBox>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
-                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="2" Height="40" Width="40" Background="Transparent" Click="DetailsClose">
+                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Height="40" Width="40" Background="Transparent" Click="DetailsClose">
                     <SymbolIcon Symbol="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SystemControlBackgroundAccentBrush}"/>
 
                 </Button>

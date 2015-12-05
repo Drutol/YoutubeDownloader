@@ -1,0 +1,85 @@
+﻿<Page
+    x:Class="YoutubeDownloader.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:YoutubeDownloader"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:my="using:YoutubeDownloader.Pages"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary>
+            <!--<ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="XamlResources/ResourcesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>-->
+            <local:PageResultsFormatter x:Key="PageConverter" />
+        </ResourceDictionary>
+    </Page.Resources>
+    
+
+    <Grid x:Name="RootGrid" Background="{ThemeResource AppBarBorderThemeBrush}"> <!-- Root -->
+        <Grid.ColumnDefinitions> <!-- Split view + Main Content -->
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainMenu.DisplayMode" Value="CompactInline"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Height="Auto" Grid.Row="1">  <!--Bottom Details + Media element-->
+
+            <StackPanel x:Name="TrimControls" Orientation="Horizontal"  Height="48" Width="205"  Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed">
+                <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim start" Click="TrimSetStart" >
+                    <SymbolIcon Symbol="Import" RenderTransformOrigin="0.5,0.5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform Rotation="180"/>
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button>
+                <TextBlock x:Name="TrimControlsStartLabel" Text="0:00" VerticalAlignment="Center" Margin="5,0"/>
+                <SymbolIcon Symbol="More"/>
+                <TextBlock x:Name="TrimControlsEndLabel" Text="0:00" VerticalAlignment="Center" Margin="5,0"/>
+                <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim end" Click="TrimSetEnd">
+                    <SymbolIcon Symbol="Import"/>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+
+        <Button x:Name="PreviewCancel" Grid.Column="0" Grid.Row="1" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="LightGray" Margin="0" FontSize="13.333" Click="VideoPreviewCancel">
+            <SymbolIcon Symbol="Cancel"/>
+        </Button>
+
+        <MediaElement Margin="205,0,0,0" Height="48" Grid.Column="1" Grid.Row="1" AreTransportControlsEnabled="True" Width="Auto" x:Name="Preview" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" MediaOpened="PreviewMediaOpened">
+            <!--<MediaElement.TransportControls> TODO
+                <local:CustomMediaTransportControls/>
+            </MediaElement.TransportControls>-->
+            <MediaElement.TransportControls>
+                <MediaTransportControls IsCompact="True" Height="48" IsFullWindowButtonVisible="False" Background="Transparent"/>
+            </MediaElement.TransportControls>
+        </MediaElement>
+
+        <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay" IsPaneOpen="False" CompactPaneLength="50" OpenPaneLength="290" Grid.ColumnSpan="2" Grid.RowSpan="2" PaneClosed="MainMenu_PaneClosed"> <!-- Settings <-> LitView -->
+            <SplitView.Pane>
+                <my:HamburgerControl x:Name="HamburgerPane"/>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Grid x:Name="ContentGrid">
+                    <Frame x:Name="DownloaderContent"/>
+                    <Frame x:Name="MiscContent"/>
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Page>
