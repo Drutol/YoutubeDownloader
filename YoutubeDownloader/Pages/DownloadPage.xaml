@@ -75,7 +75,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Grid Margin="4,10,16,56" x:Name="ContentLayoutRoot">
+        <Grid Margin="4,10" x:Name="ContentLayoutRoot">
             <!-- Main content display -->
             <Grid.RowDefinitions>
                 <!--Top contrrols for URL and bottom for ListView-->
@@ -113,9 +113,7 @@
                 </StackPanel>
                 <Button x:Name="BtnDownload" Content="Get videos" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="BtnDownload_Click" Grid.Column="3"/>
             </Grid>
-            
-            
-            
+                               
             <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" SelectionChanged="VideoItemSelected" Height="Auto" SelectionMode="Multiple" Grid.Row="1" >
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -124,7 +122,7 @@
                 </ListView.ItemContainerStyle>
             </ListView>
 
-            <Grid Background="LightGray" x:Name="VideoDetails" Visibility="Visible" Height="100" MinWidth="400" MaxWidth="1000" Width="Auto" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Opacity="1">
+            <Grid x:Name="VideoDetails" Background="LightGray"  Visibility="Visible" Height="100" MinWidth="400" MaxWidth="1000" Width="Auto" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Opacity="0">
                 <!--Details bar-->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="3"/>
@@ -180,7 +178,6 @@
                 </StackPanel>
                 <Button VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Height="40" Width="40" Background="Transparent" Click="DetailsClose">
                     <SymbolIcon Symbol="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SystemControlBackgroundAccentBrush}"/>
-
                 </Button>
             </Grid>
 

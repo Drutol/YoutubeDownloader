@@ -277,8 +277,7 @@ namespace YoutubeDownloader.Pages
             }
             //Misc
             DetailsAlbum.Text = caller.tagAlbum;
-            DetailsTrackNumber.Text = "0";
-            
+            DetailsTrackNumber.Text = "0";      
         }
         private void DetailsSuggestClicked(object sender, RoutedEventArgs e)
         {

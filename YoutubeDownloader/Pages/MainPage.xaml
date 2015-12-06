@@ -24,7 +24,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="96"/>
         </Grid.RowDefinitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -39,7 +39,6 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Height="Auto" Grid.Row="1">  <!--Bottom Details + Media element-->
-
             <StackPanel x:Name="TrimControls" Orientation="Horizontal"  Height="48" Width="205"  Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed">
                 <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim start" Click="TrimSetStart" >
                     <SymbolIcon Symbol="Import" RenderTransformOrigin="0.5,0.5">
@@ -57,7 +56,7 @@
             </StackPanel>
         </StackPanel>
 
-        <Button x:Name="PreviewCancel" Grid.Column="0" Grid.Row="1" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="LightGray" Margin="0" FontSize="13.333" Click="VideoPreviewCancel">
+        <Button x:Name="PreviewCancel" Grid.Column="0" Grid.Row="1" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" VerticalAlignment="Bottom" Height="48" HorizontalAlignment="Stretch" Background="LightGray" FontSize="13.333" Click="VideoPreviewCancel">
             <SymbolIcon Symbol="Cancel"/>
         </Button>
 

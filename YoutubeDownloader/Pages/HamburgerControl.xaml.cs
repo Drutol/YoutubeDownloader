@@ -23,7 +23,8 @@ namespace YoutubeDownloader.Pages
     {
         public HamburgerControl()
         {
-            this.InitializeComponent();        
+            this.InitializeComponent();
+            txtDownload.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
