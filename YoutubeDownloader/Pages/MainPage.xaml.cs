@@ -58,6 +58,13 @@ namespace YoutubeDownloader
             MiscContent.Visibility = Visibility.Visible;
             MiscContent.Navigate(typeof(Pages.HistoryPage));
         }
+
+        internal void NavigateSearch()
+        {
+            DownloaderContent.Visibility = Visibility.Collapsed;
+            MiscContent.Visibility = Visibility.Visible;
+            MiscContent.Navigate(typeof(Pages.SearchPage));
+        }
         #region BottomAppbBar
         bool isAppBarOpen = false;
         public void AppBarOpened()
@@ -121,6 +128,13 @@ namespace YoutubeDownloader
             TrimControls.Visibility = Visibility.Visible;
             SetBestMarginForContent();
         }
+
+        internal void BeginVideoPreview(Uri uri)
+        {
+            Preview.Source = uri;
+            Preview.Play();
+            TrimControls.Visibility = Visibility.Visible;
+        }
         private void TrimSetStart(object sender, RoutedEventArgs e)
         {
             var time = Preview.Position;
@@ -160,6 +174,8 @@ namespace YoutubeDownloader
             else
                 MainMenu.Margin = new Thickness(0, 0, 0, 0);
         }
+
+
         #endregion
 
 

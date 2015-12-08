@@ -15,13 +15,14 @@ using System.Linq;
 
 namespace YoutubeDownloader
 {
-    public sealed partial class VideoItem : UserControl
+    public partial class VideoItem : UserControl
     {
         public string id;
         public string origin;
         public string downloadUrl;
         public string thumbUrl;
         public string title;
+        public string desc;
         public string targetedFileFormat;
         public string sourceFileFormat = ".mp4";
         public string fileName;
@@ -34,6 +35,11 @@ namespace YoutubeDownloader
         private int? _trimStart;
         private int? _trimEnd;
         private Settings.PossibleOutputFormats _outputFormat;
+
+        private bool isOk = true; //Yt Extraction
+        bool report; //history
+        public SuggestedTagsPackage suggestions;
+
 
         public Settings.PossibleOutputFormats outputFormat
         {
@@ -116,11 +122,6 @@ namespace YoutubeDownloader
 
         }
 
-        private bool isOk = true;
-
-        bool report; //history
-
-        public SuggestedTagsPackage suggestions;
 
 
         public VideoItem(string id,string origin = "",bool report = false) //origin as for playlist title
@@ -138,6 +139,58 @@ namespace YoutubeDownloader
             {
                 PopulateVideoInfo();
             });
+
+        }
+
+        public VideoItem(SearchItem item) // from search
+        {
+            InitializeComponent();
+
+            id = item.id;
+            origin = "";
+            tagAlbum = "";
+            report = false;
+            downloadUrl = item.downloadUrl;
+            outputFormat = Settings.GetPrefferedOutputFormat();
+
+            title = item.title;
+            desc = item.desc;
+            
+
+            suggestions = new SuggestedTagsPackage();
+            CheckTrimRemovalButtons();
+            Task.Run(async () =>
+            {
+                if(downloadUrl != null)
+                PopulateVideoDownloadInfo();
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    VideoThumb.Source = new BitmapImage(new Uri(item.thumbUrl));
+                    VideoTitle.Text = title;
+                    VideoAuthor.Text = item.author;
+
+                    thumbUrl = item.thumbDownloadUrl;
+
+                    LoadingInfo.Visibility = Visibility.Collapsed;
+                    progressYoutubeExtraction.Visibility = Visibility.Visible;
+                });
+            });
+            if (_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3 && Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_PARSE_TAGS))
+                try
+                {
+                    suggestions = TagParser.AttemptToParseTags(title, desc, "", item.author);
+                    if (suggestions.suggestedAuthor != "")
+                        tagArtist = suggestions.suggestedAuthor;
+                    else
+                        tagArtist = item.author;
+                    if (suggestions.suggestedTitle != "")
+                        tagTitle = suggestions.suggestedTitle;
+                }
+                catch (Exception exce)
+                {
+                    Debug.WriteLine(exce.Message);
+                }
+
 
         }
 
@@ -341,6 +394,10 @@ namespace YoutubeDownloader
             return Utils.GetMainPageInstance();
         }
 
+        public static VideoItem FromSerachItem(SearchItem item)
+        {
+            return new VideoItem(item);
+        }
 
     }
 }

@@ -37,6 +37,7 @@ namespace YoutubeDownloader.Pages
             Border1.SetValue(Grid.ColumnSpanProperty, 2);
             Border2.SetValue(Grid.ColumnSpanProperty, 2);
             Border3.SetValue(Grid.ColumnSpanProperty, 2);
+            Border4.SetValue(Grid.ColumnSpanProperty, 2);
         }
 
         internal void PaneClosed()
@@ -44,6 +45,7 @@ namespace YoutubeDownloader.Pages
             Border1.SetValue(Grid.ColumnSpanProperty, 1);
             Border2.SetValue(Grid.ColumnSpanProperty, 1);
             Border3.SetValue(Grid.ColumnSpanProperty, 1);
+            Border4.SetValue(Grid.ColumnSpanProperty, 1);
         }
 
         private void BtnSettings_Click(object sender, RoutedEventArgs e)
@@ -67,11 +69,19 @@ namespace YoutubeDownloader.Pages
             txtHistory.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
         }
 
+        private void BtnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            GetMainPageInstance().NavigateSearch();
+            ResetActiveButton();
+            txtSearch.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
+        }
+
         private void ResetActiveButton()
         {
             txtSettings.Foreground = new SolidColorBrush(Colors.Black);
             txtHistory.Foreground = new SolidColorBrush(Colors.Black);
             txtDownload.Foreground = new SolidColorBrush(Colors.Black);
+            txtSearch.Foreground = new SolidColorBrush(Colors.Black);
         }
 
         private void Button_PointerEntered(object sender, PointerRoutedEventArgs e)

@@ -23,6 +23,7 @@ namespace YoutubeDownloader
         REQUEST_PLAYLIST_ITEMS,
         REQUEST_VIDEO,
         REQUEST_PLAYLIST,
+        REQUEST_SEARCH,
     }
 
     public enum IdType
@@ -37,8 +38,6 @@ namespace YoutubeDownloader
 
     static class YTDownload
     {
-
-
         const string API_KEY = "AIzaSyCC1bN7iQNMc60AoocV7V0ub1VKPiib0zA"; //don't hate me :(
         static public async Task<Tuple<List<string>,string,string>> GetVideosInPlaylist(string playlistID,string pageToken = "")
         {
@@ -94,6 +93,9 @@ namespace YoutubeDownloader
                     break;
                 case RequestTypes.REQUEST_PLAYLIST:
                     uri = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&maxResults=50&id=" + id + "&key=" + API_KEY;
+                    break;
+                case RequestTypes.REQUEST_SEARCH:
+                    uri = $"https://www.googleapis.com/youtube/v3/search?part=snippet&key={API_KEY}&q={id}";
                     break;
                 default:
                     throw new Exception("Invalid Request");
@@ -191,6 +193,30 @@ namespace YoutubeDownloader
             finalId = id;
             if (id.Length == 11) return new Tuple<IdType, string>(IdType.TYPE_VIDEO, finalId);
             else return new Tuple<IdType, string>(IdType.TYPE_PLAYLIST, finalId); ;
+        }
+
+        public static async Task<Dictionary<string,Dictionary<string,string>>> GetSearchResults(string query)
+        {
+            var request = GetWebRequest(RequestTypes.REQUEST_SEARCH, query);
+            dynamic response = await GetRequestResponse(request);
+
+            Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
+
+            foreach (var item in response.items)
+            {
+                if (item.id.videoId == null)
+                    continue;
+                Dictionary<string, string> info = new Dictionary<string, string>();
+                info.Add("title", (string)(item.snippet.title));
+                info.Add("thumbSmall", (string)(item.snippet.thumbnails.medium.url));
+                info.Add("thumbHigh", (string)(item.snippet.thumbnails.high.url));
+                info.Add("author", (string)(item.snippet.channelTitle));
+                info.Add("details", (string)(item.snippet.description));
+                result.Add((string)item.id.videoId, info);
+            }
+
+            return result;
+            
         }
 
         static async public void DownloadVideo(string url,string filename,VideoItem caller)
