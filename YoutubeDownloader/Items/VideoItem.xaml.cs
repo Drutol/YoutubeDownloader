@@ -370,7 +370,7 @@ namespace YoutubeDownloader
         private void PreviewVideo(object sender, RoutedEventArgs e)
         {
             if (downloadUrl != null) ;
-                GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl), this);
+                GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl), this,VideoThumb.Source);
         }
 
         private void RemoveTrimStart(object sender, RoutedEventArgs e)

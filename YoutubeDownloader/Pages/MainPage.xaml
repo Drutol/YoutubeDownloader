@@ -38,8 +38,24 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Height="Auto" Grid.Row="1">  <!--Bottom Details + Media element-->
-            <StackPanel x:Name="TrimControls" Orientation="Horizontal"  Height="48" Width="205"  Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed">
+        <Grid x:Name="PreviewContainer" Grid.Column="1" VerticalAlignment="Bottom" Height="Auto" Grid.Row="1" HorizontalAlignment="Stretch">
+            <!--Bottom Details + Media element-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="0" MaxWidth="168" Width="Auto"/>
+                <ColumnDefinition MinWidth="0" MaxWidth="205" Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel x:Name="PreviewInfo" Orientation="Horizontal" Background="LightGray" Width="Auto" Visibility="Collapsed" Grid.Column="0">
+                <Image x:Name="PreviewThumb" Stretch="UniformToFill" Width="68" Height="48" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                <TextBlock x:Name="PreviewTitle" Text="" Width="Auto" MaxHeight="48" MaxWidth="100" VerticalAlignment="Center" TextAlignment="DetectFromContent" TextWrapping="WrapWholeWords"/>
+                <Button x:Name="ShowTrim" Click="ShowTrimChangeState" Background="Transparent" Padding="0,0" Width="48" Height="48">
+                    <Grid Width="48" Height="48"  HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid x:Name="ShowTrimBg" Background="{StaticResource SystemControlBackgroundAccentBrush}" Opacity="0"/>
+                        <SymbolIcon Symbol="Trim"/>
+                    </Grid>
+                </Button>
+            </StackPanel>
+            <StackPanel x:Name="TrimControls" Grid.Column="1" Orientation="Horizontal"  Height="48" Width="205"  Background="LightGray" HorizontalAlignment="Left" Visibility="Collapsed">
                 <Button  Margin="5" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Background="Transparent" ToolTipService.ToolTip="Trim start" Click="TrimSetStart" >
                     <SymbolIcon Symbol="Import" RenderTransformOrigin="0.5,0.5">
                         <SymbolIcon.RenderTransform>
@@ -54,20 +70,16 @@
                     <SymbolIcon Symbol="Import"/>
                 </Button>
             </StackPanel>
-        </StackPanel>
+            <MediaElement Height="48" Grid.Column="2" AreTransportControlsEnabled="True" HorizontalAlignment="Stretch" x:Name="Preview" Visibility="{Binding ElementName=PreviewInfo, Path=Visibility}" MediaOpened="PreviewMediaOpened">
+                <MediaElement.TransportControls>
+                    <MediaTransportControls IsCompact="True" IsFullWindowButtonVisible="False"/>
+                </MediaElement.TransportControls>
+            </MediaElement>
+        </Grid>
 
-        <Button x:Name="PreviewCancel" Grid.Column="0" Grid.Row="1" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" VerticalAlignment="Bottom" Height="48" HorizontalAlignment="Stretch" Background="LightGray" FontSize="13.333" Click="VideoPreviewCancel">
+        <Button x:Name="PreviewCancel" Grid.Column="0" Grid.Row="1" Visibility="{Binding ElementName=PreviewInfo, Path=Visibility}" VerticalAlignment="Bottom" Height="48" HorizontalAlignment="Stretch" Background="LightGray" FontSize="13.333" Click="VideoPreviewCancel">
             <SymbolIcon Symbol="Cancel"/>
         </Button>
-
-        <MediaElement Margin="205,0,0,0" Height="48" Grid.Column="1" Grid.Row="1" AreTransportControlsEnabled="True" Width="Auto" x:Name="Preview" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="{Binding ElementName=TrimControls, Path=Visibility}" MediaOpened="PreviewMediaOpened">
-            <!--<MediaElement.TransportControls> TODO
-                <local:CustomMediaTransportControls/>
-            </MediaElement.TransportControls>-->
-            <MediaElement.TransportControls>
-                <MediaTransportControls IsCompact="True" Height="48" IsFullWindowButtonVisible="False" Background="Transparent"/>
-            </MediaElement.TransportControls>
-        </MediaElement>
 
         <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay" IsPaneOpen="False" CompactPaneLength="50" OpenPaneLength="290" Grid.ColumnSpan="2" Grid.RowSpan="2" PaneClosed="MainMenu_PaneClosed"> <!-- Settings <-> LitView -->
             <SplitView.Pane>

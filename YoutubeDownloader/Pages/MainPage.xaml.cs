@@ -71,17 +71,15 @@ namespace YoutubeDownloader
         {
             isAppBarOpen = true;
             SetBestMarginForContent();
-            Preview.Margin = new Thickness(205, 0, 0, 48);
             PreviewCancel.VerticalAlignment = VerticalAlignment.Top;
-            TrimControls.Margin = new Thickness(0, 0, 0, 48);
+            PreviewContainer.Margin = new Thickness(0, 0, 0, 48);
         }
         public void AppBarClosed()
         {
             isAppBarOpen = false;
             SetBestMarginForContent();
-            Preview.Margin = new Thickness(205, 0, 0, 0);
             PreviewCancel.VerticalAlignment = VerticalAlignment.Bottom;
-            TrimControls.Margin = new Thickness(0);
+            PreviewContainer.Margin = new Thickness(0);
         }
         #endregion
 
@@ -116,25 +114,55 @@ namespace YoutubeDownloader
         {
             Preview.Stop();
             currentlyPreviewedItem = null;
-            TrimControls.Visibility = Visibility.Collapsed;
+            PreviewInfo.Visibility = Visibility.Collapsed;
             SetBestMarginForContent();
         }
 
-        public void BeginVideoPreview(Uri uri, VideoItem caller)
+        public void BeginVideoPreview(Uri uri, VideoItem caller,ImageSource src = null)
         {
             Preview.Source = uri;
             Preview.Play();
             currentlyPreviewedItem = caller;
-            TrimControls.Visibility = Visibility.Visible;
+            PreviewInfo.Visibility = Visibility.Visible;
+
+            if (src != null)
+            {
+                PreviewThumb.Visibility = Visibility.Visible;
+                PreviewTitle.Visibility = Visibility.Visible;
+                PreviewThumb.Source = src;
+                PreviewTitle.Text = caller.title;
+            }
+            else
+            {
+                PreviewThumb.Visibility = Visibility.Collapsed;
+                PreviewTitle.Visibility = Visibility.Collapsed;
+            }
+
             SetBestMarginForContent();
         }
 
-        internal void BeginVideoPreview(Uri uri)
+        internal void BeginVideoPreview(Uri uri,ImageSource src = null,string title = "")
         {
             Preview.Source = uri;
             Preview.Play();
-            TrimControls.Visibility = Visibility.Visible;
+            PreviewInfo.Visibility = Visibility.Visible;
+            ShowTrim.Visibility = Visibility.Collapsed;
+            if(src != null)
+            {
+                PreviewThumb.Visibility = Visibility.Visible;
+                PreviewTitle.Visibility = Visibility.Visible;
+                PreviewThumb.Source = src;
+                PreviewTitle.Text = title;
+            }
+            else
+            {
+                PreviewThumb.Visibility = Visibility.Collapsed;
+                PreviewTitle.Visibility = Visibility.Collapsed;
+            }
+                
+            SetBestMarginForContent(true);
         }
+
         private void TrimSetStart(object sender, RoutedEventArgs e)
         {
             var time = Preview.Position;
@@ -148,10 +176,19 @@ namespace YoutubeDownloader
             currentlyPreviewedItem.trimEnd = (int?)time.TotalSeconds;
             TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}", time);
         }
-
-        internal Pages.DownloadPage GetDownloaderPage()
+        private void ShowTrimChangeState(object sender, RoutedEventArgs e)
         {
-            return DownloaderContent.Content as Pages.DownloadPage;
+            Button btn = sender as Button;
+            if(ShowTrimBg.Opacity == 0)
+            {
+                ShowTrimBg.Opacity = .75;
+                TrimControls.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ShowTrimBg.Opacity = 0;
+                TrimControls.Visibility = Visibility.Collapsed;
+            }
         }
 
         public void TrimResetStart()
@@ -162,11 +199,12 @@ namespace YoutubeDownloader
         {
             TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}", Preview.NaturalDuration.TimeSpan);
         }
+
         #endregion
         #region Helpers
-        private void SetBestMarginForContent()
+        private void SetBestMarginForContent(bool force=false) //force when there's no caller - search
         {
-            if(currentlyPreviewedItem != null)
+            if(currentlyPreviewedItem != null || force)
                 if(isAppBarOpen)
                     MainMenu.Margin = new Thickness(0, 0, 0, 96);
                 else
@@ -174,7 +212,10 @@ namespace YoutubeDownloader
             else
                 MainMenu.Margin = new Thickness(0, 0, 0, 0);
         }
-
+        internal Pages.DownloadPage GetDownloaderPage()
+        {
+            return DownloaderContent.Content as Pages.DownloadPage;
+        }
 
         #endregion
 

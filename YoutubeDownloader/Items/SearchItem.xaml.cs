@@ -37,19 +37,17 @@ namespace YoutubeDownloader
         public SearchItem(string id, Dictionary<string, string> info)
         {
             this.InitializeComponent();
+            this.id = id;
             Task.Run(async () =>
             {
                 try
                 {
-                    // Use dispatcher only to interact with the UI , putting the async method in there will block UI thread.
-                    // Info is obtained in the line above and populated on the UI thread.
-                    //Data loaded , 1/2 steps
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
                         thumbUrl = info["thumbSmall"];
-                        VideoTitle.Text = info["title"];
-                        VideoAuthor.Text = info["author"];
+                        VideoTitle.Text = title = info["title"];
+                        VideoAuthor.Text = author =  info["author"];
                         thumbDownloadUrl = info["thumbHigh"];
 
                         LoadingInfo.Visibility = Visibility.Collapsed;
@@ -123,8 +121,8 @@ namespace YoutubeDownloader
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         downloadUrl = vid.DownloadUrl;
-                        progressYoutubeExtraction.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                        PreviewVideo(null,null);
+                        progressYoutubeExtraction.Visibility = Visibility.Collapsed;
+                        PreviewVideo();
                     });
                 }
 
@@ -132,7 +130,7 @@ namespace YoutubeDownloader
             }
             catch (Exception)
             {
-                SetErrorState();
+                //SetErrorState();
             }
         }
 
@@ -143,7 +141,16 @@ namespace YoutubeDownloader
 
         private void PreviewVideo(object sender, RoutedEventArgs e)
         {
-            GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl));
+            progressYoutubeExtraction.Visibility = Visibility.Visible;
+            Task.Run(() =>
+            {
+                PopulateVideoDownloadInfo();
+            });
+        }
+
+        private void PreviewVideo()
+        {
+            GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl),VideoThumb.Source,title);
         }
 
         /// <summary>
