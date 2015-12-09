@@ -65,12 +65,6 @@ namespace YoutubeDownloader
             Progress.Value = progress;
         }
 
-        public void ForceDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            var page = Utils.GetMainPageInstance().GetDownloaderPage();
-            page.vidListItems.Add(VideoItem.FromSerachItem(this));
-        }
-
         private async void SetErrorState()
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -80,7 +74,6 @@ namespace YoutubeDownloader
                 progressYoutubeExtraction.Visibility = Visibility.Collapsed;
                 ErrorImage.Visibility = Visibility.Visible;
                 ActionButtons.Visibility = Visibility.Collapsed;
-                CompactContainer.Visibility = Visibility.Collapsed;
             });
         }
 
@@ -136,7 +129,7 @@ namespace YoutubeDownloader
 
         private void btnAddToDownload_Click(object sender, RoutedEventArgs e)
         {
-
+            Utils.GetMainPageInstance().GetDownloaderPage().AddVideoItem(VideoItem.FromSerachItem(this));
         }
 
         private void PreviewVideo(object sender, RoutedEventArgs e)
@@ -160,11 +153,6 @@ namespace YoutubeDownloader
         private static MainPage GetMainPageInstance()
         {
             return Utils.GetMainPageInstance();
-        }
-
-        public static VideoItem FromSerachItem(SearchItem item)
-        {
-            throw new NotImplementedException();
         }
     }
 }

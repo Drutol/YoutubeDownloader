@@ -62,37 +62,7 @@
                 <SymbolIcon Symbol="Globe"/>
             </Button>
         </StackPanel>
-        <StackPanel x:Name="CompactContainer" Grid.Column="2" Visibility="Collapsed" HorizontalAlignment="Center">
-            <Button x:Name="ButtonCompact" HorizontalAlignment="Center" Margin="8" VerticalAlignment="Center" Height="35" FontSize="13.333" Grid.Column="2">
-                <SymbolIcon Symbol="More"/>
-                <Button.Flyout>
-                    <Flyout>
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button x:Name="btnDownload" IsEnabled="False" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
-                                    <SymbolIcon Symbol="Download"/>
-                                </Button>
-                                <Button x:Name="btnAddToDownload"  HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="btnAddToDownload_Click">
-                                    <SymbolIcon Symbol="Add"/>
-                                </Button>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="OpenInBrowswer">
-                                    <SymbolIcon Symbol="Globe"/>
-                                </Button>
-                                <Button HorizontalAlignment="Right" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="PreviewVideo">
-                                    <SymbolIcon Symbol="Play"/>
-                                </Button>
-                            </StackPanel>
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-        </StackPanel>
         <StackPanel x:Name="ActionButtons" HorizontalAlignment="Right" Margin="0,0,1,0" Orientation="Horizontal" Grid.Column="2" Width="Auto">
-            <Button x:Name="btnDownloadMore" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}"  HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="ForceDownload">
-                <SymbolIcon Symbol="Download"/>
-            </Button>
             <Button x:Name="btnAddToDownloadMore"  HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="{Binding ElementName=btnEditTags, Path=Visibility}" FontSize="13.333" Click="btnAddToDownload_Click">
                 <SymbolIcon Symbol="Add"/>
             </Button>

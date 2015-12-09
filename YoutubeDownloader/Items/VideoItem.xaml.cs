@@ -155,14 +155,15 @@ namespace YoutubeDownloader
 
             title = item.title;
             desc = item.desc;
-            
+
+            progressYoutubeExtraction.Visibility = Visibility.Visible;
 
             suggestions = new SuggestedTagsPackage();
             CheckTrimRemovalButtons();
             Task.Run(async () =>
             {
-                if(downloadUrl != null)
-                PopulateVideoDownloadInfo();
+                if(downloadUrl == null)
+                    PopulateVideoDownloadInfo();
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     VideoThumb.Source = new BitmapImage(new Uri(item.thumbUrl));
@@ -172,7 +173,7 @@ namespace YoutubeDownloader
                     thumbUrl = item.thumbDownloadUrl;
 
                     LoadingInfo.Visibility = Visibility.Collapsed;
-                    progressYoutubeExtraction.Visibility = Visibility.Visible;
+
                 });
             });
             if (_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3 && Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_PARSE_TAGS))
@@ -287,7 +288,7 @@ namespace YoutubeDownloader
                         title = vid.Title;
                         targetedFileFormat = format;
                         btnDownload.IsEnabled = true;
-                        progressYoutubeExtraction.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                        progressYoutubeExtraction.Visibility = Visibility.Collapsed;
                         if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))
                             QueueDownload();
                     });
@@ -369,7 +370,7 @@ namespace YoutubeDownloader
 
         private void PreviewVideo(object sender, RoutedEventArgs e)
         {
-            if (downloadUrl != null) ;
+            if (downloadUrl != null)
                 GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl), this,VideoThumb.Source);
         }
 
@@ -383,6 +384,12 @@ namespace YoutubeDownloader
         {
             trimEnd = null;
             GetMainPageInstance().TrimResetEnd();
+        }
+
+        public override bool Equals(object obj)
+        {
+            VideoItem caller = obj as VideoItem;
+            return caller.id == id;
         }
 
         /// <summary>

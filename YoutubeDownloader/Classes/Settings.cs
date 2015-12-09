@@ -37,18 +37,9 @@ namespace YoutubeDownloader
             HISTORY_COUNTER,
         }
 
-        public static async void Init()
+        public static void Init()
         {
             CheckDefaultSettings();
-            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            //{
-            //    var frame = (Frame)Window.Current.Content;
-            //    var page = (MainPage)frame.Content;
-
-            //    // TODO : Move this to main page class. (maybe?)
-
-            //});
-
         }
         /// <summary>
         /// Function sets default values for each setting if they do not exist.

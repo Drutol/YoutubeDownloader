@@ -46,8 +46,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel x:Name="PreviewInfo" Orientation="Horizontal" Background="LightGray" Width="Auto" Visibility="Collapsed" Grid.Column="0">
-                <Image x:Name="PreviewThumb" Stretch="UniformToFill" Width="68" Height="48" VerticalAlignment="Center" Margin="3,0,0,0"/>
-                <TextBlock x:Name="PreviewTitle" Text="" Width="Auto" MaxHeight="48" MaxWidth="100" VerticalAlignment="Center" TextAlignment="DetectFromContent" TextWrapping="WrapWholeWords"/>
+                <Image x:Name="PreviewThumb" Stretch="UniformToFill" Width="68" Height="48" VerticalAlignment="Center" Margin="2"/>
+                <TextBlock x:Name="PreviewTitle" Text="" Width="Auto" MaxHeight="48" MaxWidth="150" VerticalAlignment="Center" TextAlignment="DetectFromContent" TextWrapping="Wrap"/>
                 <Button x:Name="ShowTrim" Click="ShowTrimChangeState" Background="Transparent" Padding="0,0" Width="48" Height="48">
                     <Grid Width="48" Height="48"  HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Grid x:Name="ShowTrimBg" Background="{StaticResource SystemControlBackgroundAccentBrush}" Opacity="0"/>

@@ -28,7 +28,7 @@ namespace YoutubeDownloader.Pages
         private string nextPageToken = "";
         private string prevPageToken = "";
 
-        public ObservableCollection<VideoItem> vidListItems;
+        public ObservableCollection<VideoItem> vidListItems = new ObservableCollection<VideoItem>();
         public ObservableCollection<HistoryItem> historyListItems = new ObservableCollection<HistoryItem>();
 
         bool ShouldPopulateHistory = true;
@@ -43,12 +43,21 @@ namespace YoutubeDownloader.Pages
             BeginWork();
         }
 
+        public bool AddVideoItem(VideoItem item)
+        {        
+            foreach (var vid in vidListItems)
+                if (vid.Equals(item))
+                    return false;
+            vidListItems.Add(item);
+            VideoList.ItemsSource = vidListItems;
+            return true;
+        }
+
         /// <summary>
         /// This is where it all begun...
         /// </summary>
         public async void BeginWork(string url = "", string token = "", bool reset = true)
         {
-
             EmptyNotice.Visibility = Visibility.Collapsed;
             SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
             if (vidListItems == null || reset)

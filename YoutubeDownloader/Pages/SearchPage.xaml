@@ -7,20 +7,51 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="SelectionMenu" Visibility="Collapsed">
+            <CommandBar.Content>
+                <Grid/>
+            </CommandBar.Content>
+            <AppBarButton Icon="Download" Label="Download" Click="MassDownload"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
+            <!-- Grid with top controls-->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="100"/>
+                <!--Label for URL + selection manipulation-->
+                <ColumnDefinition Width="*"/>
+                <!-- URL text box -->
+                <ColumnDefinition Width="50"/>
+                <!-- Page buttons -->
+                <ColumnDefinition MinWidth="100" MaxWidth="200"/>
+                <!-- Get data button -->
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="SearchQuery" HorizontalAlignment="Stretch" Grid.Column="0"/>
-            <Button Content="Search" Click="Button_Click" Grid.Column="1"/>
+            <ComboBox VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ComboBox.Items>
+                    <TextBlock Text="Playlist"/>
+                    <TextBlock Text="Video"/>
+                </ComboBox.Items>
+            </ComboBox>
+            <TextBox x:Name="SearchQuery" Margin="10" TextWrapping="Wrap" PlaceholderText="Search..." HorizontalAlignment="Stretch" Height="Auto" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <StackPanel x:Name="Pages" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Visibility="Collapsed">
+                <Button x:Name="NextPage" Background="{x:Null}" Click="NextPage_Click" >
+                    <SymbolIcon Symbol="Forward"/>
+                </Button>
+                <Button x:Name="PrevPage" Background="{x:Null}" Click="PrevPage_Click" Margin="0,2,0,0" >
+                    <SymbolIcon Symbol="Back"/>
+                </Button>
+            </StackPanel>
+            <Button x:Name="BtnDownload" Content="Search" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="StartQuery" Grid.Column="3"/>
         </Grid>
-        <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Width="Auto" Height="Auto" SelectionMode="Multiple" Grid.Row="1" >
+        <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" SelectionChanged="VideoItemSelected" HorizontalContentAlignment="Stretch" Width="Auto" Height="Auto" SelectionMode="Multiple" Grid.Row="1" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />

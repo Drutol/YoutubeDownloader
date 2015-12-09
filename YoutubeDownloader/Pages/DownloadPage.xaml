@@ -183,8 +183,6 @@
 
             <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty... Pull some viedos from youtube." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="1" />
             <ProgressRing x:Name="SpinnerLoadingPlaylist" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Margin}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="1"  />
-
-            
         </Grid>
     </Grid>
 </Page>

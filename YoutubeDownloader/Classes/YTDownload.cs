@@ -60,11 +60,9 @@ namespace YoutubeDownloader
                     {
                         videos.Add((string)item.contentDetails.videoId);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         Debug.WriteLine("Error adding video <GetVideosInPlaylist>");
-                        //MessageDialog dialog = new MessageDialog(e.Message, item.contentDetails.videoId.ToString());
-                        //await dialog.ShowAsync();
                     }
                 }
 
@@ -195,11 +193,17 @@ namespace YoutubeDownloader
             else return new Tuple<IdType, string>(IdType.TYPE_PLAYLIST, finalId); ;
         }
 
-        public static async Task<Dictionary<string,Dictionary<string,string>>> GetSearchResults(string query)
+        public static async Task<Dictionary<string,Dictionary<string,string>>> GetSearchResults(string query,string token = "")
         {
-            var request = GetWebRequest(RequestTypes.REQUEST_SEARCH, query);
+            var request = GetWebRequest(RequestTypes.REQUEST_SEARCH, query,token);
+            string nextPage = "", prevPage = "";
             dynamic response = await GetRequestResponse(request);
-
+            try
+            {
+                nextPage = response.nextPageToken;
+                prevPage = response.prevPageToken;
+            }
+            catch (Exception) { };
             Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>();
 
             foreach (var item in response.items)
@@ -214,7 +218,10 @@ namespace YoutubeDownloader
                 info.Add("details", (string)(item.snippet.description));
                 result.Add((string)item.id.videoId, info);
             }
-
+            Dictionary<string, string> tokens = new Dictionary<string, string>();
+            tokens.Add("prev", prevPage);
+            tokens.Add("next", nextPage);
+            result.Add("tokens", tokens);
             return result;
             
         }
