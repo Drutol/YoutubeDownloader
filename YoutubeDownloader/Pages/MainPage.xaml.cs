@@ -25,6 +25,7 @@ namespace YoutubeDownloader
             InitializeComponent();
             Settings.Init();
             DownloaderContent.Navigate(typeof(Pages.DownloadPage));
+            SearchContent.Navigate(typeof(Pages.SearchPage));
         }
 
         public void ReversePane()
@@ -41,29 +42,28 @@ namespace YoutubeDownloader
 
         public void NavigateSettings()
         {
-            DownloaderContent.Visibility = Visibility.Collapsed;
+            PersistentContent.Visibility = Visibility.Collapsed;
             MiscContent.Visibility = Visibility.Visible;
             MiscContent.Navigate(typeof(Pages.SettingsPage));
         }
 
         public void NavigateDownloader()
         {
+            PersistentContent.Visibility = Visibility.Visible;
             DownloaderContent.Visibility = Visibility.Visible;
-            MiscContent.Visibility = Visibility.Collapsed;
         }
 
         internal void NavigateHistory()
         {
-            DownloaderContent.Visibility = Visibility.Collapsed;
+            PersistentContent.Visibility = Visibility.Collapsed;
             MiscContent.Visibility = Visibility.Visible;
             MiscContent.Navigate(typeof(Pages.HistoryPage));
         }
 
         internal void NavigateSearch()
         {
+            PersistentContent.Visibility = Visibility.Visible;
             DownloaderContent.Visibility = Visibility.Collapsed;
-            MiscContent.Visibility = Visibility.Visible;
-            MiscContent.Navigate(typeof(Pages.SearchPage));
         }
         #region BottomAppbBar
         bool isAppBarOpen = false;
@@ -163,6 +163,8 @@ namespace YoutubeDownloader
             SetBestMarginForContent(true);
         }
 
+
+
         private void TrimSetStart(object sender, RoutedEventArgs e)
         {
             var time = Preview.Position;
@@ -216,7 +218,10 @@ namespace YoutubeDownloader
         {
             return DownloaderContent.Content as Pages.DownloadPage;
         }
-
+        internal Pages.SearchPage GetSearchPage()
+        {
+            return SearchContent.Content as Pages.SearchPage;
+        }
         #endregion
 
 

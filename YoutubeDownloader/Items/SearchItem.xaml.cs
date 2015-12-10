@@ -141,6 +141,11 @@ namespace YoutubeDownloader
             });
         }
 
+        private void SearchRelated(object sender, RoutedEventArgs e)
+        {
+            Utils.GetMainPageInstance().GetSearchPage().StartRelatedQuery(this.id);
+        }
+
         private void PreviewVideo()
         {
             GetMainPageInstance().BeginVideoPreview(new Uri(downloadUrl),VideoThumb.Source,title);

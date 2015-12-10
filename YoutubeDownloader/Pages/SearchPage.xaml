@@ -13,7 +13,7 @@
             <CommandBar.Content>
                 <Grid/>
             </CommandBar.Content>
-            <AppBarButton Icon="Download" Label="Download" Click="MassDownload"/>
+            <AppBarButton Icon="Add" Label="Add to downloader" Click="MassDownload"/>
         </CommandBar>
     </Page.BottomAppBar>
 
@@ -34,10 +34,10 @@
                 <ColumnDefinition MinWidth="100" MaxWidth="200"/>
                 <!-- Get data button -->
             </Grid.ColumnDefinitions>
-            <ComboBox VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ComboBox x:Name="QueryType" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedIndex="0">
                 <ComboBox.Items>
-                    <TextBlock Text="Playlist"/>
                     <TextBlock Text="Video"/>
+                    <TextBlock Text="Playlist"/>
                 </ComboBox.Items>
             </ComboBox>
             <TextBox x:Name="SearchQuery" Margin="10" TextWrapping="Wrap" PlaceholderText="Search..." HorizontalAlignment="Stretch" Height="Auto" Grid.Column="1" Grid.ColumnSpan="2"/>
@@ -58,5 +58,8 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
+
+        <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty..." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="1" />
+        <ProgressRing x:Name="SpinnerLoadingSearch" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Margin}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="1"  />
     </Grid>
 </Page>

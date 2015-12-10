@@ -77,7 +77,7 @@ namespace YoutubeDownloader
         }
 
         #region Helpers
-        static private WebRequest GetWebRequest(RequestTypes RequestType, string id,string pageToken = "")
+        static private WebRequest GetWebRequest(RequestTypes RequestType, string id, string pageToken = "",string queryType="",string relatedId="")
         {
             string uri;
 
@@ -93,7 +93,10 @@ namespace YoutubeDownloader
                     uri = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&maxResults=50&id=" + id + "&key=" + API_KEY;
                     break;
                 case RequestTypes.REQUEST_SEARCH:
-                    uri = $"https://www.googleapis.com/youtube/v3/search?part=snippet&key={API_KEY}&q={id}";
+                    if(relatedId == "")
+                        uri = $"https://www.googleapis.com/youtube/v3/search?part=snippet&key={API_KEY}&q={id}&type={queryType}&maxResults={Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTING_PER_PAGE)}";
+                    else
+                        uri = $"https://www.googleapis.com/youtube/v3/search?part=snippet&key={API_KEY}&relatedToVideoId={relatedId}&maxResults={Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTING_PER_PAGE)}&type=video";
                     break;
                 default:
                     throw new Exception("Invalid Request");
@@ -193,9 +196,11 @@ namespace YoutubeDownloader
             else return new Tuple<IdType, string>(IdType.TYPE_PLAYLIST, finalId); ;
         }
 
-        public static async Task<Dictionary<string,Dictionary<string,string>>> GetSearchResults(string query,string token = "")
+        public static async Task<Dictionary<string,Dictionary<string,string>>> GetSearchResults(string query,string queryType,string relatedId = "",string token = "")
         {
-            var request = GetWebRequest(RequestTypes.REQUEST_SEARCH, query,token);
+            if (relatedId != "")
+                query = "";
+            var request = GetWebRequest(RequestTypes.REQUEST_SEARCH, query,token,queryType,relatedId);
             string nextPage = "", prevPage = "";
             dynamic response = await GetRequestResponse(request);
             try

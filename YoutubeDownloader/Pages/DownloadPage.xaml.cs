@@ -31,8 +31,6 @@ namespace YoutubeDownloader.Pages
         public ObservableCollection<VideoItem> vidListItems = new ObservableCollection<VideoItem>();
         public ObservableCollection<HistoryItem> historyListItems = new ObservableCollection<HistoryItem>();
 
-        bool ShouldPopulateHistory = true;
-
         public DownloadPage()
         {
             this.InitializeComponent();
@@ -71,7 +69,6 @@ namespace YoutubeDownloader.Pages
                 case IdType.TYPE_VIDEO:
                     ResetPageTokens();
                     vidListItems.Add(new VideoItem(contentID, "", true));
-                    ShouldPopulateHistory = true;
                     break;
                 case IdType.TYPE_PLAYLIST:
                     bool setAlbumTag = Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_ALBUM_PLAYLIST_NAME);
@@ -99,7 +96,6 @@ namespace YoutubeDownloader.Pages
                     {
                         vidListItems.Add(new VideoItem(video, playlistName));
                     }
-                    ShouldPopulateHistory = true;
                     break;
                 case IdType.INVALID:
                     MessageDialog dialog = new MessageDialog("Couldn't extract playlist or video id from input string.");

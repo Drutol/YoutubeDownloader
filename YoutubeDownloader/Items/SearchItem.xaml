@@ -63,23 +63,17 @@
             </Button>
         </StackPanel>
         <StackPanel x:Name="ActionButtons" HorizontalAlignment="Right" Margin="0,0,1,0" Orientation="Horizontal" Grid.Column="2" Width="Auto">
-            <Button x:Name="btnAddToDownloadMore"  HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="{Binding ElementName=btnEditTags, Path=Visibility}" FontSize="13.333" Click="btnAddToDownload_Click">
+            <Button x:Name="btnAddToDownloadMore"  HorizontalAlignment="Right" Margin="2" VerticalAlignment="Center" Height="35"  Click="btnAddToDownload_Click">
                 <SymbolIcon Symbol="Add"/>
             </Button>
-            <Button x:Name="btnMore" HorizontalAlignment="Right" Margin=".5,7" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333">
-                <SymbolIcon Symbol="More"/>
-                <Button.Flyout>
-                    <Flyout>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="OpenInBrowswer">
-                                <SymbolIcon Symbol="Globe"/>
-                            </Button>
-                            <Button HorizontalAlignment="Right" IsEnabled="{Binding ElementName=btnDownload, Path=IsEnabled}" Margin="2" VerticalAlignment="Top" Height="35" Visibility="Visible" FontSize="13.333" Click="PreviewVideo">
-                                <SymbolIcon Symbol="Play"/>
-                            </Button>
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
+            <Button Margin="2" VerticalAlignment="Center" Height="35" Visibility="Visible"  Click="OpenInBrowswer">
+                <SymbolIcon Symbol="Globe"/>
+            </Button>
+            <Button  Margin="2" VerticalAlignment="Center" Height="35" Visibility="Visible"  Click="PreviewVideo">
+                <SymbolIcon Symbol="Play"/>
+            </Button>
+            <Button  Margin="2" VerticalAlignment="Center" Height="35" Visibility="Visible"  Click="SearchRelated">
+                <SymbolIcon Symbol="Find"/>
             </Button>
         </StackPanel>
         <ProgressBar x:Name="progressYoutubeExtraction" IsIndeterminate="True" Grid.Column="2" VerticalAlignment="Bottom" Visibility="Collapsed"></ProgressBar>

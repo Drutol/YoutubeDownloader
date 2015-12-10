@@ -30,10 +30,17 @@ namespace YoutubeDownloader.Pages
             StartQuery(SearchQuery.Text);
         }
 
-        private async void StartQuery(string query,string token = "")
+        public void StartRelatedQuery(string relatedId)
         {
+            StartQuery("", "", relatedId);
+        }
+
+        private async void StartQuery(string query,string token = "",string relatedId = "")
+        {
+            SpinnerLoadingSearch.Visibility = Visibility.Visible;
+            EmptyNotice.Visibility = Visibility.Collapsed;
             searchItems = new ObservableCollection<SearchItem>();
-            var videos = await YTDownload.GetSearchResults("monogatari",token);      
+            var videos = await YTDownload.GetSearchResults(query,(QueryType.SelectedIndex == 0 ? "video" : "playlist"),relatedId,token);      
             ProcessPageTokens(videos["tokens"]["prev"],videos["tokens"]["next"]);
             videos.Remove("tokens");
             foreach (var item in videos)
@@ -41,6 +48,7 @@ namespace YoutubeDownloader.Pages
                 searchItems.Add(new SearchItem(item.Key, item.Value));
             }
             VideoList.ItemsSource = searchItems;
+            SpinnerLoadingSearch.Visibility = Visibility.Collapsed;        
         }
 
         private void VideoItemSelected(object sender, SelectionChangedEventArgs e)

@@ -12,7 +12,7 @@
             <!--<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="XamlResources/ResourcesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>-->
-            <local:PageResultsFormatter x:Key="PageConverter" />
+            <local:InvertVisibilityConverter x:Key="VisibilityInverter"/>
         </ResourceDictionary>
     </Page.Resources>
     
@@ -87,7 +87,10 @@
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid x:Name="ContentGrid">
-                    <Frame x:Name="DownloaderContent"/>
+                    <Grid x:Name="PersistentContent">
+                        <Frame x:Name="DownloaderContent"/>
+                        <Frame x:Name="SearchContent" Visibility="{Binding ElementName=DownloaderContent ,Path=Visibility, Converter={StaticResource VisibilityInverter}}"/>
+                    </Grid>
                     <Frame x:Name="MiscContent"/>
                 </Grid>
             </SplitView.Content>
