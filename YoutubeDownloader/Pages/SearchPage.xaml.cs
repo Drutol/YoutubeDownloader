@@ -40,7 +40,7 @@ namespace YoutubeDownloader.Pages
             SpinnerLoadingSearch.Visibility = Visibility.Visible;
             EmptyNotice.Visibility = Visibility.Collapsed;
             searchItems = new ObservableCollection<SearchItem>();
-            var videos = await YTDownload.GetSearchResults(query,(QueryType.SelectedIndex == 0 ? "video" : "playlist"),relatedId,token);      
+            var videos = await YTDownload.GetSearchResults(query,QueryType.Text.ToLower(),relatedId,token,QueryOrder.Text.ToLower().Replace(" ",""),QueryDate.Text);      
             ProcessPageTokens(videos["tokens"]["prev"],videos["tokens"]["next"]);
             videos.Remove("tokens");
             foreach (var item in videos)
@@ -133,5 +133,34 @@ namespace YoutubeDownloader.Pages
             }
         }
 
+        //private void Button_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        //{
+        //    Button btn = sender as Button;
+        //    btn.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
+        //}
+
+        //private void Button_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        //{
+        //    Button btn = sender as Button;
+        //    btn.Foreground = new SolidColorBrush(Colors.Black);
+        //}
+
+        private void MenuFlyoutDateClick(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as MenuFlyoutItem;
+            QueryDate.Text = btn.Text;
+        }
+
+        private void MenuFlyoutOrderClick(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as MenuFlyoutItem;
+            QueryOrder.Text = btn.Text;
+        }
+
+        private void MenuFlyoutTypeClick(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as MenuFlyoutItem;
+            QueryType.Text = btn.Text;
+        }
     }
 }

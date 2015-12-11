@@ -1,20 +1,7 @@
-﻿using System.Collections.Generic;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System.Collections.ObjectModel;
-using Windows.UI.Popups;
 using System;
-using Windows.Storage.Pickers;
-using System.Threading.Tasks;
-using Windows.Storage.AccessCache;
-using Windows.Media.MediaProperties;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.System;
 using Windows.UI.Xaml.Media;
-using Windows.UI;
-using Windows.UI.Xaml.Data;
-using System.Diagnostics;
-using Windows.Media;
 
 namespace YoutubeDownloader
 {
@@ -108,7 +95,7 @@ namespace YoutubeDownloader
         VideoItem currentlyPreviewedItem;
         private void PreviewMediaOpened(object sender, RoutedEventArgs e)
         {
-            TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}", Preview.NaturalDuration.TimeSpan);
+            TrimControlsEndLabel.Text = string.Format("{0:mm\\:ss}", Preview.NaturalDuration.TimeSpan);
         }
         private void VideoPreviewCancel(object sender, RoutedEventArgs e)
         {
@@ -169,14 +156,14 @@ namespace YoutubeDownloader
         {
             var time = Preview.Position;
             currentlyPreviewedItem.trimStart = (int?)time.TotalSeconds;
-            TrimControlsStartLabel.Text = String.Format("{0:mm\\:ss}", time);
+            TrimControlsStartLabel.Text = string.Format("{0:mm\\:ss}", time);
         }
 
         private void TrimSetEnd(object sender, RoutedEventArgs e)
         {
             var time = Preview.Position;
             currentlyPreviewedItem.trimEnd = (int?)time.TotalSeconds;
-            TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}", time);
+            TrimControlsEndLabel.Text = string.Format("{0:mm\\:ss}", time);
         }
         private void ShowTrimChangeState(object sender, RoutedEventArgs e)
         {

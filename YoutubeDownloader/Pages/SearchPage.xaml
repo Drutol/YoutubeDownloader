@@ -20,6 +20,7 @@
     <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
@@ -34,12 +35,19 @@
                 <ColumnDefinition MinWidth="100" MaxWidth="200"/>
                 <!-- Get data button -->
             </Grid.ColumnDefinitions>
-            <ComboBox x:Name="QueryType" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedIndex="0">
-                <ComboBox.Items>
-                    <TextBlock Text="Video"/>
-                    <TextBlock Text="Playlist"/>
-                </ComboBox.Items>
-            </ComboBox>
+            <StackPanel VerticalAlignment="Center">
+                <Button Margin="1" Background="Transparent" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Content="Search type:" VerticalAlignment="Center" Height="Auto" HorizontalAlignment="Center" >
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyout.Items>
+                                <MenuFlyoutItem Text="Video" Click="MenuFlyoutTypeClick"/>
+                                <MenuFlyoutItem Text="Playlist" Click="MenuFlyoutTypeClick"/>
+                            </MenuFlyout.Items>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+                <TextBlock x:Name="QueryType" Text="Video" VerticalAlignment="Center" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+            </StackPanel>
             <TextBox x:Name="SearchQuery" Margin="10" TextWrapping="Wrap" PlaceholderText="Search..." HorizontalAlignment="Stretch" Height="Auto" Grid.Column="1" Grid.ColumnSpan="2"/>
             <StackPanel x:Name="Pages" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Visibility="Collapsed">
                 <Button x:Name="NextPage" Background="{x:Null}" Click="NextPage_Click" >
@@ -51,7 +59,36 @@
             </StackPanel>
             <Button x:Name="BtnDownload" Content="Search" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="StartQuery" Grid.Column="3"/>
         </Grid>
-        <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" SelectionChanged="VideoItemSelected" HorizontalContentAlignment="Stretch" Width="Auto" Height="Auto" SelectionMode="Multiple" Grid.Row="1" >
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button Margin="5,0" Background="Transparent" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Content="Order by:" VerticalAlignment="Center" Height="30" >
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyout.Items>
+                            <MenuFlyoutItem Text="Date" Click="MenuFlyoutOrderClick"/>
+                            <MenuFlyoutItem Text="Rating" Click="MenuFlyoutOrderClick"/>
+                            <MenuFlyoutItem Text="Relevance" Click="MenuFlyoutOrderClick"/>
+                            <MenuFlyoutItem Text="Title" Click="MenuFlyoutOrderClick"/>
+                            <MenuFlyoutItem Text="View count" Click="MenuFlyoutOrderClick"/>
+                        </MenuFlyout.Items>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+            <TextBlock x:Name="QueryOrder" Text="Relevance" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <Button Margin="5,0" Background="Transparent" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Content="Upload date:" VerticalAlignment="Center" Height="30" >
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyout.Items>
+                            <MenuFlyoutItem Text="Today" Click="MenuFlyoutDateClick"/>
+                            <MenuFlyoutItem Text="Last week" Click="MenuFlyoutDateClick"/>
+                            <MenuFlyoutItem Text="Last month" Click="MenuFlyoutDateClick"/>
+                            <MenuFlyoutItem Text="Any time" Click="MenuFlyoutDateClick"/>
+                        </MenuFlyout.Items>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+            <TextBlock x:Name="QueryDate" Text="Any time" VerticalAlignment="Center" FontWeight="SemiBold"/>
+        </StackPanel>
+        <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" SelectionChanged="VideoItemSelected" HorizontalContentAlignment="Stretch" Width="Auto" Height="Auto" SelectionMode="Multiple" Grid.Row="2" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -59,7 +96,7 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
-        <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty..." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="1" />
-        <ProgressRing x:Name="SpinnerLoadingSearch" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Margin}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="1"  />
+        <TextBlock x:Name="EmptyNotice" Margin="{Binding ElementName=VideoList, Path=Margin}" Visibility="Visible" Text="We've come up empty..." TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFB9B9B9" Grid.Row="2" />
+        <ProgressRing x:Name="SpinnerLoadingSearch" BorderBrush="#FFC13C3C" Margin="{Binding ElementName=VideoList, Path=Margin}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="150" Height="150" IsActive="True" Visibility="Collapsed" Grid.Row="2"  />
     </Grid>
 </Page>
