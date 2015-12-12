@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -67,7 +68,12 @@ namespace YoutubeDownloader.Pages
                     var info = await YTDownload.GetPlaylistDetails(contentID);
                     HistoryManager.AddNewEntry(new HistoryEntry(info.Item3, info.Item1, info.Item2, contentID));
                     string playlistName = setAlbumTag ? info.Item1 : "";
-                    var playlistItems = await YTDownload.GetVideosInPlaylist(contentID, token);
+                    Tuple<List<string>, string, string> playlistItems = new Tuple<List<string>, string, string>(new List<string>(),"",""); //Can I do this better?
+                    await Task.Run(
+                        async () =>
+                        {
+                            playlistItems = await YTDownload.GetVideosInPlaylist(contentID, token);
+                        });               
                     List<string> allVideos = new List<string>(playlistItems.Item1);
                     string nextToken = playlistItems.Item2;
                     if (Settings.GetValueForSetting(Settings.PossibleValueSettings.SETTING_PER_PAGE) == 31)

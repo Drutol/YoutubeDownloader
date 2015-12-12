@@ -141,8 +141,7 @@
                     <!--Right color bar-->
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.RowSpan="3" Grid.Column="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
-                <Grid Grid.RowSpan="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                <Grid Grid.Row="0" Grid.RowSpan="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10" >
                     <StackPanel x:Name="DetailsRow1" Orientation="Horizontal">
@@ -176,7 +175,7 @@
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
-                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Height="40" Width="40" Background="Transparent" Click="DetailsClose">
+                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Height="40" Width="40" Background="Transparent" Click="DetailsClose">
                     <SymbolIcon Symbol="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SystemControlBackgroundAccentBrush}"/>
                 </Button>
             </Grid>
