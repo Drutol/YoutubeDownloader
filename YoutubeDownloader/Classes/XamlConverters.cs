@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -30,8 +29,7 @@ namespace YoutubeDownloader
             bool val = System.Convert.ToBoolean(value);
             if (param && val )
                 return "Visible";
-            else
-                return "Collapsed";
+            return "Collapsed";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -45,10 +43,7 @@ namespace YoutubeDownloader
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var param = (Visibility)value;
-            if (param == Visibility.Visible)
-                return "Collapsed";
-            else
-                return "Visible";
+            return param == Visibility.Visible ? "Collapsed" : "Visible";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

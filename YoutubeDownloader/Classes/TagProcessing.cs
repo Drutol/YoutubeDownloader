@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using System.Threading.Tasks;
 
 namespace YoutubeDownloader
 {
@@ -34,7 +35,7 @@ namespace YoutubeDownloader
             }
             catch (Exception exc)
             {
-                System.Diagnostics.Debug.WriteLine("TagsProcessing : " + exc.Message);
+                Debug.WriteLine("TagsProcessing : " + exc.Message);
                 await Task.Delay(TimeSpan.FromSeconds(5));
                 if (nRetries >= 0)
                     SetTags(tagsPck, file, nRetries - 1);

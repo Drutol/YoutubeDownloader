@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media.Imaging;
-
-using YoutubeExtractor;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.System;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
+using YoutubeExtractor;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -50,9 +51,9 @@ namespace YoutubeDownloader
             set
             {
                 if (value != Settings.PossibleOutputFormats.FORMAT_MP3)
-                    btnEditTags.Visibility = Visibility.Collapsed;
+                    BtnEditTags.Visibility = Visibility.Collapsed;
                 else
-                    btnEditTags.Visibility = Visibility.Visible;
+                    BtnEditTags.Visibility = Visibility.Visible;
 
                 if (_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP4)
                     requiresConv = false;
@@ -111,14 +112,14 @@ namespace YoutubeDownloader
         private void CheckTrimRemovalButtons()
         {
             if (_trimEnd != null)
-                btnTrimRemoveEnd.Visibility = Visibility.Visible;
+                BtnTrimRemoveEnd.Visibility = Visibility.Visible;
             else
-                btnTrimRemoveEnd.Visibility = Visibility.Collapsed;
+                BtnTrimRemoveEnd.Visibility = Visibility.Collapsed;
 
             if (_trimStart != null)
-                btnTrimRemoveStart.Visibility = Visibility.Visible;
+                BtnTrimRemoveStart.Visibility = Visibility.Visible;
             else
-                btnTrimRemoveStart.Visibility = Visibility.Collapsed;
+                BtnTrimRemoveStart.Visibility = Visibility.Collapsed;
 
         }
 
@@ -156,7 +157,7 @@ namespace YoutubeDownloader
             title = item.title;
             desc = item.desc;
 
-            progressYoutubeExtraction.Visibility = Visibility.Visible;
+            ProgressYoutubeExtraction.Visibility = Visibility.Visible;
 
             suggestions = new SuggestedTagsPackage();
             CheckTrimRemovalButtons();
@@ -199,7 +200,13 @@ namespace YoutubeDownloader
         {
             try
             {
+                
                 Dictionary<string, string> info = await YTDownload.GetVideoDetails(id);
+                if (info.Count == 0)
+                {
+                    SetErrorState(true);
+                    return;
+                }
                 if(report)
                     HistoryManager.AddNewEntry(new HistoryEntry(info["thumbSmall"], info["title"], info["author"], id));
                 if (_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3 && Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_PARSE_TAGS))
@@ -231,8 +238,8 @@ namespace YoutubeDownloader
 
                         thumbUrl = info["thumbHigh"];
 
-                        LoadingInfo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                        progressYoutubeExtraction.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        LoadingInfo.Visibility = Visibility.Collapsed;
+                        ProgressYoutubeExtraction.Visibility = Visibility.Visible;
                     });
 
 
@@ -287,8 +294,8 @@ namespace YoutubeDownloader
                         downloadUrl = vid.DownloadUrl;
                         title = vid.Title;
                         targetedFileFormat = format;
-                        btnDownload.IsEnabled = true;
-                        progressYoutubeExtraction.Visibility = Visibility.Collapsed;
+                        BtnDownload.IsEnabled = true;
+                        ProgressYoutubeExtraction.Visibility = Visibility.Collapsed;
                         if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_DL))
                             QueueDownload();
                     });
@@ -307,12 +314,12 @@ namespace YoutubeDownloader
             Progress.Value = progress;
         }
 
-        public void StartDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        public void StartDownload(object sender, RoutedEventArgs e)
         {
             YTDownload.DownloadVideo(downloadUrl, Utils.CleanFileName(title + targetedFileFormat),this);
         }
 
-        public void ForceDownload(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        public void ForceDownload(object sender, RoutedEventArgs e)
         {
             QueueManager.Instance.ForceDownload(this);
         }
@@ -328,24 +335,28 @@ namespace YoutubeDownloader
                 QueueManager.Instance.QueueNewItem(this);
         }
 
-        private async void SetErrorState()
+        private async void SetErrorState(bool completeFail = false) //complete when there's no response from yt whatsoever
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                VideoTitle.Text += "  -  Failed parsing info , is video still available?";
+                if(!completeFail)
+                    VideoTitle.Text += "  -  Failed parsing info , is video still available?";
+                else
+                    VideoTitle.Text = "Failed parsing info , is video still available?";
                 ErrorButton.Visibility = Visibility.Visible;
-                progressYoutubeExtraction.Visibility = Visibility.Collapsed;
+                ProgressYoutubeExtraction.Visibility = Visibility.Collapsed;
                 ErrorImage.Visibility = Visibility.Visible;
-                btnEditTags.IsEnabled = false;
+                BtnEditTags.IsEnabled = false;
                 ActionButtons.Visibility = Visibility.Collapsed;
                 CompactContainer.Visibility = Visibility.Collapsed;
+                LoadingInfo.Visibility = Visibility.Collapsed;
                 isOk = false;
             });
         }
 
-        private async void OpenInBrowswer(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void OpenInBrowswer(object sender, RoutedEventArgs e)
         {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri("https://www.youtube.com/watch?v=" + id));
+            await Launcher.LaunchUriAsync(new Uri("https://www.youtube.com/watch?v=" + id));
         }
 
         private void SuggestionClosed(object sender, object e)
@@ -354,13 +365,13 @@ namespace YoutubeDownloader
             cmb.SelectedIndex = 0;
         }
 
-        private void btnEditTags_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void btnEditTags_Click(object sender, RoutedEventArgs e)
         {
            if(_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3)
                Utils.DetailsPopulate(this);
         }
 
-        private void OpenVideoDetails(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OpenVideoDetails(object sender, PointerRoutedEventArgs e)
         {
             if (isOk && e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
             {

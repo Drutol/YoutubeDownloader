@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace YoutubeDownloader
 {
@@ -19,14 +13,14 @@ namespace YoutubeDownloader
             SETTING_AUTO_DL,
             SETTING_ALBUM_PLAYLIST_NAME,
             SETTING_AUTO_RENAME,
-            SETTING_PARSE_TAGS,
+            SETTING_PARSE_TAGS
         }
 
         public enum PossibleOutputFormats
         {
             FORMAT_MP3,
             FORMAT_MP4,
-            FORMAT_M4A,
+            FORMAT_M4A
         }
 
         public enum PossibleValueSettings
@@ -34,7 +28,7 @@ namespace YoutubeDownloader
             SETTING_PARARELL_DL,
             SETTING_PARARELL_CONV,
             SETTING_PER_PAGE,
-            HISTORY_COUNTER,
+            HISTORY_COUNTER
         }
 
         public static void Init()

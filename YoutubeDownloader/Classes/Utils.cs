@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -73,27 +72,26 @@ namespace YoutubeDownloader
             foreach (string vp in Regex.Split(url, "&"))
             {
                 string[] strings = Regex.Split(vp, "=");
-                dictionary.Add(strings[0], strings.Length == 2 ? System.Net.WebUtility.UrlDecode(strings[1]) : string.Empty);
+                dictionary.Add(strings[0], strings.Length == 2 ? WebUtility.UrlDecode(strings[1]) : string.Empty);
             }
             if (dictionary.ContainsKey("list") && dictionary.ContainsKey("v"))
             {
                 MessageDialog md = new MessageDialog("There's both playlist and video id in provided string.\nWhich one would you like to be processed?");
                 bool? result = null;
                 md.Commands.Add(
-                   new UICommand("Playlist", new UICommandInvokedHandler((cmd) => result = true)));
+                   new UICommand("Playlist", cmd => result = true));
                 md.Commands.Add(
-                   new UICommand("Video", new UICommandInvokedHandler((cmd) => result = false)));
+                   new UICommand("Video", cmd => result = false));
 
                 await md.ShowAsync();
                 if (result == true)
                     return dictionary["list"];
-                else
-                    return dictionary["v"];
+                return dictionary["v"];
             }
 
             if (dictionary.ContainsKey("list"))
                 return dictionary["list"];
-            else if (dictionary.ContainsKey("v"))
+            if (dictionary.ContainsKey("v"))
                 return dictionary["v"];
 
             return "";

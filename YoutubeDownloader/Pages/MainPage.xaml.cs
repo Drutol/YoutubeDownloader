@@ -1,7 +1,8 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System;
 using Windows.UI.Xaml.Media;
+using YoutubeDownloader.Pages;
 
 namespace YoutubeDownloader
 {
@@ -11,8 +12,8 @@ namespace YoutubeDownloader
         {
             InitializeComponent();
             Settings.Init();
-            DownloaderContent.Navigate(typeof(Pages.DownloadPage));
-            SearchContent.Navigate(typeof(Pages.SearchPage));
+            DownloaderContent.Navigate(typeof(DownloadPage));
+            SearchContent.Navigate(typeof(SearchPage));
         }
 
         public void ReversePane()
@@ -31,29 +32,31 @@ namespace YoutubeDownloader
         {
             PersistentContent.Visibility = Visibility.Collapsed;
             MiscContent.Visibility = Visibility.Visible;
-            MiscContent.Navigate(typeof(Pages.SettingsPage));
+            MiscContent.Navigate(typeof(SettingsPage));
         }
 
         public void NavigateDownloader()
         {
             PersistentContent.Visibility = Visibility.Visible;
             DownloaderContent.Visibility = Visibility.Visible;
+            MiscContent.Visibility = Visibility.Collapsed;
         }
 
         internal void NavigateHistory()
         {
             PersistentContent.Visibility = Visibility.Collapsed;
             MiscContent.Visibility = Visibility.Visible;
-            MiscContent.Navigate(typeof(Pages.HistoryPage));
+            MiscContent.Navigate(typeof(HistoryPage));
         }
 
         internal void NavigateSearch()
         {
             PersistentContent.Visibility = Visibility.Visible;
             DownloaderContent.Visibility = Visibility.Collapsed;
+            MiscContent.Visibility = Visibility.Collapsed;
         }
         #region BottomAppbBar
-        bool isAppBarOpen = false;
+        bool isAppBarOpen;
         public void AppBarOpened()
         {
             isAppBarOpen = true;
@@ -201,13 +204,13 @@ namespace YoutubeDownloader
             else
                 MainMenu.Margin = new Thickness(0, 0, 0, 0);
         }
-        internal Pages.DownloadPage GetDownloaderPage()
+        internal DownloadPage GetDownloaderPage()
         {
-            return DownloaderContent.Content as Pages.DownloadPage;
+            return DownloaderContent.Content as DownloadPage;
         }
-        internal Pages.SearchPage GetSearchPage()
+        internal SearchPage GetSearchPage()
         {
-            return SearchContent.Content as Pages.SearchPage;
+            return SearchContent.Content as SearchPage;
         }
         #endregion
 

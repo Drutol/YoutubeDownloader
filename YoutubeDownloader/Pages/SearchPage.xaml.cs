@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,7 +17,7 @@ namespace YoutubeDownloader.Pages
     {
         public SearchPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         ObservableCollection<SearchItem> searchItems;
@@ -35,12 +35,23 @@ namespace YoutubeDownloader.Pages
             StartQuery("", "", relatedId);
         }
 
-        private async void StartQuery(string query,string token = "",string relatedId = "")
+        private async void StartQuery(string query, string token = "", string relatedId = "")
         {
             SpinnerLoadingSearch.Visibility = Visibility.Visible;
             EmptyNotice.Visibility = Visibility.Collapsed;
             searchItems = new ObservableCollection<SearchItem>();
-            var videos = await YTDownload.GetSearchResults(query,QueryType.Text.ToLower(),relatedId,token,QueryOrder.Text.ToLower().Replace(" ",""),QueryDate.Text);      
+            Dictionary<string, Dictionary<string, string>> videos = new Dictionary<string, Dictionary<string, string>>();
+            string type = QueryType.Text.ToLower(),
+                order = QueryOrder.Text.ToLower().Replace(" ", ""), //There's different thread down there...
+                date = QueryDate.Text;
+            await Task.Run(
+                async () =>
+                {
+                    videos =
+                        await
+                            YTDownload.GetSearchResults(query, type, relatedId, token,
+                                order.Replace(" ", ""), date);
+                });     
             ProcessPageTokens(videos["tokens"]["prev"],videos["tokens"]["next"]);
             videos.Remove("tokens");
             foreach (var item in videos)

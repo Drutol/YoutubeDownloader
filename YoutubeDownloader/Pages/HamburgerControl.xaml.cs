@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -13,7 +14,7 @@ namespace YoutubeDownloader.Pages
     {
         public HamburgerControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             txtDownload.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
         }
 
@@ -109,7 +110,7 @@ namespace YoutubeDownloader.Pages
 
         private async void OpenOututFolder(object sender, RoutedEventArgs e)
         {
-            await Windows.System.Launcher.LaunchFolderAsync(await Settings.GetOutputFolder());
+            await Launcher.LaunchFolderAsync(await Settings.GetOutputFolder());
         }
 
 

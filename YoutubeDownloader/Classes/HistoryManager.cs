@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
+using Newtonsoft.Json;
 
 namespace YoutubeDownloader
 {
@@ -24,7 +22,7 @@ namespace YoutubeDownloader
             this.id = id;
             playlist = id.Length == 11 ? false : true;
         }
-    };
+    }
 
     static public class HistoryManager
     {
@@ -37,7 +35,7 @@ namespace YoutubeDownloader
                 Settings.ChangeSetting("HistoryCounter", 0);
             }
 
-            Settings.ChangeSetting("HistoryEntry" + counter, Newtonsoft.Json.JsonConvert.SerializeObject(info));
+            Settings.ChangeSetting("HistoryEntry" + counter, JsonConvert.SerializeObject(info));
             Settings.ChangeSetting("HistoryCounter",counter + 1);
         }
 
@@ -50,11 +48,10 @@ namespace YoutubeDownloader
                 {
                     string data = (string)ApplicationData.Current.LocalSettings.Values["HistoryEntry" + i];
                     if(data != null)
-                        list.Add(Newtonsoft.Json.JsonConvert.DeserializeObject<HistoryEntry>(data));
+                        list.Add(JsonConvert.DeserializeObject<HistoryEntry>(data));
                 }
                 catch (Exception) // data may be empty
                 {
-                    continue;
                 }
             }
             return list;

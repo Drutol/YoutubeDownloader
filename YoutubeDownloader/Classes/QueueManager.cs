@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace YoutubeDownloader
 {
@@ -68,7 +66,7 @@ namespace YoutubeDownloader
             {
                 if (item.id == id)
                 {
-                    System.Diagnostics.Debug.WriteLine("Downloaded " + id);
+                    Debug.WriteLine("Downloaded " + id);
                     downloadingItems.Remove(item);
                     break;
                 }
@@ -111,7 +109,7 @@ namespace YoutubeDownloader
             {
                 if (item.id == id)
                 {
-                    System.Diagnostics.Debug.WriteLine("Converted " + id);
+                    Debug.WriteLine("Converted " + id);
                     convertingItems.Remove(item);
                     break;
                 }

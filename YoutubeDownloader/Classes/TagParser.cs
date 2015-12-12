@@ -129,7 +129,7 @@ namespace YoutubeDownloader
 
             if (word.Contains("title") || word.Contains("track"))
                 return true;
-            else if (word.Contains("name") || word.Contains("song"))
+            if (word.Contains("name") || word.Contains("song"))
                 return null;
             return false;
         }

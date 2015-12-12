@@ -1,20 +1,18 @@
-﻿using Newtonsoft.Json;
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net;
+using System.Diagnostics;
 using System.IO;
-using Windows.UI.Popups;
+using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using System.Xml;
+using Windows.UI.Popups;
+using Newtonsoft.Json;
+using Buffer = Windows.Storage.Streams.Buffer;
 
 namespace YoutubeDownloader
 {
@@ -24,14 +22,14 @@ namespace YoutubeDownloader
         REQUEST_PLAYLIST_ITEMS,
         REQUEST_VIDEO,
         REQUEST_PLAYLIST,
-        REQUEST_SEARCH,
+        REQUEST_SEARCH
     }
 
     public enum IdType
     {
         TYPE_PLAYLIST,
         TYPE_VIDEO,
-        INVALID,
+        INVALID
     }
     #endregion
 
@@ -42,7 +40,7 @@ namespace YoutubeDownloader
             Today,
             LastWeek,
             LastMonth,
-            AllTime,
+            AllTime
         }
         public string Related;
         public string Query;
@@ -74,7 +72,7 @@ namespace YoutubeDownloader
             Token = token;
             Type = type;
         }
-    };
+    }
 
 
     static class YTDownload
@@ -333,7 +331,7 @@ namespace YoutubeDownloader
                     while (true)
                     {
                         // Read from the web.
-                        IBuffer buffer = new Windows.Storage.Streams.Buffer(1024);
+                        IBuffer buffer = new Buffer(1024);
                         buffer = await inputStream.ReadAsync(buffer, buffer.Capacity, InputStreamOptions.None);
 
                         if (buffer.Length == 0)

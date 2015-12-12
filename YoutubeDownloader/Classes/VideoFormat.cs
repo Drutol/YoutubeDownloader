@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.Media.MediaProperties;
 using Windows.Media.Transcoding;
 using Windows.Storage;
-using Windows.Foundation;
-using System.Diagnostics;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
 namespace YoutubeDownloader
@@ -39,20 +35,20 @@ namespace YoutubeDownloader
                 {
                     var transcodeOp = result.TranscodeAsync();
                     transcodeOp.Progress +=
-                        new AsyncActionProgressHandler<double>(async (IAsyncActionWithProgress<double> asyncInfo, double percent) =>
+                        async (IAsyncActionWithProgress<double> asyncInfo, double percent) =>
                         {
                             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                             {
                                 caller.SetConvProgress((int)percent);
                             });
-                        });
+                        };
                     transcodeOp.Completed +=
-                        new AsyncActionWithProgressCompletedHandler<double>( (IAsyncActionWithProgress<double> asyncInfo, AsyncStatus status) =>
+                        (IAsyncActionWithProgress<double> asyncInfo, AsyncStatus status) =>
                         {
                             QueueManager.Instance.ConvCompleted(caller.id);                     
                             Utils.TryToRemoveFile(5, file);
                             TagProcessing.SetTags(new TagsPackage(caller.tagArtist, caller.tagAlbum, caller.tagTitle), audioFile);
-                        });
+                        };
                 }            
             }
             catch (Exception exc)

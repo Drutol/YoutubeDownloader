@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Diagnostics;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -13,10 +8,6 @@ using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,10 +18,10 @@ namespace YoutubeDownloader.Pages
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
-        private bool initDone = false;
+        private bool initDone;
         public SettingsPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             //Current Values
             SetAutoDownloadSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAutoDownload"]);
             SetSetAlbumAsPlaylistNameSetting((string)ApplicationData.Current.LocalSettings.Values["SettingSetAlbumAsPlaylistName"]);
@@ -150,7 +141,7 @@ namespace YoutubeDownloader.Pages
             }
             catch (TaskCanceledException ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
             }
         }
         #endregion

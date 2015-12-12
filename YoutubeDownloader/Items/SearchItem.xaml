@@ -8,6 +8,7 @@
     mc:Ignorable="d" Height="50" Width="Auto" d:DesignWidth="491" >
     <UserControl.Resources>
         <local:ActionButonsVisibilityConverter x:Key="ActionButtonsVisibility"/>
+        <local:InvertVisibilityConverter x:Key="VisibilityInverter"/>
         <x:Boolean x:Key="True">True</x:Boolean>
         <x:Boolean x:Key="False">False</x:Boolean>
     </UserControl.Resources>
@@ -19,24 +20,47 @@
         </Grid.ColumnDefinitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
-                <VisualState x:Name="Narrow">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowHeight="250"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="RootLayout.ColumnDefinitions[2].MaxWidth" Value="60"/>
-                        <Setter Target="CompactContainer.Visibility" Value="Visible"/>
-                        <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=False}"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Medium">
+                <VisualState x:Name="QuadButtons">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="800"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RootLayout.ColumnDefinitions[2].MaxWidth" Value="125"/>
-                        <Setter Target="CompactContainer.Visibility" Value="Collapsed"/>
-                        <Setter Target="ActionButtons.Visibility" Value="{Binding ElementName=btnEditTags, Path=IsEnabled,  Converter={StaticResource ActionButtonsVisibility}, ConverterParameter=True}"/>
+                        <Setter Target="BtnMore.Visibility" Value="Collapsed"/>
+                        <Setter Target="BtnOpenUrl.Visibility" Value="Visible"/>
+                        <Setter Target="BtnRelatedSearch.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="TripleButtons">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BtnMore.Visibility" Value="Visible"/>
+                        <Setter Target="BtnOpenUrl.Visibility" Value="Collapsed"/>
+                        <Setter Target="BtnRelatedSearch.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="DoubleButtons">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="400"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BtnMore.Visibility" Value="Visible"/>
+                        <Setter Target="BtnPreview.Visibility" Value="Collapsed"/>
+                        <Setter Target="BtnOpenUrl.Visibility" Value="Collapsed"/>
+                        <Setter Target="BtnRelatedSearch.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="SingleButton">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="300"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BtnMore.Visibility" Value="Visible"/>
+                        <Setter Target="BtnAddToDownload.Visibility" Value="Collapsed"/>
+                        <Setter Target="BtnPreview.Visibility" Value="Collapsed"/>
+                        <Setter Target="BtnOpenUrl.Visibility" Value="Collapsed"/>
+                        <Setter Target="BtnRelatedSearch.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -44,7 +68,6 @@
 
         <ProgressRing x:Name="LoadingInfo" Grid.Column="0" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Top" Height="30" Width="30" IsActive="True"/>
         <ProgressBar x:Name="Progress" HorizontalAlignment="Stretch" Height="50" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Opacity="0.4"/>
-        <ProgressBar x:Name="ConversionProgress" HorizontalAlignment="Stretch" Height="7" VerticalAlignment="Top" Width="Auto" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Opacity=".5" Background="#33FFFFFF" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,43,0,0"/>
         <Image x:Name="VideoThumb" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="94" Stretch="UniformToFill" Grid.Column="0"/>
         <SymbolIcon x:Name="ErrorImage" Symbol="Cancel" Visibility="Collapsed" Grid.Column="0"/>
         <TextBlock Grid.Column="0" Margin="0,35,79,0" TextAlignment="Center"/>
@@ -63,17 +86,42 @@
             </Button>
         </StackPanel>
         <StackPanel x:Name="ActionButtons" HorizontalAlignment="Right" Margin="0,0,1,0" Orientation="Horizontal" Grid.Column="2" Width="Auto">
-            <Button x:Name="btnAddToDownloadMore"  HorizontalAlignment="Right" Margin="2" VerticalAlignment="Center" Height="35"  Click="btnAddToDownload_Click">
+            <Button x:Name="BtnAddToDownload"  HorizontalAlignment="Right" Margin="2" VerticalAlignment="Center" Height="35"  Click="btnAddToDownload_Click">
                 <SymbolIcon Symbol="Add"/>
             </Button>
-            <Button Margin="2" VerticalAlignment="Center" Height="35" Visibility="Visible"  Click="OpenInBrowswer">
-                <SymbolIcon Symbol="Globe"/>
-            </Button>
-            <Button  Margin="2" VerticalAlignment="Center" Height="35" Visibility="Visible"  Click="PreviewVideo">
+            <Button  x:Name="BtnPreview"  Margin="2" VerticalAlignment="Center" Height="35"  Click="PreviewVideo">
                 <SymbolIcon Symbol="Play"/>
             </Button>
-            <Button  Margin="2" VerticalAlignment="Center" Height="35" Visibility="Visible"  Click="SearchRelated">
+            <Button x:Name="BtnOpenUrl" Margin="2" VerticalAlignment="Center" Height="35"  Click="OpenInBrowswer">
+                <SymbolIcon Symbol="Globe"/>
+            </Button>
+            <Button  x:Name="BtnRelatedSearch"  Margin="2" VerticalAlignment="Center" Height="35" Click="SearchRelated">
                 <SymbolIcon Symbol="Find"/>
+            </Button>
+            <Button x:Name="BtnMore" Margin="2" VerticalAlignment="Center" Height="35" Visibility="Collapsed">
+                <SymbolIcon Symbol="More"/>
+                <Button.Flyout>
+                    <Flyout>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button HorizontalAlignment="Right" Margin="2" VerticalAlignment="Center" Height="35" Visibility="{Binding ElementName=BtnAddToDownload , Path=Visibility, Converter={StaticResource VisibilityInverter}}" Click="btnAddToDownload_Click">
+                                    <SymbolIcon Symbol="Add"/>
+                                </Button>
+                                <Button  Margin="2" VerticalAlignment="Center" Height="35" Visibility="{Binding ElementName=BtnPreview , Path=Visibility, Converter={StaticResource VisibilityInverter}}"  Click="PreviewVideo">
+                                    <SymbolIcon Symbol="Play"/>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Margin="2" VerticalAlignment="Center" Height="35" Visibility="{Binding ElementName=BtnOpenUrl , Path=Visibility, Converter={StaticResource VisibilityInverter}}"  Click="OpenInBrowswer">
+                                    <SymbolIcon Symbol="Globe"/>
+                                </Button>
+                                <Button  Margin="2" VerticalAlignment="Center" Height="35" Visibility="{Binding ElementName=BtnRelatedSearch , Path=Visibility, Converter={StaticResource VisibilityInverter}}"  Click="SearchRelated">
+                                    <SymbolIcon Symbol="Find"/>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
             </Button>
         </StackPanel>
         <ProgressBar x:Name="progressYoutubeExtraction" IsIndeterminate="True" Grid.Column="2" VerticalAlignment="Bottom" Visibility="Collapsed"></ProgressBar>

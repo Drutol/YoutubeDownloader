@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -19,14 +21,14 @@ namespace YoutubeDownloader
         {
             myInfo = info;
             InitializeComponent();
-            System.Threading.Tasks.Task.Run(() =>
+            Task.Run(() =>
             {
                 PopulateInfo();
             });
             
         }
 
-        private async void LoadEntry(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void LoadEntry(object sender, RoutedEventArgs e)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -36,7 +38,7 @@ namespace YoutubeDownloader
             });
         }
 
-        private async void OpenURL(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void OpenURL(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri(myInfo.playlist ? "https://www.youtube.com/playlist?list=" + myInfo.id : "https://www.youtube.com/watch?v=" + myInfo.id));
         }
@@ -60,7 +62,7 @@ namespace YoutubeDownloader
             }
         }
 
-        private void ShowFlyout(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void ShowFlyout(object sender, TappedRoutedEventArgs e)
         {
             Flyout.ShowAt(this);
         }

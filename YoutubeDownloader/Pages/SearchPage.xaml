@@ -60,7 +60,7 @@
             <Button x:Name="BtnDownload" Content="Search" Height="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="StartQuery" Grid.Column="3"/>
         </Grid>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Margin="5,0" Background="Transparent" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Content="Order by:" VerticalAlignment="Center" Height="30" >
+            <Button Margin="5,0" Background="Transparent" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" VerticalAlignment="Center" Height="30" >
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyout.Items>
@@ -72,9 +72,13 @@
                         </MenuFlyout.Items>
                     </MenuFlyout>
                 </Button.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Order by:</TextBlock>
+                    <TextBlock x:Name="QueryOrder" Text="Relevance" VerticalAlignment="Center" Margin="3,0,0,0" FontWeight="SemiBold"/>
+                </StackPanel>
             </Button>
-            <TextBlock x:Name="QueryOrder" Text="Relevance" VerticalAlignment="Center" FontWeight="SemiBold"/>
-            <Button Margin="5,0" Background="Transparent" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Content="Upload date:" VerticalAlignment="Center" Height="30" >
+
+            <Button Margin="5,0" Background="Transparent" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}"  VerticalAlignment="Center" Height="30" >
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyout.Items>
@@ -85,8 +89,13 @@
                         </MenuFlyout.Items>
                     </MenuFlyout>
                 </Button.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Upload date:</TextBlock>
+                    <TextBlock x:Name="QueryDate" Text="Any time" VerticalAlignment="Center" Margin="3,0,0,0" FontWeight="SemiBold"/>
+                </StackPanel>
+                
             </Button>
-            <TextBlock x:Name="QueryDate" Text="Any time" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            
         </StackPanel>
         <ListView x:Name="VideoList" Margin="10,10,10,10" VerticalAlignment="Stretch" SelectionChanged="VideoItemSelected" HorizontalContentAlignment="Stretch" Width="Auto" Height="Auto" SelectionMode="Multiple" Grid.Row="2" >
             <ListView.ItemContainerStyle>
