@@ -37,7 +37,8 @@ namespace YoutubeDownloader.Pages
         }
 
         #region Setting Setters
-        public void SetSetAlbumAsPlaylistNameSetting(string val)
+
+        private void SetSetAlbumAsPlaylistNameSetting(string val)
         {
             SettingSetAlbumAsPlaylistName.IsOn = val == "True" ? true : false;
         }

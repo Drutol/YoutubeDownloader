@@ -47,7 +47,7 @@ namespace YoutubeDownloader
                         {
                             QueueManager.Instance.ConvCompleted(caller.id);                     
                             Utils.TryToRemoveFile(5, file);
-                            TagProcessing.SetTags(new TagsPackage(caller.tagArtist, caller.tagAlbum, caller.tagTitle), audioFile);
+                            TagProcessing.SetTagsSharp(new TagsPackage(caller.tagArtist, caller.tagAlbum, caller.tagTitle,caller.AlbumCoverPath), audioFile);
                         };
                 }            
             }

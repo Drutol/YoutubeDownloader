@@ -55,12 +55,13 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="600"/>
+                        <AdaptiveTrigger MinWindowWidth="730"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="DetailsRow1.Orientation" Value="Horizontal"/>
                         <Setter Target="DetailsRow2.Orientation" Value="Horizontal"/>
                         <Setter Target="DetailsRow3.Orientation" Value="Horizontal"/>
+                        <Setter Target="VideoDetails.Height" Value="100"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -70,6 +71,7 @@
                     <VisualState.Setters>
                         <Setter Target="DetailsRow1.Orientation" Value="Vertical"/>
                         <Setter Target="DetailsRow2.Orientation" Value="Vertical"/>
+                        <Setter Target="DetailsRow3.Orientation" Value="Vertical"/>
                         <Setter Target="VideoDetails.Height" Value="150"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -122,7 +124,7 @@
                 </ListView.ItemContainerStyle>
             </ListView>
 
-            <Grid x:Name="VideoDetails" Background="LightGray"  Visibility="Visible" Height="100" MinWidth="400" MaxWidth="1000" Width="Auto" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Opacity="0">
+            <Grid x:Name="VideoDetails" Background="LightGray"  Visibility="Collapsed" Height="100" MinWidth="400" MaxWidth="1000" Width="Auto" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Opacity="0">
                 <!--Details bar-->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="3"/>
@@ -135,6 +137,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3"/>
                     <!--Left color bar-->
+                    <ColumnDefinition MinWidth="100" MaxWidth="140" Width="Auto"/>
+                    <!--AlbumCover-->
                     <ColumnDefinition Width="*"/>
                     <!--Content-->
                     <ColumnDefinition Width="3"/>
@@ -142,8 +146,13 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Row="0" Grid.RowSpan="3" Background="{StaticResource SystemControlBackgroundAccentBrush}"/>
-
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10" >
+                <Grid MinHeight="60" MinWidth="90" MaxWidth="140" Width="Auto" Height="Auto" Row="1" Column="1" Background="AntiqueWhite" VerticalAlignment="Center" Margin="5,0" HorizontalAlignment="Left">
+                    <Image x:Name="TagAlbumCover" Stretch="Uniform"/>
+                    <Button VerticalAlignment="Stretch" Background="Transparent" HorizontalAlignment="Stretch" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" BorderThickness="1" Click="DetailsSelectAlbumCover">
+                        <SymbolIcon x:Name="IconBrowseCover"  Symbol="BrowsePhotos" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Button>
+                </Grid>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,0,0,10" >
                     <StackPanel x:Name="DetailsRow1" Orientation="Horizontal">
                         <StackPanel Margin="2,0,5,0">
                             <TextBlock Text="Title" HorizontalAlignment="Center" ></TextBlock>

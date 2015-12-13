@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.Storage.AccessCache;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -12,6 +13,7 @@ namespace YoutubeDownloader
         {
             InitializeComponent();
             Settings.Init();
+            StorageApplicationPermissions.MostRecentlyUsedList.Clear(); // Reset
             DownloaderContent.Navigate(typeof(DownloadPage));
             SearchContent.Navigate(typeof(SearchPage));
         }

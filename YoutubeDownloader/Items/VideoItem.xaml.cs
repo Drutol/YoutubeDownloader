@@ -109,6 +109,8 @@ namespace YoutubeDownloader
             }
         }
 
+        public string AlbumCoverPath = null;
+
         private void CheckTrimRemovalButtons()
         {
             if (_trimEnd != null)

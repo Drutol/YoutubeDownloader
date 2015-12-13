@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Pickers;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -253,13 +260,35 @@ namespace YoutubeDownloader.Pages
         #endregion
 
         #region Details
-        VideoItem currentlyEditedItem;
-        public void DetailsPopulate(VideoItem caller)
+
+        private string _prevCoverPath;
+        private VideoItem _currentlyEditedItem;
+        public async void DetailsPopulate(VideoItem caller)
         {
-            if(currentlyEditedItem == null)
+            if (_currentlyEditedItem == null)
+            {
                 DetailsAnimationShow.Begin();
-            currentlyEditedItem = caller;
+                VideoDetails.Visibility = Visibility.Visible;
+            }
+            _currentlyEditedItem = caller;
             //Clear
+            if (_currentlyEditedItem.AlbumCoverPath == null)
+            {
+                TagAlbumCover.Source = null;
+                IconBrowseCover.Visibility = Visibility.Visible;
+            }
+            else if (_prevCoverPath == null || _prevCoverPath != _currentlyEditedItem.AlbumCoverPath)
+            {
+                var thumb = await StorageFile.GetFileFromPathAsync(_currentlyEditedItem.AlbumCoverPath);
+                using (var fileStream = await thumb.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.SetSource(fileStream);
+                    TagAlbumCover.Source = bitmapImage;
+                }
+                IconBrowseCover.Visibility = Visibility.Collapsed;
+                _prevCoverPath = _currentlyEditedItem.AlbumCoverPath;
+            }
             DetailsTitleSuggestsBox.Items.Clear();
             DetailsArtistSuggestsBox.Items.Clear();
             //Populate data
@@ -280,7 +309,7 @@ namespace YoutubeDownloader.Pages
             }
             //Misc
             DetailsAlbum.Text = caller.tagAlbum;
-            DetailsTrackNumber.Text = "0";      
+            DetailsTrackNumber.Text = "0";
         }
         private void DetailsSuggestClicked(object sender, RoutedEventArgs e)
         {
@@ -289,35 +318,54 @@ namespace YoutubeDownloader.Pages
         }
         private void DetailsClose(object sender, RoutedEventArgs e)
         {
-            currentlyEditedItem = null;
+            _currentlyEditedItem = null;
             DetailsAnimationHide.Begin();
+            DetailsAnimationHide.Completed += (o, o1) => { VideoDetails.Visibility = Visibility.Collapsed; };
         }
         private void DetailsTitleTextChange(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             AutoSuggestBox box = sender;
-            currentlyEditedItem.tagTitle = box.Text;
+            _currentlyEditedItem.tagTitle = box.Text;
         }
 
         private void DetailsTitleSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            currentlyEditedItem.tagTitle = args.SelectedItem.ToString();
+            _currentlyEditedItem.tagTitle = args.SelectedItem.ToString();
         }
 
         private void DetailsArtistTextChange(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             AutoSuggestBox box = sender;
-            currentlyEditedItem.tagArtist = box.Text;
+            _currentlyEditedItem.tagArtist = box.Text;
         }
 
         private void DetailsArtistSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            currentlyEditedItem.tagArtist = args.SelectedItem.ToString();
+            _currentlyEditedItem.tagArtist = args.SelectedItem.ToString();
         }
 
         private void DetailsAlbumTextChanged(object sender, TextChangedEventArgs e)
         {
             TextBox box = sender as TextBox;
-            currentlyEditedItem.tagAlbum = box.Text;
+            _currentlyEditedItem.tagAlbum = box.Text;
+        }
+
+        private async void DetailsSelectAlbumCover(object sender, RoutedEventArgs e)
+        {
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".png");
+            var result = await picker.PickSingleFileAsync();
+            if(result == null) return;
+            StorageApplicationPermissions.MostRecentlyUsedList.Add(result);
+            using (var fileStream = await result.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            {
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.SetSource(fileStream);
+                TagAlbumCover.Source = bitmapImage;
+            }
+            IconBrowseCover.Visibility = Visibility.Collapsed;
+            _currentlyEditedItem.AlbumCoverPath = result.Path;
         }
         #endregion
 
