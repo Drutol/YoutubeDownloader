@@ -372,8 +372,8 @@ namespace YoutubeDownloader
         private void btnEditTags_Click(object sender, RoutedEventArgs e)
         {
             if (_outputFormat != Settings.PossibleOutputFormats.FORMAT_MP3) return;
-            VideoTitle.IsTextSelectionEnabled = true;
-            VideoAuthor.IsTextSelectionEnabled = true;
+            //VideoTitle.IsTextSelectionEnabled = true;
+            //VideoAuthor.IsTextSelectionEnabled = true;
             Utils.DetailsPopulate(this);
         }
 

@@ -8,14 +8,14 @@
     mc:Ignorable="d">
 
 
-    <Page.BottomAppBar>
+    <Page.TopAppBar>
         <CommandBar x:Name="SelectionMenu" Visibility="Collapsed">
             <CommandBar.Content>
                 <Grid/>
             </CommandBar.Content>
             <AppBarButton Icon="Add" Label="Add to downloader" Click="MassDownload"/>
         </CommandBar>
-    </Page.BottomAppBar>
+    </Page.TopAppBar>
 
     <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
         <Grid.RowDefinitions>

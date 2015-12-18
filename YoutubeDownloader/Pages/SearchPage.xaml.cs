@@ -20,9 +20,9 @@ namespace YoutubeDownloader.Pages
             InitializeComponent();
         }
 
-        ObservableCollection<SearchItem> searchItems;
-        private string nextPageToken;
-        private string prevPageToken;
+        private ObservableCollection<SearchItem> _searchItems;
+        private string _nextPageToken;
+        private string _prevPageToken;
 
 
         private void StartQuery(object sender, RoutedEventArgs e)
@@ -39,7 +39,7 @@ namespace YoutubeDownloader.Pages
         {
             SpinnerLoadingSearch.Visibility = Visibility.Visible;
             EmptyNotice.Visibility = Visibility.Collapsed;
-            searchItems = new ObservableCollection<SearchItem>();
+            _searchItems = new ObservableCollection<SearchItem>();
             Dictionary<string, Dictionary<string, string>> videos = new Dictionary<string, Dictionary<string, string>>();
             string type = QueryType.Text.ToLower(),
                 order = QueryOrder.Text.ToLower().Replace(" ", ""), //There's different thread down there...
@@ -56,9 +56,9 @@ namespace YoutubeDownloader.Pages
             videos.Remove("tokens");
             foreach (var item in videos)
             {
-                searchItems.Add(new SearchItem(item.Key, item.Value));
+                _searchItems.Add(new SearchItem(item.Key, item.Value));
             }
-            VideoList.ItemsSource = searchItems;
+            VideoList.ItemsSource = _searchItems;
             SpinnerLoadingSearch.Visibility = Visibility.Collapsed;        
         }
 
@@ -86,18 +86,18 @@ namespace YoutubeDownloader.Pages
 
         private void NextPage_Click(object sender, RoutedEventArgs e)
         {
-            StartQuery("", nextPageToken);
+            StartQuery("", _nextPageToken);
         }
 
         private void PrevPage_Click(object sender, RoutedEventArgs e)
         {
-            StartQuery("", prevPageToken);
+            StartQuery("", _prevPageToken);
         }
 
         private void ResetPageTokens()
         {
-            nextPageToken = "";
-            prevPageToken = "";
+            _nextPageToken = "";
+            _prevPageToken = "";
             Pages.Visibility = Visibility.Collapsed;
             SearchQuery.SetValue(Grid.ColumnSpanProperty, 2);
         }
@@ -117,7 +117,7 @@ namespace YoutubeDownloader.Pages
 
             if (tp != null)
             {
-                prevPageToken = tp;
+                _prevPageToken = tp;
                 PrevPage.IsEnabled = true;
                 SymbolIcon ico = PrevPage.Content as SymbolIcon;
                 ico.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
@@ -131,7 +131,7 @@ namespace YoutubeDownloader.Pages
 
             if (tn != null)
             {
-                nextPageToken = tn;
+                _nextPageToken = tn;
                 NextPage.IsEnabled = true;
                 SymbolIcon ico = NextPage.Content as SymbolIcon;
                 ico.Foreground = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;

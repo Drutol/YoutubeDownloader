@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,8 +26,7 @@ namespace YoutubeDownloader.Pages
         private string nextPageToken = "";
         private string prevPageToken = "";
 
-        public ObservableCollection<VideoItem> vidListItems = new ObservableCollection<VideoItem>();
-        public ObservableCollection<HistoryItem> historyListItems = new ObservableCollection<HistoryItem>();
+        private ObservableCollection<VideoItem> VidListItems = new ObservableCollection<VideoItem>();
 
         public DownloadPage()
         {
@@ -43,32 +40,32 @@ namespace YoutubeDownloader.Pages
 
         public bool AddVideoItem(VideoItem item)
         {        
-            foreach (var vid in vidListItems)
+            foreach (var vid in VidListItems)
                 if (vid.Equals(item))
                     return false;
-            vidListItems.Add(item);
-            VideoList.ItemsSource = vidListItems;
+            VidListItems.Add(item);
+            VideoList.ItemsSource = VidListItems;
             return true;
         }
 
         /// <summary>
         /// This is where it all begun...
         /// </summary>
-        public async void BeginWork(string url = "", string token = "", bool reset = true)
+        private async void BeginWork(string url = "", string token = "", bool reset = true)
         {
             EmptyNotice.Visibility = Visibility.Collapsed;
             SpinnerLoadingPlaylist.Visibility = Visibility.Visible;
-            if (vidListItems == null || reset)
-                vidListItems = new ObservableCollection<VideoItem>(); //prevent from adding same ids
+            if (VidListItems == null || reset)
+                VidListItems = new ObservableCollection<VideoItem>(); //prevent from adding same ids
             string contentID = url == "" ? BoxID.Text : url; // this is going to be probably overwritten
-            VideoList.ItemsSource = vidListItems;
+            VideoList.ItemsSource = VidListItems;
             var inputData = await YTDownload.IsIdValid(contentID);
             contentID = inputData.Item2;
             switch (inputData.Item1)
             {
                 case IdType.TYPE_VIDEO:
                     ResetPageTokens();
-                    vidListItems.Add(new VideoItem(contentID, "", true));
+                    VidListItems.Add(new VideoItem(contentID, "", true));
                     break;
                 case IdType.TYPE_PLAYLIST:
                     bool setAlbumTag = Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_ALBUM_PLAYLIST_NAME);
@@ -99,7 +96,7 @@ namespace YoutubeDownloader.Pages
 
                     foreach (var video in allVideos)
                     {
-                        vidListItems.Add(new VideoItem(video, playlistName));
+                        VidListItems.Add(new VideoItem(video, playlistName));
                     }
                     break;
                 case IdType.INVALID:
@@ -179,18 +176,11 @@ namespace YoutubeDownloader.Pages
         #region SelectionManip
         private void SelectionInvert(object sender, RoutedEventArgs e)
         {
-            List<string> disabledIds = new List<string>();
-            foreach (var item in VideoList.SelectedItems)
-            {
-                VideoItem vid = (VideoItem)item;
-                disabledIds.Add(vid.id);
-            }
+            List<string> disabledIds = (from VideoItem vid in VideoList.SelectedItems select vid.id).ToList();
             VideoList.SelectedItems.Clear();
-            foreach (var item in VideoList.Items)
+            foreach (var item in from item in VideoList.Items let vid = (VideoItem)item where disabledIds.Find(video => video == vid.id) == null select item)
             {
-                VideoItem vid = (VideoItem)item;
-                if (disabledIds.Find(video => video == vid.id) == null)
-                    VideoList.SelectedItems.Add(item);
+                VideoList.SelectedItems.Add(item);
             }
         }
 
@@ -205,6 +195,7 @@ namespace YoutubeDownloader.Pages
         {
             if (VideoList.SelectedItems.Count > 0)
             {
+                AppBarSetCover.Visibility = VideoList.SelectedItems.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
                 SelectionMenu.Visibility = Visibility.Visible;
                 Utils.GetMainPageInstance().AppBarOpened();
             }
@@ -212,6 +203,25 @@ namespace YoutubeDownloader.Pages
             {
                 SelectionMenu.Visibility = Visibility.Collapsed;
                 Utils.GetMainPageInstance().AppBarClosed();
+            }
+        }
+
+        private void SelectionSetThisCover(object sender, RoutedEventArgs e)
+        {
+            VideoItem currItem = VideoList.SelectedItems.First() as VideoItem;
+            foreach (var item in VidListItems)
+            {
+                item.AlbumCoverPath = currItem?.AlbumCoverPath;
+            }
+        }
+
+        private async void SelectionSetCover(object sender, RoutedEventArgs e)
+        {
+            var result = await Utils.SelectCoverFile();
+            if (result == null) return;
+            foreach (var item in VidListItems)
+            {
+                item.AlbumCoverPath = result.Path;
             }
         }
 
@@ -254,7 +264,7 @@ namespace YoutubeDownloader.Pages
         {
             foreach (VideoItem item in VideoList.SelectedItems)
             {
-                vidListItems.Remove(item);
+                VidListItems.Remove(item);
             }
         }
         #endregion
@@ -328,7 +338,7 @@ namespace YoutubeDownloader.Pages
         }
         private void DetailsClose(object sender, RoutedEventArgs e)
         {
-            _currentlyEditedItem.DisableTextSelection();
+            //_currentlyEditedItem.DisableTextSelection();
             _currentlyEditedItem = null;
             DetailsAnimationHide.Begin();
             DetailsAnimationHide.Completed += (o, o1) => { VideoDetails.Visibility = Visibility.Collapsed; };
@@ -363,13 +373,10 @@ namespace YoutubeDownloader.Pages
 
         private async void DetailsSelectAlbumCover(object sender, RoutedEventArgs e)
         {
-            var picker = new FileOpenPicker();
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            var result = await picker.PickSingleFileAsync();
+            var result = await Utils.SelectCoverFile();
             if(result == null) return;
             StorageApplicationPermissions.MostRecentlyUsedList.Add(result);
-            using (var fileStream = await result.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            using (var fileStream = await result.OpenAsync(FileAccessMode.Read))
             {
                 BitmapImage bitmapImage = new BitmapImage();
                 bitmapImage.SetSource(fileStream);

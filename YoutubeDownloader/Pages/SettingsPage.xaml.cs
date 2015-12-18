@@ -125,7 +125,7 @@ namespace YoutubeDownloader.Pages
             ComboBox cmb = (ComboBox)sender;
 
             Settings.ChangeFormat((Settings.PossibleOutputFormats)cmb.SelectedIndex);
-            //foreach (var item in vidListItems)
+            //foreach (var item in VidListItems)
             //{
             //    item.outputFormat = (Settings.PossibleOutputFormats)cmb.SelectedIndex;
             //}

@@ -58,17 +58,18 @@ namespace YoutubeDownloader
             MiscContent.Visibility = Visibility.Collapsed;
         }
         #region BottomAppbBar
-        bool isAppBarOpen;
+
+        private bool _isAppBarOpen;
         public void AppBarOpened()
         {
-            isAppBarOpen = true;
+            _isAppBarOpen = true;
             SetBestMarginForContent();
             PreviewCancel.VerticalAlignment = VerticalAlignment.Top;
             PreviewContainer.Margin = new Thickness(0, 0, 0, 48);
         }
         public void AppBarClosed()
         {
-            isAppBarOpen = false;
+            _isAppBarOpen = false;
             SetBestMarginForContent();
             PreviewCancel.VerticalAlignment = VerticalAlignment.Bottom;
             PreviewContainer.Margin = new Thickness(0);
@@ -97,7 +98,8 @@ namespace YoutubeDownloader
         #endregion
 
         #region Preview
-        VideoItem currentlyPreviewedItem;
+
+        private VideoItem _currentlyPreviewedItem;
         private void PreviewMediaOpened(object sender, RoutedEventArgs e)
         {
             TrimControlsEndLabel.Text = string.Format("{0:mm\\:ss}", Preview.NaturalDuration.TimeSpan);
@@ -105,7 +107,7 @@ namespace YoutubeDownloader
         private void VideoPreviewCancel(object sender, RoutedEventArgs e)
         {
             Preview.Stop();
-            currentlyPreviewedItem = null;
+            _currentlyPreviewedItem = null;
             PreviewInfo.Visibility = Visibility.Collapsed;
             SetBestMarginForContent();
         }
@@ -114,7 +116,7 @@ namespace YoutubeDownloader
         {
             Preview.Source = uri;
             Preview.Play();
-            currentlyPreviewedItem = caller;
+            _currentlyPreviewedItem = caller;
             PreviewInfo.Visibility = Visibility.Visible;
 
             if (src != null)
@@ -160,14 +162,14 @@ namespace YoutubeDownloader
         private void TrimSetStart(object sender, RoutedEventArgs e)
         {
             var time = Preview.Position;
-            currentlyPreviewedItem.trimStart = (int?)time.TotalSeconds;
+            _currentlyPreviewedItem.trimStart = (int?)time.TotalSeconds;
             TrimControlsStartLabel.Text = string.Format("{0:mm\\:ss}", time);
         }
 
         private void TrimSetEnd(object sender, RoutedEventArgs e)
         {
             var time = Preview.Position;
-            currentlyPreviewedItem.trimEnd = (int?)time.TotalSeconds;
+            _currentlyPreviewedItem.trimEnd = (int?)time.TotalSeconds;
             TrimControlsEndLabel.Text = string.Format("{0:mm\\:ss}", time);
         }
         private void ShowTrimChangeState(object sender, RoutedEventArgs e)
@@ -198,8 +200,8 @@ namespace YoutubeDownloader
         #region Helpers
         private void SetBestMarginForContent(bool force=false) //force when there's no caller - search
         {
-            if(currentlyPreviewedItem != null || force)
-                if(isAppBarOpen)
+            if(_currentlyPreviewedItem != null || force)
+                if(_isAppBarOpen)
                     MainMenu.Margin = new Thickness(0, 0, 0, 96);
                 else
                     MainMenu.Margin = new Thickness(0, 0, 0, 48);

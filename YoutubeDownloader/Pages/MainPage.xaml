@@ -81,14 +81,14 @@
             <SymbolIcon Symbol="Cancel"/>
         </Button>
 
-        <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay" IsPaneOpen="False" CompactPaneLength="50" OpenPaneLength="290" Grid.ColumnSpan="2" Grid.RowSpan="2" PaneClosed="MainMenu_PaneClosed"> <!-- Settings <-> LitView -->
+        <SplitView x:Name="MainMenu" DisplayMode="CompactOverlay" IsPaneOpen="False" CompactPaneLength="50" OpenPaneLength="290" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2" PaneClosed="MainMenu_PaneClosed"> <!-- Settings <-> LitView -->
             <SplitView.Pane>
                 <my:HamburgerControl x:Name="HamburgerPane"/>
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid x:Name="ContentGrid">
                     <Grid x:Name="PersistentContent">
-                        <Frame x:Name="DownloaderContent"/>
+                        <Frame x:Name="DownloaderContent" />
                         <Frame x:Name="SearchContent" Visibility="{Binding ElementName=DownloaderContent ,Path=Visibility, Converter={StaticResource VisibilityInverter}}"/>
                     </Grid>
                     <Frame x:Name="MiscContent"/>

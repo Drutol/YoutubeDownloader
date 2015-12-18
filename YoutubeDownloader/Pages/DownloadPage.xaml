@@ -5,9 +5,11 @@
     xmlns:local="using:YoutubeDownloader.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:youtubeDownloader="using:YoutubeDownloader"
     mc:Ignorable="d">
 
     <Page.Resources>
+        <youtubeDownloader:InvertVisibilityConverter x:Key="VisibilityInverter"/>
         <Storyboard x:Name="DetailsAnimationShow">
             <DoubleAnimation Storyboard.TargetName="VideoDetails" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" SpeedRatio="2.0" />
         </Storyboard>
@@ -18,9 +20,6 @@
     
     <Page.BottomAppBar>
         <CommandBar x:Name="SelectionMenu" Visibility="Collapsed">
-            <CommandBar.Content>
-                <Grid/>
-            </CommandBar.Content>
             <AppBarButton Icon="Clear" Label="Remove from list" Click="SelectionRemove"></AppBarButton>
             <AppBarButton Icon="Pictures" Label="Download thumbnails" Click="DownloadThumbnails"></AppBarButton>
             <AppBarButton Icon="MusicInfo" Label="Edit tags">
@@ -47,8 +46,14 @@
                 </AppBarButton.Flyout>
             </AppBarButton>
             <AppBarButton Icon="Download" Label="Download" Click="MassEditDownload"/>
+            <AppBarButton  x:Name="AppBarSetCover" Icon="BrowsePhotos" Label="Set cover" Click="SelectionSetCover"/>
+            <AppBarButton  Icon="SetLockScreen" Label="Set other covers to this one." Click="SelectionSetThisCover" Visibility="{Binding ElementName=AppBarSetCover , Path= Visibility, Converter={StaticResource VisibilityInverter}}"/>
         </CommandBar>
     </Page.BottomAppBar>
+
+ 
+    
+
 
     <Grid Background="{ThemeResource AppBarBorderThemeBrush}">
         <VisualStateManager.VisualStateGroups>

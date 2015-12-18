@@ -6,6 +6,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Pickers;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -115,6 +117,17 @@ namespace YoutubeDownloader
         {
             var frame = (Frame)Window.Current.Content;
             return (MainPage)frame.Content;
+        }
+
+        public static async Task<StorageFile> SelectCoverFile()
+        {
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".png");
+            
+            var result = await picker.PickSingleFileAsync();
+            StorageApplicationPermissions.MostRecentlyUsedList.Add(result);
+            return result;
         }
 
         internal static void DetailsPopulate(VideoItem videoItem)
