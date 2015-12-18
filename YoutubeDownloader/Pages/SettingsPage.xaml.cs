@@ -33,6 +33,7 @@ namespace YoutubeDownloader.Pages
             SetMaxPararellConv((int)ApplicationData.Current.LocalSettings.Values["SettingMaxPararellConv"]);
             SetResultsPerPage((int)ApplicationData.Current.LocalSettings.Values["SettingResultsPerPage"]);
             SetParseTagsSetting((string)ApplicationData.Current.LocalSettings.Values["SettingAttemptToParseTags"]);
+            SetAutoCover((string)ApplicationData.Current.LocalSettings.Values["SettingSetDefaultCover"]);
             initDone = true;
         }
 
@@ -40,43 +41,57 @@ namespace YoutubeDownloader.Pages
 
         private void SetSetAlbumAsPlaylistNameSetting(string val)
         {
-            SettingSetAlbumAsPlaylistName.IsOn = val == "True" ? true : false;
+            SettingSetAlbumAsPlaylistName.IsOn = val == "True";
         }
-        public void SetAutoDownloadSetting(string val)
+
+        private void SetAutoDownloadSetting(string val)
         {
-            SettingAutoDownload.IsOn = val == "True" ? true : false;
+            SettingAutoDownload.IsOn = val == "True";
         }
-        public void SetParseTagsSetting(string val)
+
+        private void SetParseTagsSetting(string val)
         {
-            SettingAttemptToParseTags.IsOn = val == "True" ? true : false;
+            SettingAttemptToParseTags.IsOn = val == "True";
         }
-        public void SetOutputFormat(int iFormat)
+
+        private void SetOutputFormat(int iFormat)
         {
             ComboOutputFormat.SelectedIndex = iFormat;
         }
-        public void SetRenameSetting(string val)
+
+        private void SetRenameSetting(string val)
         {
-            SettingRenameFile.IsOn = val == "True" ? true : false;
+            SettingRenameFile.IsOn = val == "True";
         }
-        public void SetOutputQuality(int iQuality)
+
+        private void SetOutputQuality(int iQuality)
         {
             ComboOutputQuality.SelectedIndex = iQuality;
         }
-        public void SetOutputFolderName(string name)
+
+        private void SetOutputFolderName(string name)
         {
             SettingOutputFolder.Text = name == "" ? "Music library" : name;
         }
-        public void SetMaxPararellDownloads(int value)
+
+        private void SetMaxPararellDownloads(int value)
         {
             SettingMaxPararellDownloads.Value = value;
         }
-        internal void SetMaxPararellConv(int value)
+
+        private void SetMaxPararellConv(int value)
         {
             SettingMaxPararellConv.Value = value;
         }
-        internal void SetResultsPerPage(int value)
+
+        private void SetResultsPerPage(int value)
         {
             SettingResultsPerPage.Value = value;
+        }
+
+        private void SetAutoCover(string val)
+        {
+            SettingSetDefaultCover.IsOn = val == "True";
         }
         #endregion
 

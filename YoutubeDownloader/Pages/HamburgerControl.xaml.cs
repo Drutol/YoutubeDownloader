@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -79,13 +80,10 @@ namespace YoutubeDownloader.Pages
         {
             Button btn = sender as Button;
             Grid grid = btn.Content as Grid;
-            foreach (var item in grid.Children)
+            foreach (Border item in grid.Children.OfType<Border>())
             {
-                if(item is Border)
-                {
-                    item.Visibility = Visibility.Visible;
-                    break;
-                }
+                item.Visibility = Visibility.Visible;
+                break;
             }
         }
 
@@ -93,13 +91,10 @@ namespace YoutubeDownloader.Pages
         {
             Button btn = sender as Button;
             Grid grid = btn.Content as Grid;
-            foreach (var item in grid.Children)
+            foreach (Border item in grid.Children.OfType<Border>())
             {
-                if (item is Border)
-                {
-                    item.Visibility = Visibility.Collapsed;
-                    break;
-                }
+                item.Visibility = Visibility.Collapsed;
+                break;
             }
         }
     

@@ -174,7 +174,8 @@ namespace YoutubeDownloader
                     VideoAuthor.Text = item.author;
 
                     thumbUrl = item.thumbDownloadUrl;
-
+                    if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_COVER))
+                        AlbumCoverPath = thumbUrl;
                     LoadingInfo.Visibility = Visibility.Collapsed;
 
                 });
@@ -237,8 +238,9 @@ namespace YoutubeDownloader
                         VideoThumb.Source = new BitmapImage(new Uri(info["thumbSmall"]));
                         VideoTitle.Text = info["title"];
                         VideoAuthor.Text = info["author"];
-
                         thumbUrl = info["thumbHigh"];
+                        if (Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_AUTO_COVER))
+                            AlbumCoverPath = thumbUrl;
 
                         LoadingInfo.Visibility = Visibility.Collapsed;
                         ProgressYoutubeExtraction.Visibility = Visibility.Visible;
@@ -369,8 +371,16 @@ namespace YoutubeDownloader
 
         private void btnEditTags_Click(object sender, RoutedEventArgs e)
         {
-           if(_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3)
-               Utils.DetailsPopulate(this);
+            if (_outputFormat != Settings.PossibleOutputFormats.FORMAT_MP3) return;
+            VideoTitle.IsTextSelectionEnabled = true;
+            VideoAuthor.IsTextSelectionEnabled = true;
+            Utils.DetailsPopulate(this);
+        }
+
+        public void DisableTextSelection()
+        {
+            VideoTitle.IsTextSelectionEnabled = false;
+            VideoAuthor.IsTextSelectionEnabled = false;
         }
 
         private void OpenVideoDetails(object sender, PointerRoutedEventArgs e)

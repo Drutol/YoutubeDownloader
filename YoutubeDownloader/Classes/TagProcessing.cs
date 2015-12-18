@@ -6,7 +6,10 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using TagLib;
 
 namespace YoutubeDownloader
@@ -14,17 +17,17 @@ namespace YoutubeDownloader
 
     struct TagsPackage
     {
-        public string artist;
-        public string album;
-        public string title;
-        public string ThumbPath;
+        public readonly string artist;
+        public readonly string album;
+        public readonly string title;
+        public readonly  string ThumbSource;
 
-        public TagsPackage(string artist,string album,string title,string thumb = null)
+        public TagsPackage(string artist,string album,string title, string thumb = null)
         {
             this.artist = artist;
             this.album = album;
             this.title = title;
-            ThumbPath = thumb;
+            ThumbSource = thumb;
         }
     }
 
@@ -60,24 +63,38 @@ namespace YoutubeDownloader
                 tagFile.Tag.Title = tagsPck.title;
                 tagFile.Tag.Performers = new[] {tagsPck.artist};
                 tagFile.Tag.Album = tagsPck.album;
-                if (tagsPck.ThumbPath != null)
+                if (tagsPck.ThumbSource != null)
                 {
-                    StorageFile thumb = await StorageFile.GetFileFromPathAsync(tagsPck.ThumbPath);
-                    var thumbStream = await thumb.OpenStreamForReadAsync();
+
                     TagLib.Id3v2.AttachedPictureFrame pic = new TagLib.Id3v2.AttachedPictureFrame
                     {
-                        TextEncoding = TagLib.StringType.Latin1,
-                        MimeType = thumb.Name.Contains(".png") ? "image/png" : "image/jpeg",
-                        Type = TagLib.PictureType.FrontCover,
-                        Data = TagLib.ByteVector.FromFile(new StreamFileAbstraction("Cover", thumbStream, thumbStream))
+                        TextEncoding = StringType.Latin1,
+                        Type = PictureType.FrontCover
                     };
+                    var uri = new Uri(tagsPck.ThumbSource);         
+                    if (!uri.IsFile)
+                    {
+                        var rass = RandomAccessStreamReference.CreateFromUri(uri);
+                        IRandomAccessStream stream = await rass.OpenReadAsync();
+                        pic.Data = ByteVector.FromStream(stream.AsStream());
+                        pic.MimeType = "image/jpeg";
+                        stream.Dispose();
+                    }
+                    else
+                    {
+                        StorageFile thumb = await StorageFile.GetFileFromPathAsync(tagsPck.ThumbSource);
+                        var thumbStream = await thumb.OpenStreamForReadAsync();
+                        pic.Data = ByteVector.FromFile(new StreamFileAbstraction("Cover", thumbStream, thumbStream));
+                        pic.MimeType = thumb.Name.Contains(".png") ? "image/png" : "image/jpeg";
+                        thumbStream.Dispose();
+                    }
+
                     tagFile.Tag.Pictures = new IPicture[1] {pic};
-                    thumbStream.Dispose();
+                    
                 }
 
                 tagFile.Save();
-                fileStream.Dispose();
-                            
+                fileStream.Dispose();                          
             }
             catch (Exception exc)
             {

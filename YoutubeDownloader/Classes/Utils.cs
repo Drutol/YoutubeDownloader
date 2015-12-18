@@ -120,7 +120,7 @@ namespace YoutubeDownloader
         internal static void DetailsPopulate(VideoItem videoItem)
         {
             var page = GetMainPageInstance();
-            var dlPage = page.GetDownloaderPage();
+            var dlPage = page.GetDownloaderPage();           
             dlPage.DetailsPopulate(videoItem);
         }
 

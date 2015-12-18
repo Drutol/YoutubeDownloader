@@ -17,7 +17,7 @@
                     <ColumnDefinition Width="4"/>
                 </Grid.ColumnDefinitions>
                 <Grid Background="{StaticResource SystemControlBackgroundAccentBrush}" Grid.Column="1"/>
-                <StackPanel>
+                <StackPanel Grid.Column="0">
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="HamburgerButton" FontWeight="Bold" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="50" Height="50" Background="Transparent" FontSize="20" Foreground="{StaticResource SystemControlBackgroundAccentBrush}" Click="HamburgerButton_Click"/>
                     </StackPanel>
@@ -44,7 +44,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Border x:Name="Border4" BorderThickness="0,0,0,2" BorderBrush="{StaticResource SystemControlBackgroundAccentBrush}" Grid.ColumnSpan="1" Visibility="Collapsed"/>
-                            <SymbolIcon Symbol="Find" HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Center"  Foreground="{Binding ElementName=txtHistory , Path=Foreground}"/>
+                            <SymbolIcon Symbol="Find" HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Center"  Foreground="{Binding ElementName=txtSearch , Path=Foreground}"/>
                             <TextBlock x:Name="txtSearch" Text="Search" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
                         </Grid>
                     </Button>

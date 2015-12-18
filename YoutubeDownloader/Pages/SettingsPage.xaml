@@ -32,7 +32,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PanelSliders.(RelativePanel.RightOf)" Value="{x:Null}"/>
-
                         <Setter Target="PanelSliders.(RelativePanel.Below)" Value="PanelOnOff"/>
                         <Setter Target="PanelCombo.(RelativePanel.Below)" Value="PanelSliders"/>
                     </VisualState.Setters>
@@ -44,7 +43,6 @@
                     <VisualState.Setters>
                         <Setter Target="PanelSliders.(RelativePanel.Below)" Value="{x:Null}"/>
                         <Setter Target="PanelCombo.(RelativePanel.Below)" Value="{x:Null}"/>
-
                         <Setter Target="PanelSliders.(RelativePanel.RightOf)" Value="PanelOnOff"/>
                         <Setter Target="PanelCombo.(RelativePanel.Below)" Value="PanelOnOff"/>
                     </VisualState.Setters>
@@ -56,7 +54,6 @@
                     <VisualState.Setters>
                         <Setter Target="PanelSliders.(RelativePanel.RightOf)" Value="{x:Null}"/>
                         <Setter Target="PanelCombo.(RelativePanel.Below)" Value="{x:Null}"/>
-
                         <Setter Target="PanelSliders.(RelativePanel.RightOf)" Value="PanelOnOff"/>
                         <Setter Target="PanelCombo.(RelativePanel.RightOf)" Value="PanelSliders"/>
                     </VisualState.Setters>
@@ -89,6 +86,10 @@
                     <StackPanel Orientation="Horizontal" Margin="0,5">
                         <TextBlock Text="Make attempt to parse tags from video info:" TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
                         <ToggleSwitch x:Name="SettingAttemptToParseTags" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center"  Toggled="ChangeSetting"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Set album cover to youtube thumbnail:" TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalAlignment="Left" Width="130" VerticalAlignment="Center"/>
+                        <ToggleSwitch x:Name="SettingSetDefaultCover" HorizontalAlignment="Center" Margin="10,0,0,0"  VerticalAlignment="Center"  HorizontalContentAlignment="Center" Toggled="ChangeSetting"/>
                     </StackPanel>
                 </StackPanel>
                 <!--/ On/Off Swicthes-->

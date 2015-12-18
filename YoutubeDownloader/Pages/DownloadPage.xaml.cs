@@ -275,17 +275,27 @@ namespace YoutubeDownloader.Pages
             if (_currentlyEditedItem.AlbumCoverPath == null)
             {
                 TagAlbumCover.Source = null;
-                IconBrowseCover.Visibility = Visibility.Visible;
+                _prevCoverPath = null;
+                IconBrowseCover.Visibility = Visibility.Visible;             
             }
             else if (_prevCoverPath == null || _prevCoverPath != _currentlyEditedItem.AlbumCoverPath)
             {
-                var thumb = await StorageFile.GetFileFromPathAsync(_currentlyEditedItem.AlbumCoverPath);
-                using (var fileStream = await thumb.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                var uri = new Uri(_currentlyEditedItem.AlbumCoverPath);
+                if (uri.IsFile)
                 {
-                    BitmapImage bitmapImage = new BitmapImage();
-                    bitmapImage.SetSource(fileStream);
-                    TagAlbumCover.Source = bitmapImage;
+                    var thumb = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
+                    using (var fileStream = await thumb.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();
+                        bitmapImage.SetSource(fileStream);
+                        TagAlbumCover.Source = bitmapImage;
+                    }
                 }
+                else
+                {
+                    TagAlbumCover.Source = new BitmapImage(new Uri(_currentlyEditedItem.AlbumCoverPath));
+                }
+
                 IconBrowseCover.Visibility = Visibility.Collapsed;
                 _prevCoverPath = _currentlyEditedItem.AlbumCoverPath;
             }
@@ -318,6 +328,7 @@ namespace YoutubeDownloader.Pages
         }
         private void DetailsClose(object sender, RoutedEventArgs e)
         {
+            _currentlyEditedItem.DisableTextSelection();
             _currentlyEditedItem = null;
             DetailsAnimationHide.Begin();
             DetailsAnimationHide.Completed += (o, o1) => { VideoDetails.Visibility = Visibility.Collapsed; };
@@ -367,7 +378,22 @@ namespace YoutubeDownloader.Pages
             IconBrowseCover.Visibility = Visibility.Collapsed;
             _currentlyEditedItem.AlbumCoverPath = result.Path;
         }
+
+        private void DetailsSelectStockThumb(object sender, RoutedEventArgs e)
+        {
+            _currentlyEditedItem.AlbumCoverPath = _currentlyEditedItem.thumbUrl;
+            TagAlbumCover.Source = new BitmapImage(new Uri(_currentlyEditedItem.AlbumCoverPath));
+            IconBrowseCover.Visibility = Visibility.Collapsed;
+        }
+
+        private void DetailRemoveCover(object sender, RoutedEventArgs e)
+        {
+            _currentlyEditedItem.AlbumCoverPath = null;
+            TagAlbumCover.Source = null;
+            IconBrowseCover.Visibility = Visibility.Visible;
+        }
         #endregion
+
 
     }
 }
