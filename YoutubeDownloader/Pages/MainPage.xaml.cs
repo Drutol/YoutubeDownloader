@@ -189,11 +189,13 @@ namespace YoutubeDownloader
 
         public void TrimResetStart()
         {
-            TrimControlsStartLabel.Text = "00:00";
+            if (Preview.Visibility == Visibility.Visible)
+                TrimControlsStartLabel.Text = "00:00";
         }
         public void TrimResetEnd()
         {
-            TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}", Preview.NaturalDuration.TimeSpan);
+            if(Preview.Visibility == Visibility.Visible)
+                TrimControlsEndLabel.Text = String.Format("{0:mm\\:ss}", Preview.NaturalDuration.TimeSpan);
         }
 
         #endregion

@@ -63,7 +63,7 @@ namespace YoutubeDownloader
             {
                 VideoTitle.Text += "  -  Failed parsing info , is video still available?";
                 ErrorButton.Visibility = Visibility.Visible;
-                progressYoutubeExtraction.Visibility = Visibility.Collapsed;
+                ProgressYoutubeExtraction.Visibility = Visibility.Collapsed;
                 ErrorImage.Visibility = Visibility.Visible;
                 ActionButtons.Visibility = Visibility.Collapsed;
             });
@@ -106,7 +106,7 @@ namespace YoutubeDownloader
                     await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         downloadUrl = vid.DownloadUrl;
-                        progressYoutubeExtraction.Visibility = Visibility.Collapsed;
+                        ProgressYoutubeExtraction.Visibility = Visibility.Collapsed;
                         PreviewVideo();
                     });
                 }
@@ -126,7 +126,7 @@ namespace YoutubeDownloader
 
         private void PreviewVideo(object sender, RoutedEventArgs e)
         {
-            progressYoutubeExtraction.Visibility = Visibility.Visible;
+            ProgressYoutubeExtraction.Visibility = Visibility.Visible;
             Task.Run(() =>
             {
                 PopulateVideoDownloadInfo();

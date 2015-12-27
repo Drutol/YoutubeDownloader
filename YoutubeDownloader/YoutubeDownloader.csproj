@@ -146,6 +146,7 @@
     <None Include="YoutubeDownloader_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\TagLib.Portable.dll" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -216,8 +217,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="TagLib.Portable">
-      <HintPath>..\..\taglib\src\TagLib.Portable\bin\Release\TagLib.Portable.dll</HintPath>
+    <Reference Include="TagLib.Portable, Version=2.2.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\TagLib.Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

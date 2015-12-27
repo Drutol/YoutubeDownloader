@@ -399,8 +399,55 @@ namespace YoutubeDownloader.Pages
             TagAlbumCover.Source = null;
             IconBrowseCover.Visibility = Visibility.Visible;
         }
-        #endregion
+        private void DetailsTrimStartChanged(object sender, TextChangedEventArgs e)
+        {
+            int time;
+            if (DetailsTrimStart.Text == "")
+                time = 0;
+            else
+            {
+                bool success = int.TryParse(DetailsTrimStart.Text, out time);
+                if (!success)
+                {
+                    DetailsTrimStart.Text = "";
+                    time = 0;
+                }
+            }
+           
+            _currentlyEditedItem.trimStart = time;
 
+        }
+
+        private void DetailsTrimEndChanged(object sender, TextChangedEventArgs e)
+        {
+            int? final;
+            if (DetailsTrimEnd.Text == "")
+                final = null;
+            else
+            {
+                int time;
+                bool success = int.TryParse(DetailsTrimEnd.Text, out time);
+                if (!success)
+                {
+                    DetailsTrimStart.Text = "";
+                    final = null;
+                }
+                else
+                    final = time;
+            }
+            int? end = _currentlyEditedItem.trimStart ?? 0; // ?? - is null?
+            if (final == null || final >= end)
+            {
+                _currentlyEditedItem.trimEnd = final;
+                TrimEndGreaterNotice.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                _currentlyEditedItem.trimEnd = null;
+                TrimEndGreaterNotice.Visibility = Visibility.Visible;
+            }
+        }
+        #endregion
 
     }
 }

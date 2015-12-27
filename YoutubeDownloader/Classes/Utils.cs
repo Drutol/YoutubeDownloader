@@ -69,13 +69,8 @@ namespace YoutubeDownloader
                 url = url.Substring(url.IndexOf('?') + 1);
             }
 
-            var dictionary = new Dictionary<string, string>();
+            var dictionary = Regex.Split(url, "&").Select(vp => Regex.Split(vp, "=")).ToDictionary(strings => strings[0], strings => strings.Length == 2 ? WebUtility.UrlDecode(strings[1]) : string.Empty);
 
-            foreach (string vp in Regex.Split(url, "&"))
-            {
-                string[] strings = Regex.Split(vp, "=");
-                dictionary.Add(strings[0], strings.Length == 2 ? WebUtility.UrlDecode(strings[1]) : string.Empty);
-            }
             if (dictionary.ContainsKey("list") && dictionary.ContainsKey("v"))
             {
                 MessageDialog md = new MessageDialog("There's both playlist and video id in provided string.\nWhich one would you like to be processed?");
@@ -105,10 +100,9 @@ namespace YoutubeDownloader
         /// <returns></returns>
         public static bool VisibilityConverter(Visibility vis)
         {
-            if (vis == Visibility.Visible)
-                return true;
-            return false;
+            return vis == Visibility.Visible;
         }
+
         /// <summary>
         /// Use only from main thread
         /// </summary>

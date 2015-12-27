@@ -124,7 +124,7 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
-        <ProgressBar x:Name="progressYoutubeExtraction" IsIndeterminate="True" Grid.Column="2" VerticalAlignment="Bottom" Visibility="Collapsed"></ProgressBar>
+        <ProgressBar x:Name="ProgressYoutubeExtraction" IsIndeterminate="True" Grid.Column="2" VerticalAlignment="Bottom" Visibility="Collapsed"/>
     </Grid>
 
 
