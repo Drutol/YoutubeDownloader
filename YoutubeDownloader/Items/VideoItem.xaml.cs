@@ -75,7 +75,7 @@ namespace YoutubeDownloader
                 if (_trimStart == null)
                     TrimStart.Text = "";
                 else
-                    TrimStart.Text = $"Trim start : {String.Format("{0:mm\\:ss}", TimeSpan.FromSeconds((double)value))}";
+                    TrimStart.Text = $"Trim start : {String.Format("{0:mm\\:ss}", TimeSpan.FromSeconds((double)_trimStart))}";
 
                 if (_trimStart > _trimEnd)
                 {
@@ -98,7 +98,7 @@ namespace YoutubeDownloader
                 if (_trimEnd == null)
                     TrimEnd.Text = "";
                 else
-                    TrimEnd.Text = $"Trim end  : {String.Format("{0:mm\\:ss}", TimeSpan.FromSeconds((double)value))}";
+                    TrimEnd.Text = $"Trim end  : {String.Format("{0:mm\\:ss}", TimeSpan.FromSeconds((double)_trimEnd))}";
 
                 if (_trimEnd < _trimStart)
                 {
@@ -180,23 +180,19 @@ namespace YoutubeDownloader
 
                 });
             });
-            if (_outputFormat == Settings.PossibleOutputFormats.FORMAT_MP3 && Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_PARSE_TAGS))
-                try
-                {
-                    suggestions = TagParser.AttemptToParseTags(title, desc, "", item.author);
-                    if (suggestions.suggestedAuthor != "")
-                        tagArtist = suggestions.suggestedAuthor;
-                    else
-                        tagArtist = item.author;
-                    if (suggestions.suggestedTitle != "")
-                        tagTitle = suggestions.suggestedTitle;
-                }
-                catch (Exception exce)
-                {
-                    Debug.WriteLine(exce.Message);
-                }
-
-
+            if (_outputFormat != Settings.PossibleOutputFormats.FORMAT_MP3 ||
+                !Settings.GetBoolSettingValueForKey(Settings.PossibleSettingsBool.SETTING_PARSE_TAGS)) return;
+            try
+            {
+                suggestions = TagParser.AttemptToParseTags(title, desc, "", item.author);
+                tagArtist = suggestions.suggestedAuthor != "" ? suggestions.suggestedAuthor : item.author;
+                if (suggestions.suggestedTitle != "")
+                    tagTitle = suggestions.suggestedTitle;
+            }
+            catch (Exception exce)
+            {
+                Debug.WriteLine(exce.Message);
+            }
         }
 
         private async void PopulateVideoInfo()

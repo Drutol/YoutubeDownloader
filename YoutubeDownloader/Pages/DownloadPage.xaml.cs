@@ -330,6 +330,8 @@ namespace YoutubeDownloader.Pages
             //Misc
             DetailsAlbum.Text = caller.tagAlbum;
             DetailsTrackNumber.Text = "0";
+            DetailsTrimStart.Text = caller.trimStart == null ? "" : caller.trimStart.ToString();
+            DetailsTrimEnd.Text = caller.trimEnd == null ? "" : caller.trimEnd.ToString();
         }
         private void DetailsSuggestClicked(object sender, RoutedEventArgs e)
         {
@@ -399,23 +401,55 @@ namespace YoutubeDownloader.Pages
             TagAlbumCover.Source = null;
             IconBrowseCover.Visibility = Visibility.Visible;
         }
+
+        public void DetailsSetTrimEnd(string id, int secs)
+        {
+            if(id != _currentlyEditedItem.id)
+                return;
+
+            DetailsTrimEnd.Text = secs.ToString();
+        }
+
+        public void DetailsSetTrimStart(string id, int secs)
+        {
+            if (id != _currentlyEditedItem.id)
+                return;
+
+            DetailsTrimStart.Text = secs.ToString();
+        }
+
         private void DetailsTrimStartChanged(object sender, TextChangedEventArgs e)
         {
-            int time;
+            int? start;
             if (DetailsTrimStart.Text == "")
-                time = 0;
+                start = null;
             else
             {
+                int time;
                 bool success = int.TryParse(DetailsTrimStart.Text, out time);
                 if (!success)
                 {
                     DetailsTrimStart.Text = "";
-                    time = 0;
+                    start = null;
+                }
+                else
+                {
+                    start = time;
                 }
             }
            
-            _currentlyEditedItem.trimStart = time;
-
+            _currentlyEditedItem.trimStart = start;
+            Utils.GetMainPageInstance().TrimSetStart(start);
+            if (start != null)
+            {
+                int end;
+                bool success = int.TryParse(DetailsTrimEnd.Text, out end);
+                if (success && start < end)
+                {
+                    _currentlyEditedItem.trimEnd = end;
+                    Utils.GetMainPageInstance().TrimSetEnd(end);
+                }
+            }
         }
 
         private void DetailsTrimEndChanged(object sender, TextChangedEventArgs e)
@@ -435,16 +469,28 @@ namespace YoutubeDownloader.Pages
                 else
                     final = time;
             }
-            int? end = _currentlyEditedItem.trimStart ?? 0; // ?? - is null?
+            int? end = _currentlyEditedItem.trimEnd ?? 0; // ?? - is null?
             if (final == null || final >= end)
             {
                 _currentlyEditedItem.trimEnd = final;
+                Utils.GetMainPageInstance().TrimSetEnd(final);
                 TrimEndGreaterNotice.Visibility = Visibility.Collapsed;
             }
             else
             {
                 _currentlyEditedItem.trimEnd = null;
+                Utils.GetMainPageInstance().TrimSetEnd(null);
                 TrimEndGreaterNotice.Visibility = Visibility.Visible;
+            }
+            if (final != null)
+            {
+                int start;
+                bool success = int.TryParse(DetailsTrimStart.Text, out start);
+                if (success && start < end)
+                {
+                    _currentlyEditedItem.trimStart = start;
+                    Utils.GetMainPageInstance().TrimSetStart(start);
+                }              
             }
         }
         #endregion

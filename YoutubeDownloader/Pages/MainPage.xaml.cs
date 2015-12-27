@@ -13,7 +13,7 @@ namespace YoutubeDownloader
         {
             InitializeComponent();
             Settings.Init();
-            StorageApplicationPermissions.MostRecentlyUsedList.Clear(); // Reset
+            StorageApplicationPermissions.MostRecentlyUsedList.Clear(); // Reset cover files
             DownloaderContent.Navigate(typeof(DownloadPage));
             SearchContent.Navigate(typeof(SearchPage));
         }
@@ -157,13 +157,40 @@ namespace YoutubeDownloader
             SetBestMarginForContent(true);
         }
 
-
-
         private void TrimSetStart(object sender, RoutedEventArgs e)
         {
+
             var time = Preview.Position;
             _currentlyPreviewedItem.trimStart = (int?)time.TotalSeconds;
             TrimControlsStartLabel.Text = string.Format("{0:mm\\:ss}", time);
+            GetDownloaderPage().DetailsSetTrimStart(_currentlyPreviewedItem.id, (int)time.TotalSeconds);
+        }
+
+        public void TrimSetStart(int? secs)
+        {
+            if (_currentlyPreviewedItem == null)
+                return;
+            if (secs == null)
+            {
+                TrimControlsStartLabel.Text = "00:00";
+                return;
+            }
+            TrimControlsStartLabel.Text = string.Format("{0:mm\\:ss}", TimeSpan.FromSeconds((int)secs));
+        }
+
+        public void TrimSetEnd(int? secs)
+        {
+            if (_currentlyPreviewedItem == null)
+                return;
+            if (secs == null)
+            {
+                TrimControlsEndLabel.Text = "00:00";
+                return;
+            }
+            if (secs > Preview.NaturalDuration.TimeSpan.TotalSeconds)
+                secs = (int) Preview.NaturalDuration.TimeSpan.TotalSeconds;
+            TrimControlsEndLabel.Text = string.Format("{0:mm\\:ss}", TimeSpan.FromSeconds((int)secs));
+
         }
 
         private void TrimSetEnd(object sender, RoutedEventArgs e)
@@ -171,10 +198,10 @@ namespace YoutubeDownloader
             var time = Preview.Position;
             _currentlyPreviewedItem.trimEnd = (int?)time.TotalSeconds;
             TrimControlsEndLabel.Text = string.Format("{0:mm\\:ss}", time);
+            GetDownloaderPage().DetailsSetTrimEnd(_currentlyPreviewedItem.id,(int)time.TotalSeconds);
         }
         private void ShowTrimChangeState(object sender, RoutedEventArgs e)
         {
-            Button btn = sender as Button;
             if(ShowTrimBg.Opacity == 0)
             {
                 ShowTrimBg.Opacity = .75;
